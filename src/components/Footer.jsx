@@ -1,0 +1,127 @@
+import React from 'react';
+import { FaFacebookF, FaLinkedin, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
+import  MedivirtLogo from '../assets/img/Medivirt.png'
+
+const Footer = () => {
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    alert('Subscribed successfully!');
+  };
+
+  return (
+    <footer className="bg-[#3D52A1] py-8 text-sm text-[#818990] font-sans">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap justify-center lg:justify-between">
+          {/* Left section */}
+          <div className="w-full lg:w-1/3 px-4 flex justify-center mb-8 lg:mb-0 lg:justify-start">
+            <div className="w-full lg:max-w-lg">
+              <div className="flex flex-wrap items-top mb-6 justify-center">
+                <div className="w-full lg:w-[170px] px-4">
+                  <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2 text-white">Useful Links</span>
+                  <ul className="list-unstyled">
+                    <li>
+                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/">Home</a>
+                    </li>
+                    <li>
+                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="">Doctor</a>
+                    </li>
+                    <li>
+                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="https://www.github.com/creativetimofficial?ref=njs-profile">Company</a>
+                    </li>
+                    <li>
+                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/price">Pricing</a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="w-full lg:w-[170px] px-4">
+                  <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2 text-white">Other Resources</span>
+                  <ul className="list-unstyled">
+                    <li>
+                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/signup">Join Us</a>
+                    </li>
+                    <li>
+                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="https://creative-tim.com/terms?ref=njs-profile">Terms &amp; Conditions</a>
+                    </li>
+                    <li>
+                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="https://creative-tim.com/privacy?ref=njs-profile">Privacy Policy</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Middle section (centered both horizontally and vertically) */}
+          <div className="w-full lg:w-1/3 flex flex-col justify-center items-center px-3 lg:text-center mb-8">
+            <img
+              alt="Medivirt"
+              className='max-w-full w-[170px] mx-auto'
+              src={MedivirtLogo}
+            />
+            <div className="mt-5 text-white">
+              Follow us on these platforms for more updates!
+            </div>
+            <div className="mt-6 mb-8 relative">
+              <form onSubmit={handleSubscribe} className="flex flex-col md:flex-row items-center md:items-start">
+                <div className="relative flex-grow w-full">
+                  <div className="relative">
+                    <input
+                      type="email"
+                      placeholder="Your Email"
+                      className="bg-white border border-gray-300 rounded-md py-3 px-4 pr-40 focus:outline-none focus:border-indigo-500"
+                      required
+                    />
+                    <button
+                      type="submit"
+                      className="bg-indigo-600 text-white absolute top-0 right-0 h-full py-3 px-4 rounded-r-md"
+                      style={{ height: '100%' }}
+                    >
+                      Subscribe
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div className="flex justify-center lg:justify-start space-x-4 mb-6 text-white">
+              <a href="https://twitter.com/medivirt">
+                <FaXTwitter className='w-5 h-5' />
+              </a>
+              <a href="https://www.instagram.com/medivirt">
+                <FaInstagram className='w-5 h-5' />
+              </a>
+              <a href="https://www.linkedin.com/company/medivirt-labs/?originalSubdomain=in">
+                <FaLinkedin className='w-5 h-5' />
+              </a>
+            </div>
+          </div>
+
+          {/* Right section */}
+          <div className="w-full lg:w-1/3 px-4 lg:px-10 mt-5 lg:mt-0 text-center lg:text-right">
+            <div className="text-lg font-bold text-white mb-4">Contact Us</div>
+            <div className="text-sm font-medium text-white">
+              Better yet, see us in person!
+              <br />
+              MEDIVIRT LABS PVT LTD
+              <br />
+              Bangalore, Karnataka, India
+              <br />
+              <a className=''>meet@medivirt.com</a>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom section */}
+        <hr className="my-6 border-blueGray-300" />
+        <div className="flex flex-col items-center justify-center md:flex-row md:justify-center">
+          <div className="text-sm text-white font-semibold py-1 text-center">
+            COPYRIGHT © <span id="get-current-year">{new Date().getFullYear()} FIRST HELP - ALL RIGHTS RESERVED.</span>
+            <p className='mt-5'>POWERED BY MEDIVIRT</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

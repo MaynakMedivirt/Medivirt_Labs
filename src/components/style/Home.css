@@ -1,0 +1,54 @@
+.marquee-container {
+  width: 100%; /* Set the width of the marquee container */
+  overflow: hidden; /* Hide content that exceeds the container width */
+}
+
+.marquee-item {
+  display: inline-block; /* Display items in a row */
+  vertical-align: middle; /* Align items vertically */
+  width: 200px; /* Set the width of each marquee item */
+  height: auto; /* Allow height to adjust proportionally */
+  margin-right: 20px; /* Optional: Add spacing between items */
+}
+
+.marquee-image {
+  width: 100%; /* Ensure image fills its container */
+  height: auto; /* Maintain aspect ratio */
+}
+
+
+
+.card {
+  position: relative; /* Ensure position context for absolute positioning */
+  overflow: hidden; /* Hide any overflow content within the card */
+}
+
+.card::before {
+  content: ''; /* Create a pseudo-element for the overlay */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; /* Fill the entire width of the card */
+  height: 100%; /* Fill the entire height of the card */
+  background-color: rgba(0, 0, 0, 0.281); /* Transparent light black overlay */
+  z-index: 1; /* Ensure the overlay is behind other content */
+}
+
+.card .hover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 16px;
+  width: 100%; /* Fill the entire width of the card */
+  height: 100%; /* Fill the entire height of the card */
+  background-color: rgba(0, 0, 0, 0.87); /* Adjust overlay background color */
+  opacity: 0; /* Start with hidden overlay */
+  transform: translateY(100%); /* Start overlay below the card */
+  transition: opacity 0.7s ease, transform 0.5s ease; /* Transition properties */
+  display: flex;
+}
+
+.card:hover .hover-overlay {
+  opacity: 1; /* Show overlay on hover */
+  transform: translateY(0); /* Slide overlay up to show */
+}
