@@ -10,15 +10,14 @@ import backgroundImage from '../assets/img/main.jpg';
 import w1 from '../assets/img/w1.png'
 import w2 from '../assets/img/w2.png'
 import wcm from '../assets/img/Group.jpg'
-import left from '../assets/img/arrow-left.png'
-import right from '../assets/img/arrow-right.png'
 import marketing from '../assets/img/marketing.png'
 import femaledoc from '../assets/img/female-doctor.png'
 import onphone from '../assets/img/on_phone.png'
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-
+import left from '../assets/img/arrow-left.png';
+import right from '../assets/img/arrow-right.png';
 import './style/Home.css'
 import { NavLink } from 'react-router-dom';
 
@@ -37,6 +36,9 @@ const Home = () => {
     infinite: false,
     speed: 500,
     slidesToShow: 3.4,
+    arrows: false,
+    prevArrow: left,
+    nextArrow: right,
     slidesToScroll: 1,
     responsive: [
       {
@@ -58,6 +60,8 @@ const Home = () => {
       }
     ]
   };
+
+  
   return (
     <div className="relative">
       <Header />
@@ -424,10 +428,10 @@ const Home = () => {
           </Slider>
           <div className="flex z-10 gap-6 justify-between self-end mt-7 mr-44 max-w-full w-[544px] max-md:flex-wrap max-md:mr-2.5">
             <div>
-              <button>
+              <button id='left'>
                 <img src={left} alt="Previous" />
               </button>
-              <button>
+              <button id='right'>
                 <img src={right} alt="Next" />
               </button>
             </div>
