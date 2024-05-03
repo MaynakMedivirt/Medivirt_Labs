@@ -30,7 +30,6 @@
   left: 0;
   width: 100%; /* Fill the entire width of the card */
   height: 100%; /* Fill the entire height of the card */
-  background-color: rgba(0, 0, 0, 0.281); /* Transparent light black overlay */
   z-index: 1; /* Ensure the overlay is behind other content */
 }
 
@@ -51,4 +50,43 @@
 .card:hover .hover-overlay {
   opacity: 1; /* Show overlay on hover */
   transform: translateY(0); /* Slide overlay up to show */
+}
+
+.hover-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%; /* Set width to 100% */
+  text-align: start;
+  list-style: disc;
+}
+
+li {
+  color: white;
+  margin-bottom: 10px;
+  white-space: pre-line;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .hover-overlay {
+    padding: 10px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .hover-overlay {
+    padding: 10px;
+  }
 }

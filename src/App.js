@@ -7,9 +7,9 @@ import DoctorDash from './components/DoctorDash';
 import CompanyDash from './components/CompanyDash';
 import { AuthProvider } from './components/AuthContext';
 import DoctorList from './components/DoctorList';
-import CompanyList from './components/CompanyList';
+//import CompanyList from './components/CompanyList';
 import DoctorProfile from './components/DoctorProfile';
-import CompanyProfile from './components/CompanyProfile';
+//import CompanyProfile from './components/CompanyProfile';
 import WarningPage from './pages/WarningPage';
 import Navbar from './components/Navbar';
 import Sidebar from "./components/Side";
@@ -41,10 +41,10 @@ const App = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/doctordash" element={<DoctorDash />} />
           <Route path="/companydash" element={<CompanyDash />} />
-          <Route path="/companylist" element={<CompanyList />} />
+          {/*<Route path="/companylist" element={<CompanyList />} /> */}
           <Route path="/doctorlist" element={<DoctorList />} />
           <Route path="/doctor/:id" element={<DoctorProfile />} />
-          <Route path="/company/:id" element={<CompanyProfile />} />
+          {/* <Route path="/company/:id" element={<CompanyProfile />} />*/}
           <Route path="/warning" element={<WarningPage />} />
           <Route path='/price' element={<Pricing/>}/>
           <Route path='/footer' element={<Footer/>}/>

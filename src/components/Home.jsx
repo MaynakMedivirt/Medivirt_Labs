@@ -12,7 +12,9 @@ import w2 from '../assets/img/w2.png'
 import wcm from '../assets/img/Group.jpg'
 import left from '../assets/img/arrow-left.png'
 import right from '../assets/img/arrow-right.png'
-import marketing from '../assets/img/marketing.jpg'
+import marketing from '../assets/img/marketing.png'
+import femaledoc from '../assets/img/female-doctor.png'
+import onphone from '../assets/img/on_phone.png'
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -68,7 +70,7 @@ const Home = () => {
           <div className="mt-20 text-2xl font-medium leading-9 text-zinc-500 max-md:mt-10 max-md:max-w-full">
             Our platform connects medical sales representatives with doctors <br /> for virtual product presentations remotely.
           </div>
-          <button className="flex gap-2.5 justify-center items-center px-4 py-6 mt-16 text-base font-bold text-center text-white uppercase bg-indigo-800 tracking-[2px] max-md:mt-10">
+          <button className="flex gap-2.5 justify-center items-center px-4 py-6 mt-10 text-base font-bold text-center text-white uppercase bg-indigo-800 tracking-[2px] max-md:mt-10">
             <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />
             <NavLink to="/signup" className="flex-auto self-stretch">Get Started</NavLink>
             <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />
@@ -111,7 +113,7 @@ const Home = () => {
                   fingertips
                 </div>
                 <button className="flex gap-0.5 justify-center self-start px-5 py-3.5 mt-12 text-sm font-medium leading-5 text-indigo-800 border border-indigo-800 border-solid max-md:px-5 max-md:mt-10">
-                  <div className="grow my-auto">Book an Online Consultation</div>
+                  <div className="grow my-auto">Register Now</div>
                   <img
                     loading="lazy"
                     src="https://cdn.builder.io/api/v1/image/assets/TEMP/e95b5401bbc073fb293ada4aad809ecadc6202fd77aebedc576925d98a1c1bd1?"
@@ -441,82 +443,65 @@ const Home = () => {
       </div>
       <div className="flex justify-center items-center px-16 py-16 w-full bg-white max-md:px-5 max-md:max-w-full">
         <div className="flex flex-col w-full max-w-[1232px] max-md:max-w-full">
-          <div className="self-center text-4xl font-semibold tracking-wider leading-5 text-center text-indigo-800 capitalize">
+          <div className="self-center text-4xl font-semibold tracking-wider leading-10 text-center text-indigo-800 capitalize">
             Explore Medivirt
           </div>
           <div className="mt-12 max-md:mt-10 max-md:max-w-full">
             <div className="flex gap-5 max-md:flex-col max-md:gap-0">
               {/* Card 1 */}
-              <div className="card relative overflow-hidden flex flex-col grow justify-center text-4xl font-medium text-center text-white whitespace-nowrap aspect-[0.81] max-md:mt-10 bg-black bg-opacity-20">
-                <img
-                  loading="lazy"
-                  src={marketing}
-                  className="object-cover absolute inset-0 w-full h-full"
-                />
+              <div className="card relative overflow-hidden flex flex-col grow justify-center text-lg font-medium text-center text-white whitespace-nowrap aspect-[0.81] max-md:mt-10 bg-black bg-opacity-20">
+                <img loading="lazy" src={marketing} className="object-cover absolute inset-0 w-full h-full" />
                 <div className="absolute inset-0 flex flex-col justify-center items-center">
-                  <div className="self-center text-white">New Features</div>
+                  <div className="text-white text-4xl">New Features</div>
                 </div>
                 {/* Hover Container */}
-                <div class="card relative overflow-hidden flex flex-col grow justify-center text-4xl font-medium text-center text-white whitespace-nowrap aspect-[0.81] max-md:mt-10 bg-black bg-opacity-20">
-                  <div class="hover-overlay absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full flex justify-center items-center">
-                    <div class="p-4" style="width: calc(100% - 2rem); height: calc(100% - 2rem);">
-                      <ul class="text-white list-disc">
-                        <li class="mb-2 md:mb-4">Doctors receive meeting requests from medical <br /> sales reps through the platform.</li>
-                        <li class="mb-2 md:mb-4">They can review meeting details, including the product being presented and the agenda.</li>
-                        <li class="mb-2 md:mb-4">They can adjust their availability based on their schedule and workload. Doctors join virtual meetings at the scheduled time through the platform.</li>
-                        <li class="mb-2 md:mb-4">They actively engage in discussions with the medical sales rep, asking questions and providing feedback.</li>
-                        <li>Companies foster ongoing engagement, providing educational resources to support doctors and drive sales growth.</li>
-                      </ul>
-                    </div>
-                  </div>
+                <div className="hover-overlay absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full flex justify-center items-center">
+                  <ul className="list-none ">
+                    <li>Dedicated spaces for interactive presentations and discussions between healthcare professionals and companies.​</li>
+                    <li>Features enabling live product demonstrations, Q&A sessions, and real-time engagement</li>
+                    <li>Mechanisms for collecting and analyzing feedback from participants to enhance user experience and product offerings</li>
+                    <li>User-friendly tools for scheduling and managing virtual meetings, ensuring efficient time management.​</li>
+                  </ul>
                 </div>
               </div>
               {/* Card 2 */}
-              <div className="card relative overflow-hidden flex flex-col grow justify-center text-4xl font-medium text-center text-white whitespace-nowrap aspect-[0.8] max-md:mt-10 bg-black bg-opacity-20">
-                <img
-                  loading="lazy"
-                  src=".\src\assets\img\female-doctor.jpg"
-                  className="object-cover absolute inset-0 w-full h-full"
-                />
+              <div className="card relative overflow-hidden flex flex-col grow justify-center text-lg font-medium text-center text-white whitespace-nowrap aspect-[0.8] max-md:mt-10 ">
+                <img loading="lazy" src={femaledoc} className="object-cover absolute inset-0 w-full h-full" />
                 <div className="absolute inset-0 flex flex-col justify-center items-center">
-                  <div className="text-white">Explore Doctors</div>
+                  <div className="text-white text-4xl">Explore Doctors</div>
                 </div>
                 {/* Hover Container */}
-                <div className="hover-overlay absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full">
-                  <div className="p-4">
-                    <ul className="text-white list-disc">
-                      <li>Doctor 1</li>
-                      <li>Doctor 2</li>
-                      <li>Doctor 3</li>
-                    </ul>
-                  </div>
+                <div className="hover-overlay absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full flex justify-center items-center">
+                  <ul className="list-none">
+                    <li>Doctors receive meeting requests from medical sales reps through the platform.​</li>
+                    <li>They can review meeting details, including the product being presented and the agenda.​</li>
+                    <li>They can adjust their availability based on their schedule and workload.​Doctors join virtual meetings at the scheduled time through the platform</li>
+                    <li>They actively engage in discussions with the medical sales rep, asking questions and providing feedback.​</li>
+                    <li>Companies foster ongoing engagement, providing educational resources to support doctors and drive sales growth.​</li>
+                  </ul>
                 </div>
               </div>
               {/* Card 3 */}
-              <div className="card relative overflow-hidden flex flex-col grow justify-center text-4xl font-medium text-center text-white whitespace-nowrap aspect-[0.81] max-md:mt-10 bg-black bg-opacity-20">
-                <img
-                  loading="lazy"
-                  src=".\src\assets\img\on_phone.png"
-                  className="object-cover absolute inset-0 w-full h-full"
-                />
+              <div className="card relative overflow-hidden flex flex-col grow justify-center text-lg font-medium text-center text-white whitespace-nowrap aspect-[0.81] max-md:mt-10 ">
+                <img loading="lazy" src={onphone} className="object-cover absolute inset-0 w-full h-full bg-black bg-opacity-20" />
                 <div className="absolute inset-0 flex flex-col justify-center items-center">
-                  <div className="self-center text-white">Explore Companies</div>
+                  <div className="text-white text-4xl">Explore Doctors</div>
                 </div>
                 {/* Hover Container */}
-                <div className="hover-overlay absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full">
-                  <div className="p-4 ">
-                    <ul className="text-white list-disc ">
-                      <li>Company 1</li>
-                      <li>Company 2</li>
-                      <li>Company 3</li>
-                    </ul>
-                  </div>
+                <div className="hover-overlay absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full flex justify-center items-center">
+                  <ul className="list-none">
+                    <li>Reach a wider audience of doctors and healthcare professionals, increasing your market reach and engagement.​</li>
+                    <li>Save time and resources by conducting virtual presentations, eliminating the need for travel and logistics.​</li>
+                    <li> Gather valuable insights and feedback from doctors, helping to improve your products and strategies.​</li>
+                    <li>Utilize valuable feedback and insights gathered from your presentations to refine your sales strategies and drive product adoption.​</li>
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
       {/* Marquee with Images */}
       <div className="flex flex-col items-center px-16 pt-7 pb-12 w-full text-4xl mt-10 font-semibold text-center text-indigo-800 bg-white max-md:px-5 max-md:max-w-full">
         <div className="flex flex-col max-w-full w-[905px]">

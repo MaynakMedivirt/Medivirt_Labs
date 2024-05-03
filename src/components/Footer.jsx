@@ -24,10 +24,10 @@ const Footer = () => {
                       <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/">Home</a>
                     </li>
                     <li>
-                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="">Doctor</a>
+                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/doctorlist">Doctor</a>
                     </li>
                     <li>
-                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="https://www.github.com/creativetimofficial?ref=njs-profile">Company</a>
+                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="">Company</a>
                     </li>
                     <li>
                       <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/price">Pricing</a>
@@ -41,10 +41,10 @@ const Footer = () => {
                       <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/signup">Join Us</a>
                     </li>
                     <li>
-                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="https://creative-tim.com/terms?ref=njs-profile">Terms &amp; Conditions</a>
+                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="">Terms &amp; Conditions</a>
                     </li>
                     <li>
-                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="https://creative-tim.com/privacy?ref=njs-profile">Privacy Policy</a>
+                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="#">Privacy Policy</a>
                     </li>
                   </ul>
                 </div>
@@ -99,7 +99,7 @@ const Footer = () => {
           {/* Right section */}
           <div className="w-full lg:w-1/3 px-4 lg:px-10 mt-5 lg:mt-0 text-center lg:text-right">
             <div className="text-lg font-bold text-white mb-4">Contact Us</div>
-            <div className="text-sm font-medium text-white">
+            <div className="text-sm font-medium text-white mt-6">
               Better yet, see us in person!
               <br />
               MEDIVIRT LABS PVT LTD

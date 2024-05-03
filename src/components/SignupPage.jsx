@@ -8,6 +8,7 @@ import { FcGoogle } from 'react-icons/fc';
 import Header from './Header';
 import Footer from './Footer';
 import { PiSignIn } from 'react-icons/pi';
+import MedivirtLogo from '../assets/img/Medivirt.png'
 
 import { firebaseConfig } from '../components/firebase';
 
@@ -124,7 +125,7 @@ const SignupPage = () => {
               <div className="mt-[6rem] ml-10 mr-10">
                 <img
                   loading="lazy"
-                  srcSet="./src/assets/img/Medivirt.png"
+                  srcSet= {MedivirtLogo}
                   className="max-w-full aspect-[7.14] w-[156px] mb-[5rem]"
                 />
                 <h1 className="text-2xl xl:text-3xl font-semibold text-[#FFF]">

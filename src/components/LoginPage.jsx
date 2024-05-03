@@ -9,7 +9,7 @@ import { PiSignIn } from "react-icons/pi";
 import Header from './Header';
 import Footer from './Footer';
 import signupImage from '../assets/img/login-signup.jpg';
-
+import MedivirtLogo from '../assets/img/Medivirt.png'
 import { firebaseConfig } from '../components/firebase'; 
 
 const app = initializeApp(firebaseConfig);
@@ -76,7 +76,7 @@ const LoginPage = () => {
           <div className="hidden bg-[#7191e6] md:flex md:w-[60%] rounded-l-lg">
             <div className="w-full bg-contain bg-no-repeat" style={{ backgroundImage: `url(${signupImage})`, height: '900px' }}>
               <div className="mt-[6rem] ml-10 mr-10">
-                <img loading="lazy" srcSet="./src/assets/img/Medivirt.png" className="max-w-full aspect-[7.14] w-[156px] mb-[5rem]" alt="Medivirt Logo" />
+                <img loading="lazy" srcSet= {MedivirtLogo} className="max-w-full aspect-[7.14] w-[156px] mb-[5rem]" alt="Medivirt Logo" />
                 <h1 className="text-2xl xl:text-3xl font-semibold text-[#FFF]">Login as {role}</h1>
                 <p className="text-lg mt-3 text-[#fff]">Welcome back to MEDIVIRT! Sign in to your account</p>
               </div>
