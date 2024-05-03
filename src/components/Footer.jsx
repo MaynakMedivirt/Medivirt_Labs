@@ -2,6 +2,7 @@ import React from 'react';
 import { FaFacebookF, FaLinkedin, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import  MedivirtLogo from '../assets/img/Medivirt.png'
+import { NavLink } from 'react-router-dom';
 
 const Footer = () => {
   const handleSubscribe = (e) => {
@@ -21,16 +22,16 @@ const Footer = () => {
                   <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2 text-white">Useful Links</span>
                   <ul className="list-unstyled">
                     <li>
-                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/">Home</a>
+                      <NavLink to='/' className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm">Home</NavLink>
                     </li>
                     <li>
-                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/doctorlist">Doctor</a>
+                      <NavLink to='/doctorlist' className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/doctorlist">Doctor</NavLink>
                     </li>
                     <li>
-                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/">Company</a>
+                      <NavLink to='/' className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/">Company</NavLink>
                     </li>
                     <li>
-                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/price">Pricing</a>
+                      <NavLink to='/price' className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/price">Pricing</NavLink>
                     </li>
                   </ul>
                 </div>
@@ -38,13 +39,13 @@ const Footer = () => {
                   <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2 text-white">Other Resources</span>
                   <ul className="list-unstyled">
                     <li>
-                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/signup">Join Us</a>
+                      <NavLink to='/signup' className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/signup">Join Us</NavLink>
                     </li>
                     <li>
-                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="">Terms &amp; Conditions</a>
+                      <NavLink to='/' className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="">Terms &amp; Conditions</NavLink>
                     </li>
                     <li>
-                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="#">Privacy Policy</a>
+                      <NavLink to='/' className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="#">Privacy Policy</NavLink>
                     </li>
                   </ul>
                 </div>
