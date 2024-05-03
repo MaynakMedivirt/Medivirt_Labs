@@ -27,7 +27,7 @@ const Footer = () => {
                       <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/doctorlist">Doctor</a>
                     </li>
                     <li>
-                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="">Company</a>
+                      <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/">Company</a>
                     </li>
                     <li>
                       <a className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/price">Pricing</a>

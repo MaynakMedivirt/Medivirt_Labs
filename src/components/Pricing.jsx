@@ -105,7 +105,7 @@ const Pricing = () => {
                 />
                 <div className="flex-auto">only domestic</div>
               </div>
-              <div className="flex flex-col justify-center self-start mt-10 text-lg font-semibold text-center text-white capitalize bg-indigo-800">
+              <div className="flex flex-col justify-center self-start mt-[5rem] text-lg font-semibold text-center text-white capitalize bg-indigo-800">
                 <div className="justify-center px-6 py-3.5 bg-indigo-400">
                   setup fee : rs. 4499/-
                 </div>
@@ -175,9 +175,9 @@ const Pricing = () => {
                 />
                 <div className="flex-auto">Domestic and International both.</div>
               </div>
-              <div className="flex flex-col justify-center self-start mt-10 text-lg font-semibold text-center text-white capitalize bg-indigo-800">
+              <div className="flex flex-col justify-center self-start mt-[2.5rem] text-lg font-semibold text-center text-white capitalize bg-indigo-800">
                 <div className="justify-center px-7 py-3.5 bg-indigo-400">
-                  setup fee : rs. 4499/-
+                  setup fee : rs. 3999/-
                 </div>
               </div>
             </div>
@@ -247,7 +247,7 @@ const Pricing = () => {
               </div>
               <div className="flex flex-col justify-center self-start mt-10 text-lg font-semibold text-center text-white capitalize bg-indigo-800">
                 <div className="justify-center px-7 py-3.5 bg-indigo-400">
-                  setup fee : rs. 4499/-
+                  setup fee : rs. 2999/-
                 </div>
               </div>
             </div>
@@ -317,7 +317,7 @@ const Pricing = () => {
               </div>
               <div className="flex flex-col justify-center self-start mt-10 ml-3 text-lg font-semibold text-center text-white capitalize bg-indigo-800">
                 <div className="justify-center px-6 py-3.5 bg-indigo-400">
-                  setup fee : rs. 4499/-
+                  setup fee : rs. 1999/-
                 </div>
               </div>
             </div>
