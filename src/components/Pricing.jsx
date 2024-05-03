@@ -114,7 +114,7 @@ const Pricing = () => {
             <div className="flex flex-col border mt-4 px-10 py-12 text-base bg-white rounded-xl shadow-sm max-w-[329px] text-zinc-500">
               <div className="text-4xl font-bold text-indigo-400">STANDARD</div>
               <div className="mt-4 leading-5 capitalize">
-              FOR ESTABLISHED STARTUPS- 10 CREDITS
+              FOR ESTABLISHED STARTUPS - 10 CREDITS
               </div>
               <div className="mt-4 text-5xl font-bold leading-10 text-indigo-400">
                 Rs. 2999/-
@@ -184,7 +184,7 @@ const Pricing = () => {
             <div className="flex flex-col border px-10 py-12 text-base bg-[#F9EDEF] rounded-xl shadow-sm max-w-[329px] text-zinc-500 mb-[2rem]"> {/* Add custom class and margin-top */}
               <div className="text-4xl font-bold text-indigo-400">ECONOMY</div>
               <div className="mt-4 leading-5 capitalize">
-              FOR ESTABLISED COMPANIES- 25
+              FOR ESTABLISED COMPANIES - 25 CREDITS
               </div>
               <div className="mt-4 text-5xl font-bold leading-10 text-indigo-400">
               5999/-
@@ -254,7 +254,7 @@ const Pricing = () => {
             <div className="flex flex-col border  px-10 py-12 mt-4 text-base bg-white rounded-xl shadow-sm max-w-[329px] text-zinc-500">
               <div className="text-4xl font-bold text-indigo-400">ADVANCE</div>
               <div className="mt-4 leading-5 capitalize">
-              FOR ESTABLISED COMPANIES-35 
+              FOR ESTABLISED COMPANIES - 35 CREDITS
               </div>
               <div className="mt-4 text-5xl font-bold leading-10 text-indigo-400">
                 Rs. 9999/-
