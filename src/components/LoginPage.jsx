@@ -21,7 +21,6 @@ const LoginPage = () => {
   const [role, setRole] = useState('company');
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
-  const { currentUser } = useAuth()
   const auth = getAuth(); // Initialize auth here
   // const currentUser=auth.currentUser
 
@@ -39,7 +38,7 @@ const LoginPage = () => {
     try {
       
         await signInWithEmailAndPassword(auth, email, password);
-        if(currentUser.emailVerified){
+        if(auth.currentUser.emailVerified){
           setShowPopup(true);
           setTimeout(() => {
             redirectToDashboard();
