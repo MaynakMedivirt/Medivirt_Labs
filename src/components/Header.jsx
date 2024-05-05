@@ -3,23 +3,25 @@ import { AiOutlineMenu, AiOutlineUser } from 'react-icons/ai';
 import { NavLink, useLocation } from 'react-router-dom';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../components/firebase'; 
-
+import { useAuth } from './AuthContext';
 import MedivirtLogo from '../assets/img/Medivirt.png'
 
 const Header = () => {
   const location = useLocation();
-  const [currentUser, setCurrentUser] = useState(null);
+  // const [currentUser, setCurrentUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const {currentUser} = useAuth()
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, user => {
+  //     setCurrentUser(user);
+  //   });
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
-      setCurrentUser(user);
-    });
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, []);
 
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  // console.log(currentUser)
 
   const closeMenu = () => {
     setMenuOpen(false);
@@ -28,7 +30,6 @@ const Header = () => {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        setCurrentUser(null);
         console.log('User logged out successfully.');
         window.location.href = '/';
       })
@@ -65,9 +66,9 @@ const Header = () => {
           PRICING
           {renderIndicator('/price')}
         </NavLink>
-        <NavLink to="/joinnow" className="font-semibold text-white relative" onClick={closeMenu}>
+        <NavLink to="/signup" className="font-semibold text-white relative" onClick={closeMenu}>
           JOIN NOW
-          {renderIndicator('/joinnow')}
+          {renderIndicator('/signup')}
         </NavLink>
       </div>
 
@@ -111,7 +112,7 @@ const Header = () => {
             <NavLink to="/doctorlist" className="text-white" onClick={closeMenu}>DOCTORS</NavLink>
             <NavLink to="/companylist" className="text-white" onClick={closeMenu}>COMPANIES</NavLink>
             <NavLink to="/price" className="text-white" onClick={closeMenu}>PRICING</NavLink>
-            <NavLink to="/joinnow" className="text-white" onClick={closeMenu}>JOIN NOW</NavLink>
+            <NavLink to="/signup" className="text-white" onClick={closeMenu}>JOIN NOW</NavLink>
             {currentUser && (
               <NavLink to="/dashboard" className="text-white" onClick={closeMenu}>Dashboard</NavLink>
             )}

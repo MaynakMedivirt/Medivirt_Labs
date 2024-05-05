@@ -21,12 +21,12 @@ const Pricing = () => {
     <>
       <Header />
       <div
-        className="relative mt-[70px]"
+        className="relative mt-[40px]"
         style={{
           backgroundImage: `url(${Sliderimg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          height: '250px', // Set the height of the banner 
+          height: '170px', // Set the height of the banner 
         }}
       >
         <h2 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-[#3d52a1] text-3xl font-bold font-sans">
@@ -35,7 +35,7 @@ const Pricing = () => {
       </div>
       <section className="bg-white py-5">
         <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
-          <div className="mt-20 text-4xl font-semibold text-center capitalize leading-[54px] text-black max-md:mt-10 max-md:max-w-full">
+          <div className="mt-10 text-4xl font-semibold text-center capitalize leading-[54px] text-black max-md:mt-10 max-md:max-w-full">
             Choose your package and get started - <br />
             it's that easy!
           </div>
@@ -46,7 +46,7 @@ const Pricing = () => {
               <div className="mt-4 leading-5 capitalize">
                 For early startups - 3 CREDITS
               </div>
-              <div className="mt-4 text-5xl font-bold leading-10 text-indigo-400">
+              <div className="mt-[2.2rem] text-5xl font-bold leading-10 text-indigo-400">
                 Rs. 999/-
               </div>
               <div className="flex gap-0.5 mt-11 capitalize">
@@ -105,7 +105,7 @@ const Pricing = () => {
                 />
                 <div className="flex-auto">only domestic</div>
               </div>
-              <div className="flex flex-col justify-center self-start mt-[5rem] text-lg font-semibold text-center text-white capitalize bg-indigo-800">
+              <div className="flex flex-col justify-center self-start mt-[3.9rem] text-lg font-semibold text-center text-white capitalize bg-indigo-800">
                 <div className="justify-center px-6 py-3.5 bg-indigo-400">
                   setup fee : rs. 4499/-
                 </div>

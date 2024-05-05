@@ -116,7 +116,7 @@ const Footer = () => {
         <hr className="my-6 border-blueGray-300" />
         <div className="flex flex-col items-center justify-center md:flex-row md:justify-center">
           <div className="text-sm text-white font-semibold py-1 text-center">
-            COPYRIGHT © <span id="get-current-year">{new Date().getFullYear()} FIRST HELP - ALL RIGHTS RESERVED.</span>
+            COPYRIGHT © <span id="get-current-year">{new Date().getFullYear()} MEDIVIRT LABS - ALL RIGHTS RESERVED.</span>
             <p className='mt-5'>POWERED BY MEDIVIRT</p>
           </div>
         </div>

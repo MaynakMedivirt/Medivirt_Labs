@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { useAuth } from './AuthContext';
@@ -21,8 +21,9 @@ const LoginPage = () => {
   const [role, setRole] = useState('company');
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
+  const { currentUser } = useAuth()
   const auth = getAuth(); // Initialize auth here
+  // const currentUser=auth.currentUser
 
   auth.languageCode = 'en';
 
@@ -30,18 +31,23 @@ const LoginPage = () => {
     navigate('/home');
   };
 
+ 
+  // console.log(auth)
+
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      if (currentUser.emailVerified) {
+      
         await signInWithEmailAndPassword(auth, email, password);
-        setShowPopup(true);
-        setTimeout(() => {
-          redirectToDashboard();
-        }, 3000);
-      } else {
-        alert("Email not verified!");
-      }
+        if(currentUser.emailVerified){
+          setShowPopup(true);
+          setTimeout(() => {
+            redirectToDashboard();
+          }, 3000);
+        }
+        else{
+          alert("Email not verified!")
+        }
     } catch (error) {
       console.error('Error signing in:', error.message);
       alert('Failed to sign in. Please check your credentials and try again.');

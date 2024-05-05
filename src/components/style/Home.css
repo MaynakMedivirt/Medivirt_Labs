@@ -78,6 +78,27 @@ li {
   white-space: pre-line;
 }
 
+.hover-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.hover-container .hover-overlay {
+  position: absolute;
+  bottom: 0; /* Initially, place the overlay at the bottom */
+  left: 0;
+  right: 0;
+  height: 100%; /* Make the overlay cover the entire container */
+  background-color: rgb(255, 255, 255); /* Same color as the card */
+  opacity: 20;
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Transition opacity and transform */
+  transform: translateY(100%); /* Initially, move the overlay below the container */
+}
+
+.hover-container:hover .hover-overlay {
+  transform: translateY(0); /* Slide the overlay up from the bottom on hover */
+  opacity: 1; /* Adjust the opacity as desired */
+}
 /* Responsive styles */
 @media screen and (max-width: 768px) {
   .hover-overlay {
@@ -89,4 +110,13 @@ li {
   .hover-overlay {
     padding: 10px;
   }
+}
+@media (max-width: 768px) {
+  .slick-slide {
+    margin: 0 auto; /* Center the slides */
+  }
+}
+/* Add padding to create space between cards */
+.slick-slide {
+  padding: 0 10px; /* Adjust the padding as needed */
 }

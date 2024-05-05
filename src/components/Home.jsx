@@ -123,8 +123,8 @@ const Home = () => {
                   They create profiles detailing their specialities, <br />
                   areas of interest, and preferred meeting times.
                 </div>
-                <button className="flex gap-0.5 justify-center self-start px-5 py-3.5 mt-12 text-sm font-medium leading-5 text-indigo-800 border border-indigo-800 border-solid max-md:px-5 max-md:mt-10">
-                  <div className="grow my-auto">Register Now</div>
+                <button className="flex gap-0.5 justify-center self-start px-5 py-3.5 mt-[5.1rem] text-sm font-medium leading-5 text-indigo-800 border border-indigo-800 border-solid max-md:px-5 max-md:mt-10">
+                  <div className="grow my-auto">Book an Online Meeting</div>
                   <img
                     loading="lazy"
                     src="https://cdn.builder.io/api/v1/image/assets/TEMP/e95b5401bbc073fb293ada4aad809ecadc6202fd77aebedc576925d98a1c1bd1?"
@@ -291,160 +291,183 @@ const Home = () => {
           Tailored Process for Healthcare Companies and professionals
         </div>
         <div className="flex flex-col self-stretch px-20 mt-6 w-full max-md:px-5 max-md:max-w-full">
-          <Slider {...settings}>
-            <div className="ml-5" style={{ marginRight: "20px" }}>
-              <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
-                <div className="flex flex-col">
-                  <div className="text-xl leading-5">Scheduling Meetings</div>
-                  <div className="mt-14 text-base leading-5 text-zinc-500 max-md:mt-10">
-                    Medical sales reps initiate meeting requests, specifying
-                    preferred dates and times.
-                    <br />
-                  </div>
-                  <div className="mt-20 text-lg leading-8 max-md:mt-10">
-                    Learn more
+          {/* Apply negative margin to create space between cards */}
+          <Slider {...settings} className="-mx-5">
+            <div className="ml-5 mr-5 relative">
+              <div className="hover-container">
+                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
+                  <div className="flex flex-col">
+                    <div className="text-2xl py-[6.5rem]  leading-5">
+                      User Registration and Profile Creation
+                    </div>
                   </div>
                 </div>
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/1be6014d039f9aa1761f4b32d1fa07a6231828074f9e482813d4f7d74b2d0beb?"
-                  className="shrink-0 self-end mt-48 border-2 border-solid aspect-[1.67] border-zinc-800 stroke-[2.38px] stroke-zinc-800 w-[25px] max-md:mt-10"
-                />
-              </div>
-            </div>
-            <div className="ml-5" style={{ marginRight: "20px" }}>
-              <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
-                <div className="flex flex-col">
-                  <div className="text-xl leading-5">Scheduling Meetings</div>
-                  <div className="mt-14 text-base leading-5 text-zinc-500 max-md:mt-10">
-                    Medical sales reps initiate meeting requests, specifying
-                    preferred dates and times.
-                    <br />
+                {/* Hover Container */}
+                <div className="hover-overlay absolute flex-col bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full flex justify-center items-center">
+                  {/* Content to show on hover */}
+                  <div className="text-black mb-2">
+                    Users (medical sales reps and doctors) register on the
+                    platform by providing necessary information.
                   </div>
-                  <div className="mt-20 text-lg leading-8 max-md:mt-10">
-                    Learn more
+                  <div className="text-black">
+                    Upon registration, they create profiles detailing their
+                    expertise, specialties, and preferences.
                   </div>
                 </div>
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/1be6014d039f9aa1761f4b32d1fa07a6231828074f9e482813d4f7d74b2d0beb?"
-                  className="shrink-0 self-end mt-48 border-2 border-solid aspect-[1.67] border-zinc-800 stroke-[2.38px] stroke-zinc-800 w-[25px] max-md:mt-10"
-                />
               </div>
             </div>
-            <div className="ml-5" style={{ marginRight: "20px" }}>
-              <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
-                <div className="flex flex-col">
-                  <div className="text-xl leading-5">Scheduling Meetings</div>
-                  <div className="mt-14 text-base leading-5 text-zinc-500 max-md:mt-10">
-                    Medical sales reps initiate meeting requests, specifying
-                    preferred dates and times.
-                    <br />
-                  </div>
-                  <div className="mt-20 text-lg leading-8 max-md:mt-10">
-                    Learn more
+
+            <div className="ml-5 mr-5 relative">
+              <div className="hover-container">
+                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
+                  <div className="flex flex-col">
+                    <div className="text-2xl py-[7.2rem] ml-6 leading-5">
+                      Scheduling Meetings
+                    </div>
                   </div>
                 </div>
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/1be6014d039f9aa1761f4b32d1fa07a6231828074f9e482813d4f7d74b2d0beb?"
-                  className="shrink-0 self-end mt-48 border-2 border-solid aspect-[1.67] border-zinc-800 stroke-[2.38px] stroke-zinc-800 w-[25px] max-md:mt-10"
-                />
-              </div>
-            </div>
-            <div className="ml-5" style={{ marginRight: "20px" }}>
-              <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
-                <div className="flex flex-col">
-                  <div className="text-xl leading-5">Scheduling Meetings</div>
-                  <div className="mt-14 text-base leading-5 text-zinc-500 max-md:mt-10">
+                {/* Hover Container */}
+                <div className="hover-overlay absolute flex-col bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full flex justify-center items-center">
+                  {/* Content to show on hover */}
+                  <div className="text-black mb-2">
                     Medical sales reps initiate meeting requests, specifying
                     preferred dates and times.
-                    <br />
                   </div>
-                  <div className="mt-20 text-lg leading-8 max-md:mt-10">
-                    Learn more
-                  </div>
-                </div>
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/1be6014d039f9aa1761f4b32d1fa07a6231828074f9e482813d4f7d74b2d0beb?"
-                  className="shrink-0 self-end mt-48 border-2 border-solid aspect-[1.67] border-zinc-800 stroke-[2.38px] stroke-zinc-800 w-[25px] max-md:mt-10"
-                />
-              </div>
-            </div>
-            <div className="ml-5" style={{ marginRight: "20px" }}>
-              <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
-                <div className="flex flex-col">
-                  <div className="text-xl leading-5">Scheduling Meetings</div>
-                  <div className="mt-14 text-base leading-5 text-zinc-500 max-md:mt-10">
-                    Medical sales reps initiate meeting requests, specifying
-                    preferred dates and times.
-                    <br />
-                  </div>
-                  <div className="mt-20 text-lg leading-8 max-md:mt-10">
-                    Learn more
+                  <div className="text-black">
+                    Doctors receive meeting requests and can accept, reschedule,
+                    or decline based on their availability.
                   </div>
                 </div>
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/1be6014d039f9aa1761f4b32d1fa07a6231828074f9e482813d4f7d74b2d0beb?"
-                  className="shrink-0 self-end mt-48 border-2 border-solid aspect-[1.67] border-zinc-800 stroke-[2.38px] stroke-zinc-800 w-[25px] max-md:mt-10"
-                />
               </div>
             </div>
-            <div className="ml-5" style={{ marginRight: "20px" }}>
-              <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
-                <div className="flex flex-col">
-                  <div className="text-xl leading-5">Scheduling Meetings</div>
-                  <div className="mt-14 text-base leading-5 text-zinc-500 max-md:mt-10">
-                    Medical sales reps initiate meeting requests, specifying
-                    preferred dates and times.
-                    <br />
-                  </div>
-                  <div className="mt-20 text-lg leading-8 max-md:mt-10">
-                    Learn more
+
+            <div className="ml-5 mr-5 relative">
+              <div className="hover-container">
+                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
+                  <div className="flex flex-col">
+                    <div className="text-2xl py-[7.2rem] ml-10 leading-5">
+                      Virtual Meetings
+                    </div>
                   </div>
                 </div>
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/1be6014d039f9aa1761f4b32d1fa07a6231828074f9e482813d4f7d74b2d0beb?"
-                  className="shrink-0 self-end mt-48 border-2 border-solid aspect-[1.67] border-zinc-800 stroke-[2.38px] stroke-zinc-800 w-[25px] max-md:mt-10"
-                />
-              </div>
-            </div>
-            <div className="ml-5" style={{ marginRight: "20px" }}>
-              <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
-                <div className="flex flex-col">
-                  <div className="text-xl leading-5">Scheduling Meetings</div>
-                  <div className="mt-14 text-base leading-5 text-zinc-500 max-md:mt-10">
-                    Medical sales reps initiate meeting requests, specifying
-                    preferred dates and times.
-                    <br />
+                {/* Hover Container */}
+                <div className="hover-overlay absolute flex-col items-start bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full flex justify-center">
+                  {/* Content to show on hover */}
+                  <div className="text-black mb-2">
+                    Document Sharing and Collaboration:{" "}
                   </div>
-                  <div className="mt-20 text-lg leading-8 max-md:mt-10">
-                    Learn more
+                  <div className="text-black mb-2">
+                    Doctors can review and collaborate on documents in
+                    real-time, if necessary.{" "}
                   </div>
                 </div>
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/1be6014d039f9aa1761f4b32d1fa07a6231828074f9e482813d4f7d74b2d0beb?"
-                  className="shrink-0 self-end mt-48 border-2 border-solid aspect-[1.67] border-zinc-800 stroke-[2.38px] stroke-zinc-800 w-[25px] max-md:mt-10"
-                />
               </div>
             </div>
-            {/* Add more cards here */}
+
+            <div className="ml-5 mr-5 relative">
+              <div className="hover-container">
+                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
+                  <div className="flex flex-col">
+                    <div className="text-2xl py-[6.6rem] ml-10 leading-5">
+                      Document Sharing and Collaboration
+                    </div>
+                  </div>
+                </div>
+                {/* Hover Container */}
+                <div className="hover-overlay absolute flex-col bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full flex justify-center items-center">
+                  {/* Content to show on hover */}
+                  <div className="text-black mb-2">
+                    After the meeting, reps can send follow-up emails or
+                    messages to doctors, addressing any additional questions or
+                    concerns.
+                  </div>
+                  <div className="text-black">
+                    Doctors can provide feedback on the meeting experience and
+                    the presented products through the platform's feedback
+                    system.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="ml-5 mr-5 relative">
+              <div className="hover-container">
+                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
+                  <div className="flex flex-col">
+                    <div className="text-2xl py-[6.6rem] ml-10 leading-5">
+                      Follow-up and Feedback
+                    </div>
+                  </div>
+                </div>
+                {/* Hover Container */}
+                <div className="hover-overlay absolute flex-col bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full flex justify-center items-center">
+                  {/* Content to show on hover */}
+                  <div className="text-black mb-2">
+                    After the meeting, reps can send follow-up emails or
+                    messages to doctors, addressing any additional questions or
+                    concerns.
+                  </div>
+                  <div className="text-black">
+                    Doctors can provide feedback on the meeting experience and
+                    the presented products through the platform's feedback
+                    system.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="ml-5 mr-5 relative">
+              <div className="hover-container">
+                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
+                  <div className="flex flex-col">
+                    <div className="text-2xl py-[6.6rem] ml-10 leading-5">
+                      Data Security and Compliance
+                    </div>
+                  </div>
+                </div>
+                {/* Hover Container */}
+                <div className="hover-overlay absolute flex-col bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full flex justify-center items-center">
+                  {/* Content to show on hover */}
+                  <div className="text-black mb-2">
+                    The platform ensures data security by encrypting sensitive
+                    information and implementing access controls.
+                  </div>
+                  <div className="text-black">
+                    Compliance with healthcare regulations, such as HIPAA
+                    (Health Insurance Portability and Accountability Act), is
+                    maintained to safeguard patient information.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="ml-5 mr-5 relative">
+              <div className="hover-container">
+                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
+                  <div className="flex flex-col">
+                    <div className="text-2xl py-[6.6rem] ml-10 leading-5">
+                      Monitoring and Analytics
+                    </div>
+                  </div>
+                </div>
+                {/* Hover Container */}
+                <div className="hover-overlay absolute flex-col bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full flex justify-center items-center">
+                  {/* Content to show on hover */}
+                  <div className="text-black mb-2">
+                    Platform administrators monitor user activity and platform
+                    performance.
+                  </div>
+                  <div className="text-black">
+                    Analytics tools track metrics such as meeting attendance,
+                    engagement levels, and user satisfaction to assess the
+                    platform's effectiveness.
+                  </div>
+                </div>
+              </div>
+            </div>
           </Slider>
-          <div className="flex z-10 gap-6 justify-between self-end mt-7 mr-44 max-w-full w-[544px] max-md:flex-wrap max-md:mr-2.5">
-            <div>
-              <button id="left">
-                <img src={left} alt="Previous" />
-              </button>
-              <button id="right">
-                <img src={right} alt="Next" />
-              </button>
-            </div>
-          </div>
-          <div className="flex gap-5 justify-between items-start mt-6 w-full max-md:flex-wrap max-md:pr-5 max-md:max-w-full">
+          {/* Add some margin between the Slider and the "learn more" section */}
+          <div className="mt-10 flex gap-5 mb-5 justify-between items-start w-full max-md:flex-wrap max-md:pr-5 max-md:max-w-full">
             <div className="flex gap-5 justify-center items-center self-start px-4 py-6 text-base font-bold text-center text-white uppercase bg-indigo-800 tracking-[2px]">
               <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />
               <div className="flex-auto self-stretch">learn more</div>
@@ -455,7 +478,7 @@ const Home = () => {
       </div>
       <div className="flex justify-center items-center px-16 py-16 w-full bg-white max-md:px-5 max-md:max-w-full">
         <div className="flex flex-col w-full max-w-[1232px] max-md:max-w-full">
-          <div className="self-center text-4xl font-semibold tracking-wider leading-10 text-center text-indigo-800 capitalize">
+          <div className="self-center text-4xl font-semibold font-sans tracking-wider leading-10 text-center text-indigo-800 capitalize">
             Explore Medivirt
           </div>
           <div className="mt-12 max-md:mt-10 max-md:max-w-full">

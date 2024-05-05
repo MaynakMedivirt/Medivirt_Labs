@@ -7,6 +7,7 @@ import signupImage from '../assets/img/login-signup.jpg';
 import { FcGoogle } from 'react-icons/fc';
 import Header from './Header';
 import Footer from './Footer';
+import { TbEye, TbEyeClosed } from "react-icons/tb";
 import { PiSignIn } from 'react-icons/pi';
 import MedivirtLogo from '../assets/img/Medivirt.png'
 
@@ -26,6 +27,7 @@ const SignupPage = () => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [setErrorMessage] = useState('');
   const [errorField, setErrorField] = useState('');
+  const [showPassword, setShowPassword] = useState(false); 
 
   const navigate = useNavigate();
 
@@ -198,19 +200,33 @@ const SignupPage = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+             <div className="relative w-full"> {/* Password input wrapper with relative position */}
+                <input
+                  className="w-full px-5 py-5 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                {/* Password visibility toggle icon */}
+                {showPassword ? (
+                  <TbEyeClosed 
+                    className="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
+                    onClick={() => setShowPassword(false)}
+                  />
+                ) : (
+                  <TbEye
+                    className="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
+                    onClick={() => setShowPassword(true)}
+                  />
+                )}
+              </div>
             <input
-              className="w-full px-3 py-5 mb-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+              className="w-full px-3 py-5 mb-4 mt-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
               type="tel"
               placeholder="Phone Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-            />
-            <input
-              className="w-full px-3 py-5 mb-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
             />
             {/* Sign up button */}
             <button
