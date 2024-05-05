@@ -37,7 +37,7 @@ const App = () => {
 
   return (
     <AuthProvider>
-      <BrowserRouter basename="/path">
+      <BrowserRouter>
       <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />

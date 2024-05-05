@@ -92,6 +92,15 @@ const Footer = () => {
                         Privacy Policy
                       </NavLink>
                     </li>
+                    <li>
+                      <NavLink
+                        to="/admin"
+                        className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm"
+                        href="/admin"
+                      >
+                        Admin
+                      </NavLink>
+                    </li>
                   </ul>
                 </div>
               </div>
