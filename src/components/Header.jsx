@@ -80,7 +80,7 @@ const Header = () => {
               <AiOutlineUser className="w-6 h-6 text-white cursor-pointer" onClick={() => setMenuOpen(!menuOpen)} />
               {menuOpen && (
                 <div className="absolute right-0 mt-2 w-40 bg-white rounded shadow z-10">
-                  <p className="p-2">Logged in as: {currentUser.name || currentUser.email}</p>
+                  <p className="p-2">Logged in as: {currentUser.email}</p>
                   <hr />
                   <NavLink to="/dashboard" className="block w-full text-left p-2 hover:bg-gray-200" onClick={closeMenu}>Dashboard</NavLink>
                   <button className="block w-full text-left p-2 hover:bg-gray-200" onClick={handleLogout}>Logout</button>

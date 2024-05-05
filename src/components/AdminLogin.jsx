@@ -13,8 +13,8 @@ const AdminLogin = () => {
     const handleLogin = (e) => {
         e.preventDefault();
 
-        const adminEmail = 'admin@gmail.com';
-        const adminPassword = '12345678';
+        const adminEmail = 'meet@medivirt.com';
+        const adminPassword = 'Medivirt@meet.2024';
 
         if (email === adminEmail && password === adminPassword) {
             navigate('/adminDash');

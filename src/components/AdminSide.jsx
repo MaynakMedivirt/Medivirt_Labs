@@ -21,7 +21,7 @@ const AdminSide = () => {
       <div
         className={`${
           open ? "w-72" : "w-20"
-        } fixed top-0 left-0 bg-white shadow-2xl h-screen p-5 pt-8 relative duration-300`}
+        } top-0 left-0 bg-white shadow-2xl h-screen p-5 pt-8 relative duration-300`}
       >
         {/* Toggle Button */}
         <div
@@ -45,7 +45,7 @@ const AdminSide = () => {
           {Menus.map((menu, index) => (
             <li
               key={index}
-              className={`flex items-center py-3 px-4 cursor-pointer hover:bg-gray-100 rounded-md ${
+              className={`flex items-center py-3 px-4 cursor-pointer text-black hover:bg-gray-100 rounded-md ${
                 index === 0 && "bg-gray-100"
               }`}
             >
