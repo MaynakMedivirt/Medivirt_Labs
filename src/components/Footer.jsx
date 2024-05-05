@@ -1,13 +1,13 @@
-import React from 'react';
-import { FaFacebookF, FaLinkedin, FaInstagram, FaTwitter } from 'react-icons/fa';
-import { FaXTwitter } from 'react-icons/fa6';
-import  MedivirtLogo from '../assets/img/Medivirt.png'
-import { NavLink } from 'react-router-dom';
+import React from "react";
+import { FaLinkedin, FaInstagram } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import MedivirtLogo from "../assets/img/Medivirt.png";
+import { NavLink } from "react-router-dom";
 
 const Footer = () => {
   const handleSubscribe = (e) => {
     e.preventDefault();
-    alert('Subscribed successfully!');
+    alert("Subscribed successfully!");
   };
 
   return (
@@ -19,33 +19,78 @@ const Footer = () => {
             <div className="w-full lg:max-w-lg">
               <div className="flex flex-wrap items-top mb-6 justify-center">
                 <div className="w-full lg:w-[170px] px-4">
-                  <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2 text-white">Useful Links</span>
+                  <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2 text-white">
+                    Useful Links
+                  </span>
                   <ul className="list-unstyled">
                     <li>
-                      <NavLink to='/' className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm">Home</NavLink>
+                      <NavLink
+                        to="/"
+                        className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm"
+                      >
+                        Home
+                      </NavLink>
                     </li>
                     <li>
-                      <NavLink to='/doctorlist' className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/doctorlist">Doctor</NavLink>
+                      <NavLink
+                        to="/doctorlist"
+                        className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm"
+                        href="/doctorlist"
+                      >
+                        Doctor
+                      </NavLink>
                     </li>
                     <li>
-                      <NavLink to='/' className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/">Company</NavLink>
+                      <NavLink
+                        to="/"
+                        className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm"
+                        href="/"
+                      >
+                        Company
+                      </NavLink>
                     </li>
                     <li>
-                      <NavLink to='/price' className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/price">Pricing</NavLink>
+                      <NavLink
+                        to="/price"
+                        className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm"
+                        href="/price"
+                      >
+                        Pricing
+                      </NavLink>
                     </li>
                   </ul>
                 </div>
                 <div className="w-full lg:w-[170px] px-4">
-                  <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2 text-white">Other Resources</span>
+                  <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2 text-white">
+                    Other Resources
+                  </span>
                   <ul className="list-unstyled">
                     <li>
-                      <NavLink to='/signup' className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="/signup">Join Us</NavLink>
+                      <NavLink
+                        to="/signup"
+                        className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm"
+                        href="/signup"
+                      >
+                        Join Us
+                      </NavLink>
                     </li>
                     <li>
-                      <NavLink to='/' className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="">Terms &amp; Conditions</NavLink>
+                      <NavLink
+                        to="/"
+                        className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm"
+                        href=""
+                      >
+                        Terms &amp; Conditions
+                      </NavLink>
                     </li>
                     <li>
-                      <NavLink to='/' className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm" href="#">Privacy Policy</NavLink>
+                      <NavLink
+                        to="/"
+                        className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm"
+                        href="#"
+                      >
+                        Privacy Policy
+                      </NavLink>
                     </li>
                   </ul>
                 </div>
@@ -57,26 +102,29 @@ const Footer = () => {
           <div className="w-full lg:w-1/3 flex flex-col justify-center items-center px-3 lg:text-center mb-8">
             <img
               alt="Medivirt"
-              className='max-w-full w-[170px] mx-auto'
+              className="max-w-full w-[170px] mx-auto"
               src={MedivirtLogo}
             />
             <div className="mt-5 text-white">
               Follow us on these platforms for more updates!
             </div>
             <div className="mt-6 mb-8 relative">
-              <form onSubmit={handleSubscribe} className="flex flex-col md:flex-row items-center md:items-start">
+              <form
+                onSubmit={handleSubscribe}
+                className="flex flex-col md:flex-row items-center md:items-start"
+              >
                 <div className="relative flex-grow w-full">
                   <div className="relative">
                     <input
                       type="email"
                       placeholder="Your Email"
-                      className="bg-white border border-gray-300 rounded-md py-3 px-4 pr-40 focus:outline-none focus:border-indigo-500"
+                      className="bg-white border border-gray-300 py-3 px-4 pr-40 focus:outline-none focus:border-indigo-500"
                       required
                     />
                     <button
                       type="submit"
-                      className="bg-indigo-600 text-white absolute top-0 right-0 h-full py-3 px-4 rounded-r-md"
-                      style={{ height: '100%' }}
+                      className="bg-indigo-600 text-white absolute top-0 right-0 h-full py-3 px-4"
+                      style={{ height: "100%" }}
                     >
                       Subscribe
                     </button>
@@ -86,13 +134,13 @@ const Footer = () => {
             </div>
             <div className="flex justify-center lg:justify-start space-x-4 mb-6 text-white">
               <a href="https://twitter.com/medivirt">
-                <FaXTwitter className='w-5 h-5' />
+                <FaXTwitter className="w-5 h-5" />
               </a>
               <a href="https://www.instagram.com/medivirt">
-                <FaInstagram className='w-5 h-5' />
+                <FaInstagram className="w-5 h-5" />
               </a>
               <a href="https://www.linkedin.com/company/medivirt-labs/?originalSubdomain=in">
-                <FaLinkedin className='w-5 h-5' />
+                <FaLinkedin className="w-5 h-5" />
               </a>
             </div>
           </div>
@@ -100,14 +148,19 @@ const Footer = () => {
           {/* Right section */}
           <div className="w-full lg:w-1/3 px-4 lg:px-10 mt-5 lg:mt-0 text-center lg:text-right">
             <div className="text-lg font-bold text-white mb-4">Contact Us</div>
-            <div className="text-sm font-medium text-white mt-6">
+            <div
+              className="text-sm font-medium text-white mt-6"
+              style={{ lineHeight: "2.5" }}
+            >
               Better yet, see us in person!
               <br />
               MEDIVIRT LABS PVT LTD
               <br />
               Bangalore, Karnataka, India
               <br />
-              <a className=''>meet@medivirt.com</a>
+              <a href="mailto:meet@medivirt.com" className="">
+                meet@medivirt.com
+              </a>
             </div>
           </div>
         </div>
@@ -116,8 +169,11 @@ const Footer = () => {
         <hr className="my-6 border-blueGray-300" />
         <div className="flex flex-col items-center justify-center md:flex-row md:justify-center">
           <div className="text-sm text-white font-semibold py-1 text-center">
-            COPYRIGHT © <span id="get-current-year">{new Date().getFullYear()} MEDIVIRT LABS - ALL RIGHTS RESERVED.</span>
-            <p className='mt-5'>POWERED BY MEDIVIRT</p>
+            COPYRIGHT ©{" "}
+            <span id="get-current-year">
+              {new Date().getFullYear()} MEDIVIRT LABS - ALL RIGHTS RESERVED.
+            </span>
+            <p className="mt-5">POWERED BY MEDIVIRT</p>
           </div>
         </div>
       </div>

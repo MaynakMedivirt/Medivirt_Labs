@@ -491,7 +491,7 @@ const Home = () => {
                   className="object-cover absolute inset-0 w-full h-full"
                 />
                 <div className="absolute inset-0 flex flex-col justify-center items-center">
-                  <div className="text-white text-4xl">New Features</div>
+                  <div className="text-white text-4xl">New <br /> Features</div>
                 </div>
                 {/* Hover Container */}
                 <div className="hover-overlay absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full flex justify-center items-center">
@@ -525,7 +525,7 @@ const Home = () => {
                   className="object-cover absolute inset-0 w-full h-full"
                 />
                 <div className="absolute inset-0 flex flex-col justify-center items-center">
-                  <div className="text-white text-4xl">Explore Doctors</div>
+                  <div className="text-white text-4xl">Explore <br /> Doctors</div>
                 </div>
                 {/* Hover Container */}
                 <div className="hover-overlay absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full flex justify-center items-center">
@@ -562,7 +562,7 @@ const Home = () => {
                   className="object-cover absolute inset-0 w-full h-full bg-black bg-opacity-20"
                 />
                 <div className="absolute inset-0 flex flex-col justify-center items-center">
-                  <div className="text-white text-4xl">Explore Doctors</div>
+                  <div className="text-white text-4xl">Explore <br /> Companies</div>
                 </div>
                 {/* Hover Container */}
                 <div className="hover-overlay absolute bottom-0 left-0 right-0 bg-black bg-opacity-80 opacity-0 transition-opacity duration-300 pointer-events-none transform translate-y-full flex justify-center items-center">
