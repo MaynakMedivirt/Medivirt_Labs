@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import Header from './Header';
-import Footer from './Footer';
-import { FaCalendar, FaGraduationCap, FaLocationDot, FaStethoscope } from 'react-icons/fa6';
-import { IoMdFemale, IoMdMale } from 'react-icons/io';
-import { MdOutlineScheduleSend } from "react-icons/md";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import Header from "./Header";
+import Footer from "./Footer";
+import Image from "../assets/img/defaultAvatar.png";
+import Banner from "../assets/img/Banner.png";
 
-const DoctorProfile = () => {
+const DoctorProfiles = () => {
   const { id } = useParams();
   const [doctor, setDoctor] = useState(null);
 
@@ -15,26 +14,19 @@ const DoctorProfile = () => {
     const fetchDoctor = async () => {
       try {
         const db = getFirestore();
-        const doctorRef = doc(db, 'doctors', id);
-        const doctorSnapshot = await getDoc(doctorRef);
+        const docRef = doc(db, "doctors", id);
+        const doctorSnapshot = await getDoc(docRef);
         if (doctorSnapshot.exists()) {
           setDoctor({ id: doctorSnapshot.id, ...doctorSnapshot.data() });
         } else {
-          console.log('No such doctor!');
+          console.log("No such doctor");
         }
       } catch (error) {
-        console.error('Error fetching doctor:', error);
+        console.log("Error fetching doctor :", error);
       }
     };
-
     fetchDoctor();
   }, [id]);
-
-  const handleContactMe = () => {
-    if (doctor && doctor.email) {
-      window.location.href = `mailto:${doctor.email}`;
-    }
-  };
 
   if (!doctor) {
     return <div className="text-center">Loading...</div>;
@@ -43,93 +35,177 @@ const DoctorProfile = () => {
   return (
     <>
       <Header />
-      <div className="container mx-auto px-4 md:px-0 xl:max-w-[200rem]">
-        <div className="bg-gray-200 rounded-lg overflow-hidden shadow-lg">
-          <div className="flex flex-col md:flex-row p-6 items-center">
-            <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6 rounded-full">
-              {doctor.image ? (
-                <img
-                  src={doctor.image}
-                  alt={`Profile of ${doctor.name}`}
-                  className="w-32 h-32 md:w-48 md:h-48 rounded-full"
-                />
-              ) : (
-                <div className="w-32 h-32 md:w-48 md:h-48 bg-gray-200 rounded-full flex items-center justify-center">
-                  {/* Placeholder image */}
-                  <img src="../src/assets/img/defaultAvatar.png" alt="Placeholder" />
+      <div className="container mx-auto px-4 md:px-0 xl:max-w-[200rem] my-10">
+        <div className="overflow-hidden mt-[20px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 md:px-10">
+            <div className="col-span-1 md:col-span-2 mt-5">
+              <div
+                className="overflow-hidden"
+                style={{
+                  backgroundImage: `url(${Banner})`,
+                  height: "250px",
+                  backgroundSize: "cover",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center",
+                }}
+              >
+                <div className="flex flex-col md:flex-row p-6 items-center">
+                  <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6 rounded-full">
+                    <div className="w-32 h-32 md:w-48 md:h-48 bg-gray-200 rounded-full flex items-center justify-center">
+                      {doctor.image ? (
+                        <img
+                          src={doctor.image}
+                          alt={`Profile of ${doctor.name}`}
+                          className="w-32 h-32 md:w-48 md:h-48 rounded-full"
+                        />
+                      ) : (
+                        <div className="w-32 h-32 md:w-48 md:h-48 bg-gray-200 rounded-full flex items-center justify-center">
+                          {/* Placeholder image */}
+                          <img src={Image} alt="Placeholder" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="px-6 md:flex-grow">
+                    <h1 className="text-xl font-semibold text-gray-800 mb-2 underline underline-offset-4">
+                      {doctor.name}
+                    </h1>
+                    <p className="text-lg text-gray-600 mb-4">
+                      {doctor.specialist}
+                    </p>
+                    <p className="text-lg text-gray-600 mb-4">
+                      {doctor.currentPosition}
+                    </p>
+                  </div>
                 </div>
-              )}
+              </div>
+
+              <div className="bg-white border-b-2 border-gray-300 mt-5">
+                <h3 className="font-semibold text-xl mb-3">About Doctor</h3>
+                <p className="text-lg text-gray-600 mb-4">{doctor.about}</p>
+              </div>
+
+              <div className="my-[4rem] px-4 md:px-10 border-b-2 border-gray-200 ">
+                <h2 className="font-semibold text-2xl">Experience</h2>
+                {doctor.experience_1 && (
+                  <div className="flex items-center mt-[3rem] mb-[1rem]">
+                    <button className="bg-green-100 text-indigo font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                      A
+                    </button>
+                    <div className="px-5">
+                      <p className="text-lg ml-2 font-semibold text-blue-800">
+                        {doctor.experience_1}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {doctor.experience_2 && (
+                  <div className="flex items-center mt-[3rem] mb-[1rem]">
+                    <button className="bg-green-100 text-indigo font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                      B
+                    </button>
+                    <div className="px-5">
+                      <p className="text-lg ml-2 font-semibold text-blue-800">
+                        {doctor.experience_2}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {doctor.experience_3 && (
+                  <div className="flex items-center mt-[3rem] mb-[1rem]">
+                    <button className="bg-green-100 text-indigo font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                      C
+                    </button>
+                    <div className="px-5">
+                      <p className="text-lg ml-2 font-semibold text-blue-800">
+                        {doctor.experience_3}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="my-[4rem] px-4 md:px-10 ">
+                <h2 className="font-semibold text-2xl">Education</h2>
+                {doctor.education_1 && (
+                  <div className="flex items-center mt-[3rem] mb-[1rem] ">
+                    <button className="bg-green-100 text-indigo font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                      A
+                    </button>
+                    <div className="px-5">
+                      <p className="text-lg ml-2 font-semibold text-blue-800">
+                        {doctor.education_1}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {doctor.education_2 && (
+                  <div className="flex items-center mt-[3rem] mb-[1rem]">
+                    <button className="bg-green-100 text-indigo font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                      B
+                    </button>
+                    <div className="px-5">
+                      <p className="text-lg ml-2 font-semibold text-blue-800">
+                        {doctor.education_2}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {doctor.education_3 && (
+                  <div className="flex items-center mt-[3rem] mb-[1rem]">
+                    <button className="bg-green-100 text-indigo font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                      C
+                    </button>
+                    <div className="px-5">
+                      <p className="text-lg ml-2 font-semibold text-blue-800">
+                        {doctor.education_3}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="px-6 md:flex-grow">
-              <h1 className="text-xl font-semibold text-gray-800 mb-2">{doctor.name}</h1>
-              <p className="text-lg text-gray-600 mb-4">{doctor.specialist}</p>
-              <div className="flex items-center mb-2">
-                <FaLocationDot className="text-gray-600 mr-2 w-5 h-5" />
-                <p className="text-gray-600 mr-8">{doctor.location}</p>
-                <FaCalendar className="text-gray-600 mr-2" />
-                <p className="text-gray-600">{doctor.birthdate}</p>
+            <div className="col-span-1 md:col-span-1">
+              <div className="bg-white border rounded-lg overflow-hidden shadow-lg">
+                {/* <div className="flex flex-col md:flex-row mb-6 ">
+                                    <div className="md:flex-1 md:order-2 mt-6 xl:max-w-[25rem]"> */}
+                <div className="">
+                  <div className="mt-5">
+                    <div className="p-6 md:p-5 md:h-auto">
+                      <div className="flex items-center justify-between mb-5">
+                        <p className="text-lg ">Location:</p>
+                        <p className="text-lg font-semibold">Bangalore</p>
+                      </div>
+                      <hr className="mb-3 border-gray-300"></hr>
+                      <div className="flex items-center justify-between mb-5">
+                        <span className="text-lg">Specialist:</span>
+                        <span className="text-lg font-semibold">
+                          {doctor.specialist}
+                        </span>
+                      </div>
+                      <hr className="mb-3 border-gray-300"></hr>
+                      <div className="flex items-center justify-between mb-5">
+                        <p className="text-lg">Gender: </p>
+                        <p className="text-lg font-semibold">{doctor.gender}</p>
+                      </div>
+                      <hr className="mb-3 border-gray-300"></hr>
+                      <div className="flex items-center justify-center">
+                        <button className="flex gap-1.5 justify-center items-center px-6 py-2 mt-5 text-base font-bold text-center text-white uppercase bg-indigo-800 tracking-[2px] max-md:mt-5">
+                          Schedule Meeting
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      {/* Additional content */}
-      <div className="flex flex-col md:flex-row mb-6 ">
-        <div className="md:flex-1 md:order-2 mt-6 xl:max-w-[25rem]">
-          <div className="p-6 md:p-5 md:h-auto bg-gray-100 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold mb-2">Additional Details:</h2>
-            <div className="flex items-center mb-2">
-              <FaLocationDot className='h-6 w-6 mr-2' />
-              <p className="text-md">Location: {doctor.location}</p>
-            </div>
-            <hr className='mb-3 border-gray-300'></hr>
-            <div className="flex items-center mb-2">
-              {doctor.gender && doctor.gender.toLowerCase() === 'male' ? (
-                <IoMdMale className="h-6 w-6 mr-2 text-blue-500" />
-              ) : (
-                <IoMdFemale className="h-6 w-6 mr-2 text-pink-500" />
-              )}
-              <p className="text-md">Gender: {doctor.gender}</p>
-            </div>
-            <hr className='mb-3 border-gray-300'></hr>
-            <div className="flex items-center mb-2">
-              <FaStethoscope className='h-6 w-6 mr-2' />
-              <span className="text-md mr-2">Specialist: {doctor.specialist}</span>
-            </div>
-            <hr className='mb-3 border-gray-300'></hr>
-            <div className="flex items-center">
-              <FaGraduationCap className='h-6 w-6 mr-2' />
-              <span className="text-md mr-2">Qualification: {doctor.qualification}</span>
-            </div>
-            <hr className='mb-4 border-gray-300 mt-2'></hr>
-            <div className="flex items-center justify-center">
-              <button className='bg-[#333333] hover:bg-gray-500 text-white py-1 px-4 flex items-center'>
-                <span className="mr-2">Schedule Meeting</span>
-                <MdOutlineScheduleSend className='h-5 w-5' />
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="md:flex-1 md:order-1 mt-6 md:mt-0">
-          <div className="p-3 md:p-10 text-gray-700 md:w-[70rem]">
-            <h2 className="text-xl font-semibold mb-2">About:</h2>
-            <p className="text-lg">{doctor.aboutMe}</p>
-          </div>
-          <div className="p-3 md:p-10 text-gray-700 md:w-[70rem]">
-            <h2 className="text-xl font-semibold mb-2">Education:</h2>
-            <h3 className="text-lg font-medium mb-2">10th and 12th greade:</h3>
-            <p className="text-lg">{doctor.e1}.</p>
-          </div>
-          <div className="p-3 md:p-10 text-gray-700 md:w-[70rem]">
-            <h2 className="text-xl font-semibold mb-2">Experience:</h2>
-            <h3 className="text-lg font-medium mb-2">10th and 12th greade:</h3>
-            <p className="text-lg">{doctor.e1}.</p>
-          </div>
-        </div>
-      </div>
+
       <Footer />
     </>
   );
 };
 
-export default DoctorProfile;
+export default DoctorProfiles;

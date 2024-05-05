@@ -36,6 +36,7 @@ const AddDoctor = () => {
   const [comment, setComment] = useState("");
   const [other, setOther] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [gender, setGender] = useState("");
 
   const navigate = useNavigate();
 
@@ -43,50 +44,52 @@ const AddDoctor = () => {
     event.preventDefault();
 
     try {
-        const docRef = await addDoc(collection(db, "doctors"), {
-            name,
-            specialist,
-            currentPosition,
-            location,
-            about,
-            image: imageUrl,
-            experience_1,
-            experience_2,
-            experience_3,
-            education_1,
-            education_2,
-            education_3,
-            comment,
-            other,
-        });
+      const docRef = await addDoc(collection(db, "doctors"), {
+        name,
+        specialist,
+        currentPosition,
+        location,
+        about,
+        image: imageUrl,
+        experience_1,
+        experience_2,
+        experience_3,
+        education_1,
+        education_2,
+        education_3,
+        comment,
+        other,
+        gender,
+      });
 
-        console.log("Document Written with ID : ", docRef.id);
-        alert("Doctor added successfully!");
+      console.log("Document Written with ID : ", docRef.id);
+      alert("Doctor added successfully!");
 
-        // Clear the form fields after successful submission
-        setName("");
-        setSpecialist("");
-        setCurrentPosition("");
-        setLocation("");
-        setAbout("");
-        setExperience_1("");
-        setExperience_2("");
-        setExperience_3("");
-        setEducation_1("");
-        setEducation_2("");
-        setEducation_3("");
-        setComment("");
-        setOther("");
-        setImageUrl("");
+      // Clear the form fields after successful submission
+      setName("");
+      setSpecialist("");
+      setCurrentPosition("");
+      setLocation("");
+      setAbout("");
+      setExperience_1("");
+      setExperience_2("");
+      setExperience_3("");
+      setEducation_1("");
+      setEducation_2("");
+      setEducation_3("");
+      setComment("");
+      setOther("");
+      setImageUrl("");
+      setGender("");
 
-        // Reload the page after 1 seconds
-        setTimeout(() => {
-            window.location.reload();
-        }, 1000);
+      // Reload the page after 1 seconds
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
-        console.log("Error adding document :", error);
+      console.log("Error adding document :", error);
     }
-};
+  };
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) {
@@ -154,6 +157,26 @@ const AddDoctor = () => {
                     className="peer-focus:font-medium absolute text-sm text-black-800 dark:text-black-800 font-bold duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                   >
                     Name
+                  </label>
+                </div>
+                <div className="relative z-0 w-full mb-6 group">
+                  <select
+                    name="gender"
+                    id="gender"
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <label
+                    htmlFor="gender"
+                    className="peer-focus:font-medium absolute text-sm text-black-800 dark:text-black-800 font-bold duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >
+                    Gender
                   </label>
                 </div>
                 <div className="relative z-0 w-full mb-6 group">

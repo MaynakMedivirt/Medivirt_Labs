@@ -57,6 +57,7 @@ const App = () => {
           <Route path='/adminDash/*' element={<AdminDashboard/>}/>
           <Route path='/admin/doctors*' element={<Doctor/>}/>
           <Route path='/add-doctor' element={<AddDoctor/>}/>
+          
 
           {/* Route for the home page */}
           <Route path="*" element={isAuthorized ? <Home /> : <WarningPage />} />
