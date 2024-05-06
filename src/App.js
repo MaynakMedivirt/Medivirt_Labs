@@ -20,6 +20,7 @@ import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
 import Doctor from './components/Doctor';
 import AddDoctor from './components/AddDoctor';
+import EditDoctor from './components/EditDoctor';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -57,6 +58,7 @@ const App = () => {
           <Route path='/adminDash/*' element={<AdminDashboard/>}/>
           <Route path='/admin/doctors*' element={<Doctor/>}/>
           <Route path='/add-doctor' element={<AddDoctor/>}/>
+          <Route path='/edit-doctor/:id' element={<EditDoctor/>}/>
           
 
           {/* Route for the home page */}

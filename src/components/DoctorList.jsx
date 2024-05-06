@@ -60,7 +60,7 @@ const DoctorList = () => {
     (selectedSpecialists.length === 0 || selectedSpecialists.includes(doctor.specialist))
   );
 
-  const totalPages = Math.ceil(filteredDoctors.length / 12);
+  const totalPages = Math.ceil(filteredDoctors.length / 24);
   const startIndex = (currentPage - 1) * 12;
   const endIndex = Math.min(startIndex + 12, filteredDoctors.length);
   const currentDoctors = filteredDoctors.slice(startIndex, endIndex);
