@@ -44,7 +44,9 @@ const AddDoctor = () => {
     event.preventDefault();
 
     try {
-      const docRef = await addDoc(collection(db, "doctors"), {
+      const customId = `${name}_${location}`;
+      const customDocRef = doc(db, "doctors", customId); 
+      await setDoc(customDocRef, {
         name,
         specialist,
         currentPosition,
@@ -62,7 +64,7 @@ const AddDoctor = () => {
         gender,
       });
 
-      console.log("Document Written with ID : ", docRef.id);
+      console.log("Document Written with ID : ", customId);
       alert("Doctor added successfully!");
 
       // Clear the form fields after successful submission
