@@ -55,13 +55,13 @@ const DoctorList = () => {
     "Orthopaedic",
     "Cardiologist",
     "Gynaecologist",
-   "Radiologist",
-   "Dermatologist",
-   "Oncology ",
-   "Neurology",
-   "Urology",
-   "Ophthalmology",
-   "Paediatric",
+    "Radiologist",
+    "Dermatologist",
+    "Oncology ",
+    "Neurology",
+    "Urology",
+    "Ophthalmology",
+    "Paediatric",
   ];
 
   const allLocations = [
@@ -239,7 +239,7 @@ const DoctorList = () => {
       {/* top section */}
       <div className="flex flex-col items-center px-16 pt-6 bg-red-50 max-md:px-5">
         <div className="flex gap-5 justify-between items-start w-full max-w-[1176px] max-md:flex-wrap max-md:max-w-full">
-          <div className="flex flex-col self-start text-base text-neutral-800 max-md:max-w-full mb-4">
+          <div className="flex flex-col self-start lg:ml-[14rem] text-base text-neutral-800 max-md:max-w-full mb-4">
             <div className="text-4xl font-bold font-sans leading-8 max-md:max-w-full">
               Find Your Doctor Here
             </div>
@@ -254,17 +254,16 @@ const DoctorList = () => {
                     className="px-4 py-4 border-gray-300 rounded-md max-md:w-[200px]"
                   />
                 </div>
-                <div className="flex gap-5 justify-center self-stretch px-5 pt-4 pb-2.5 my-auto text-base leading-7 bg-white rounded-lg border border-white border-solid max-md:w-full max-md:mb-4">
+                <div className="flex gap-5 justify-center self-stretch px-5 pt-4 pb-2.5 my-auto text-base leading-7 bg-white rounded-lg border  border-white border-solid max-md:w-full max-md:mb-4">
                   <input
                     type="text"
                     placeholder="City, state, or zip"
                     className="flex-auto py-px"
                   />
-                  <div className="w-2 h-5 bg-gray-400" />
                 </div>
                 <button
                   onClick={() => console.log("Search logic here")}
-                  className="px-10 py-4 bg-[#3D52A1] text-white hover:bg-[7191E6] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                  className="px-10 py-4 bg-[#3D52A1] text-white hover:bg-[7191E6] sm:justify-center focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                 >
                   Search
                 </button>
@@ -273,7 +272,7 @@ const DoctorList = () => {
           </div>
         </div>
       </div>
-      <div className="container  mt-10 flex flex-col lg:flex-row items-start">
+      <div className="container mt-10 flex flex-col lg:flex-row items-start">
         <div className="lg:w-1/4 px-4 hidden md:block">
           <div className="bg-gray-100 p-4">
             <h2 className="text-lg font-semibold mb-2">Filter By Specialist</h2>
@@ -370,37 +369,40 @@ const DoctorList = () => {
           </div>
         </div>
         <div className="w-full lg:w-3/4 px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {currentDoctors.map((doctor, index) => (
-              <div
-                key={index}
-                className="flex flex-col grow px-7 pt-8 pb-2 w-full text-base font-medium text-center bg-white rounded border border-gray-200 border-solid text-neutral-800 max-md:px-5 max-md:mt-8 shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105"
+              <div 
+                key={index} 
+                className="max-w-sm bg-white border border-gray-200 rounded-lg shadow flex flex-col items-center text-center"
               >
+                {/* <a href="#"> */}
                 <img
                   loading="lazy"
                   src={doctor.image || "/src/assets/img/defaultAvatar.png"}
                   alt={`Profile of ${doctor.name}`}
-                  className="self-center aspect-square w-[90px] rounded-full"
+                  className="items-center aspect-square w-[90px] mt-3 rounded-full"
                 />
-                <div className="self-center  mt-7 text-lg leading-7 underline">
-                  {doctor.name}
-                </div>
-                <div className="mt-6">
-                  <div className="justify-center px-9 py-2  text-sm leading-9 bg-violet-100 max-md:px-5">
-                    {doctor.specialist}
+                {/* </a> */}
+                <div className="p-5">
+                  <div className="self-center text-sm font-bold leading-7 underline">
+                    {doctor.name}
                   </div>
+                  <div className="mt-3">
+                    <div className="justify-center py-1 text-sm leading-9 bg-violet-100 max-md:px-5">
+                      {doctor.specialist}
+                    </div>
+                  </div>
+                  <div className="justify-center leading-7 mt-4 border-t border-gray-200 border-solid max-md:pr-5 max-md:pl-7">
+                    <span className="">Location:</span>
+                    <span className=""> {doctor.location}</span>
+                  </div>
+                  <button
+                    onClick={() => handleViewProfile(doctor)}
+                    className="justify-center px-2 py-1 mt-3 font-semibold text-white capitalize bg-indigo-800 tracking-[2px] max-md:px-5 hover:bg-indigo-600"
+                  >
+                    View Profile
+                  </button>
                 </div>
-                <div className="justify-center px-16 py-2 mt-5 leading-7 border-t border-gray-200 border-solid max-md:pr-5 max-md:pl-7">
-                  <span className="">Location:</span>
-                  <br />
-                  <span className="">{doctor.location}</span>
-                </div>
-                <button
-                  onClick={() => handleViewProfile(doctor)}
-                  className="justify-center px-18 py-4 mt-3 font-semibold text-white capitalize bg-indigo-800 tracking-[2px] max-md:px-5 hover:bg-indigo-600"
-                >
-                  View Profile
-                </button>
               </div>
             ))}
           </div>
@@ -427,11 +429,10 @@ const DoctorList = () => {
                       setCurrentPage(index + 1);
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
-                    className={`px-4 py-2 ${
-                      currentPage === index + 1
-                        ? "bg-indigo-400 text-white"
-                        : "bg-white text-neutral-800"
-                    } rounded-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 mx-1`}
+                    className={`px-4 py-2 ${currentPage === index + 1
+                      ? "bg-indigo-400 text-white"
+                      : "bg-white text-neutral-800"
+                      } rounded-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 mx-1`}
                   >
                     {index + 1}
                   </button>
@@ -451,6 +452,8 @@ const DoctorList = () => {
           </div>
         </div>
       </div>
+
+
       <Footer />
     </>
   );

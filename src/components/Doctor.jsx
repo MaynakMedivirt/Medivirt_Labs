@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  deleteDoc,
-} from "firebase/firestore";
+import { getFirestore, collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import AdminSide from "./AdminSide";
@@ -18,7 +12,8 @@ const Doctor = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage] = useState(5); // Number of items per page
+  const [perPage] = useState(25); // Number of items per page
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const { currentUser } = useAuth();
 
@@ -42,6 +37,12 @@ const Doctor = () => {
 
     fetchDoctors();
   }, []);
+
+  // Filter doctors based on searchQuery for name and specialist
+  const filteredDoctors = doctors.filter((doctor) =>
+    doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    doctor.specialist.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleViewProfile = (doctorId) => {
     navigate(`/doctor/${doctorId}`);
@@ -72,13 +73,15 @@ const Doctor = () => {
 
   const indexOfLastDoctor = currentPage * perPage;
   const indexOfFirstDoctor = indexOfLastDoctor - perPage;
-  const currentDoctors = doctors.slice(indexOfFirstDoctor, indexOfLastDoctor);
+  const currentDoctors = filteredDoctors.slice(indexOfFirstDoctor, indexOfLastDoctor);
+
 
   let serialNumber = indexOfFirstDoctor + 1; // Initialize serial number counter
 
   const renderDoctors = currentDoctors.map((doctor) => {
     const sn = serialNumber++;
     return (
+
       <tr
         className="border-b border-gray-200 dark:border-gray-700"
         key={doctor.id}
@@ -124,8 +127,10 @@ const Doctor = () => {
     );
   });
 
+  const totalPages = Math.ceil(filteredDoctors.length / perPage);
+
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(doctors.length / perPage); i++) {
+  for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
 
@@ -149,6 +154,7 @@ const Doctor = () => {
     return <div>Error: {error}</div>;
   }
 
+
   return (
     <div className="flex">
       <AdminSide />
@@ -164,36 +170,72 @@ const Doctor = () => {
               >
                 Add Doctor
               </Link>
+
             </div>
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-5">
-              <thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="text-lg px-6 py-3">
-                    S.N.
-                  </th>
-                  <th
-                    scope="col"
-                    className="text-lg px-6 py-3 bg-gray-50 dark:bg-gray-800"
-                  >
-                    Name
-                  </th>
-                  <th scope="col" className="text-lg px-6 py-3">
-                    Email
-                  </th>
-                  <th
-                    scope="col"
-                    className="text-lg px-6 py-3 bg-gray-50 dark:bg-gray-800"
-                  >
-                    Specialist
-                  </th>
-                  <th scope="col" className="text-lg px-6 py-3">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{renderDoctors}</tbody>
-            </table>
+            <div className="flex justify-end items-center py-2.5 pr-2.5 pl-5 mt-6 bg-white rounded max-md:flex-wrap max-md:max-w-full">
+
+              <div className="flex items-center">
+                <div className="flex flex-col mx-2 justify-center self-stretch my-auto border rounded-md">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by name or specialist"
+                    className="p-2"
+                  />
+                </div>
+                <button
+                  onClick={() => console.log('Search logic here')}
+                  className="p-2 rounded bg-[#11A798] text-white  hover:bg-[7191E6] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+            <div className="overflow-auto mt-3">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase dark:text-gray-400">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-sm tracking-wider"
+                    >
+                      S.N.
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-sm uppercase tracking-wider"
+                    >
+                      Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-sm uppercase tracking-wider"
+                    >
+                      Email
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-sm uppercase tracking-wider"
+                    >
+                      Specialist
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-sm uppercase tracking-wider"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">{renderDoctors}</tbody>
+              </table>
+            </div>
+
             <div>{renderPageNumbers}</div>
+            <div className="text-gray-600 dark:text-gray-400 text-sm mb-4 text-end">
+              {`Showing ${currentDoctors.length} out of ${filteredDoctors.length} matches`}
+            </div>
           </div>
         </div>
       </div>
