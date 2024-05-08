@@ -5,10 +5,15 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Image from "../assets/img/defaultAvatar.png";
 import Banner from "../assets/img/Banner.png";
+import Calendar from "react-calendar";
+import "./style/Calendar.css";
 
 const DoctorProfiles = () => {
   const { id } = useParams();
   const [doctor, setDoctor] = useState(null);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState(null);
 
   useEffect(() => {
     const fetchDoctor = async () => {
@@ -27,6 +32,21 @@ const DoctorProfiles = () => {
     };
     fetchDoctor();
   }, [id]);
+
+  const toggleCalendar = () => {
+    setShowCalendar(!showCalendar);
+  };
+
+  const onChange = (date) => {
+    setSelectedDate(date);
+    // You can perform further actions with the selected date here
+  };
+
+  const handleBookSchedule = () => {
+    // Handle booking the schedule here
+    console.log("Selected Date:", selectedDate);
+    console.log("Selected Time:", selectedTime);
+  };
 
   if (!doctor) {
     return <div className="text-center">Loading...</div>;
@@ -167,8 +187,6 @@ const DoctorProfiles = () => {
             </div>
             <div className="col-span-1 md:col-span-1">
               <div className="bg-white border rounded-lg overflow-hidden shadow-lg">
-                {/* <div className="flex flex-col md:flex-row mb-6 ">
-                                    <div className="md:flex-1 md:order-2 mt-6 xl:max-w-[25rem]"> */}
                 <div className="">
                   <div className="mt-5">
                     <div className="p-6 md:p-5 md:h-auto">
@@ -186,14 +204,68 @@ const DoctorProfiles = () => {
                       <hr className="mb-3 border-gray-300"></hr>
                       <div className="flex items-center justify-between mb-5">
                         <p className="text-lg">Gender: </p>
-                        <p className="text-lg font-semibold">{doctor.gender}</p>
+                        <p className="text-lg font-semibold capitalize">{doctor.gender}</p>
                       </div>
                       <hr className="mb-3 border-gray-300"></hr>
                       <div className="flex items-center justify-center">
-                        <button className="flex gap-1.5 justify-center items-center px-6 py-2 mt-5 text-base font-bold text-center text-white uppercase bg-indigo-800 tracking-[2px] max-md:mt-5">
-                          Schedule Meeting
+                        <button
+                          onClick={toggleCalendar}
+                          className="flex gap-1.5 justify-center items-center px-6 py-2 mt-5 text-base font-bold text-center text-white uppercase bg-indigo-800 tracking-[2px] max-md:mt-5"
+                        >
+                          {showCalendar ? "Hide Calendar" : "Schedule Meeting"}
                         </button>
                       </div>
+                      {showCalendar && (
+                        <div className="mt-5">
+                          <Calendar onChange={onChange} value={selectedDate} minDate={new Date()}  className="custom-calendar" />
+                          <div className="flex justify-between mt-3">
+                            <select
+                              value={selectedTime}
+                              onChange={(e) => setSelectedTime(e.target.value)}
+                              className="p-2 border border-gray-300 rounded-md focus:outline-none w-full max-w-[200px]"
+                            >
+                              <option value="">Select Time</option>
+                              <option value="09:00 AM">09:00 AM</option>
+                              <option value="09:30 AM">09:30 AM</option>
+                              <option value="10:00 AM">10:00 AM</option>
+                              <option value="10:30 AM">10:30 AM</option>
+                              <option value="11:00 AM">11:00 AM</option>
+                              <option value="11:30 AM">11:30 AM</option>
+                              <option value="12:00 PM">12:00 PM</option>
+                              <option value="12:30 PM">12:30 PM</option>
+                              <option value="1:00 PM">1:00 PM</option>
+                              <option value="1:30 PM">1:30 PM</option>
+                              <option value="2:00 PM">2:00 PM</option>
+                              <option value="2:30 PM">2:30 PM</option>
+                              <option value="3:00 PM">3:00 PM</option>
+                              <option value="3:30 PM">3:30 PM</option>
+                              <option value="4:00 PM">4:00 PM</option>
+                              <option value="4:30 PM">4:30 PM</option>
+                              <option value="5:00 PM">5:00 PM</option>
+                              <option value="5:30 PM">5:30 PM</option>
+                              <option value="6:00 PM">6:00 PM</option>
+                              <option value="6:30 PM">6:30 PM</option>
+                              <option value="7:00 PM">7:00 PM</option>
+                              <option value="7:30 PM">7:30 PM</option>
+                              <option value="8:00 PM">8:00 PM</option>
+                              <option value="8:30 PM">8:30 PM</option>
+                            </select>
+                          </div>
+                          <div className="flex justify-center mt-5">
+                            <button
+                              onClick={handleBookSchedule}
+                              disabled={!selectedTime}
+                              className={`px-6 py-2 text-base font-bold text-center text-white uppercase ${
+                                selectedTime
+                                  ? "bg-blue-800 hover:bg-blue-600 cursor-pointer"
+                                  : "bg-gray-400 cursor-not-allowed"
+                              }`}
+                            >
+                              Book Schedule Meeting
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -202,7 +274,6 @@ const DoctorProfiles = () => {
           </div>
         </div>
       </div>
-
       <Footer />
     </>
   );

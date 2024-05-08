@@ -1,0 +1,79 @@
+/* calendarStyles.css */
+
+/* Customize calendar container */
+.react-calendar {
+  font-family: Arial, sans-serif;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  width: 100%; /* Match container width */
+  max-width: 100%;
+  margin: 20px auto 0; /* Center the calendar and add margin from the top */
+}
+
+/* Style the calendar navigation buttons */
+.react-calendar__navigation button {
+  background-color: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  margin: 0 8px; /* Add space between buttons */
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: inline-block; /* Ensure buttons are inline-block */
+}
+
+.react-calendar__navigation button:hover {
+  background-color: #5252f1;
+}
+
+/* Style the calendar navigation labels */
+.react-calendar__navigation label {
+  font-size: 16px;
+  color: #333;
+}
+
+/* Style calendar weekdays */
+.react-calendar__month-view__weekdays {
+  background-color: #f0f0f0;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Style calendar days */
+.react-calendar__tile {
+  padding: 12px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+/* Style active calendar day */
+.react-calendar__tile--active {
+  background-color: #6366f1;
+  color: #fff;
+  border-radius: 100%;
+}
+
+/* Style today's calendar day */
+.react-calendar__tile--now {
+  background-color: #3730a3;
+}
+
+/* Style calendar day on hover */
+.react-calendar__tile:hover {
+  background-color: #e0e0e0;
+  cursor: pointer;
+}
+
+/* Style past dates */
+.react-calendar__tile--past {
+  opacity: 0.5; /* Faded past dates */
+  pointer-events: none; /* Disable clicking on past dates */
+}
