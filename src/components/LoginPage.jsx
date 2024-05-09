@@ -1,56 +1,76 @@
-import React, { useState,useContext } from 'react';
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { useAuth } from './AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import Header from './Header';
+import Footer from './Footer';
 import { FcGoogle } from 'react-icons/fc';
 import { TbEye, TbEyeClosed } from "react-icons/tb";
 import { PiSignIn } from "react-icons/pi";
-import Header from './Header';
-import Footer from './Footer';
+import { useAuth } from './AuthContext'; // Import useAuth
 import signupImage from '../assets/img/login-signup.jpg';
 import MedivirtLogo from '../assets/img/Medivirt.png'
-import { firebaseConfig } from '../components/firebase'; 
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { firebaseConfig } from '../components/firebase';
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); 
   const [role, setRole] = useState('company');
+  const [name, setName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
-  const auth = getAuth(); // Initialize auth here
-  // const currentUser=auth.currentUser
-
-  auth.languageCode = 'en';
+  const { currentUser, setCurrentUser } = useAuth(); 
 
   const redirectToDashboard = () => {
     navigate('/home');
   };
 
- 
-  // console.log(auth)
-
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      
+      if (email && password) {
         await signInWithEmailAndPassword(auth, email, password);
-        if(auth.currentUser.emailVerified){
+        if (currentUser.emailVerified) {
           setShowPopup(true);
           setTimeout(() => {
             redirectToDashboard();
           }, 3000);
         }
-        else{
+        else {
           alert("Email not verified!")
         }
+      } else if (name) {
+        const userDoc = await getUserDocumentByRole(name, role);
+        if (userDoc.exists()) {
+          // Proceed with login if user document exists
+          // Update authentication state here
+          setCurrentUser({ ...userDoc.data(), role, id: userDoc.id  });
+          // You may want to perform additional checks here if needed
+          alert('Login successful!');
+          redirectToDashboard();
+        } else {
+          throw new Error('User not found.');
+        }
+      } else {
+        throw new Error('Please provide email/password or name.');
+      }
     } catch (error) {
       console.error('Error signing in:', error.message);
       alert('Failed to sign in. Please check your credentials and try again.');
     }
+  };
+
+  const getUserDocumentByRole = async (name, role) => {
+    const usersRef = collection(db, role === 'doctor' ? 'doctors' : 'companies');
+    const q = query(usersRef, where("name", "==", name));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs[0];
   };
 
   const handleLoginWithGoogle = async () => {
@@ -71,23 +91,20 @@ const LoginPage = () => {
     }
   };
 
-
   return (
     <>
       <Header />
       <div className="min-h-screen flex items-center justify-center px-5 lg:px-0 bg-cover">
         <div className="max-w-screen-2xl bg-white shadow sm:rounded-lg flex justify-center w-full lg:w-3/4 xl:w-full">
-          {/* Left Side Image Section */}
           <div className="hidden bg-[#7191e6] md:flex md:w-[60%] rounded-l-lg">
             <div className="w-full bg-contain bg-no-repeat" style={{ backgroundImage: `url(${signupImage})`, height: '900px' }}>
               <div className="mt-[6rem] ml-10 mr-10">
-                <img loading="lazy" srcSet= {MedivirtLogo} className="max-w-full aspect-[7.14] w-[156px] mb-[5rem]" alt="Medivirt Logo" />
+                <img loading="lazy" srcSet={MedivirtLogo} className="max-w-full aspect-[7.14] w-[156px] mb-[5rem]" alt="Medivirt Logo" />
                 <h1 className="text-2xl xl:text-3xl font-semibold text-[#FFF]">Login as {role}</h1>
                 <p className="text-lg mt-3 text-[#fff]">Welcome back to MEDIVIRT! Sign in to your account</p>
               </div>
             </div>
           </div>
-          {/* Right Side Login Section */}
           <div className="w-full md:w-[40%] p-6 sm:p-8 lg:">
             <div className="flex gap-4 max-w-xl mx-auto mt-20 text-base font-bold text-center uppercase mb-10 whitespace-nowrap tracking-[2px] max-md:flex-wrap">
               {/* Role Selection Buttons */}
@@ -108,7 +125,6 @@ const LoginPage = () => {
                 <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />
               </button>
             </div>
-            {/* Login Form */}
             <div className="mx-auto max-w-xl flex flex-col gap-4 items-center">
               <input
                 className="w-full px-5 py-5 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
@@ -127,7 +143,7 @@ const LoginPage = () => {
                 />
                 {/* Password visibility toggle icon */}
                 {showPassword ? (
-                  <TbEyeClosed 
+                  <TbEyeClosed
                     className="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
                     onClick={() => setShowPassword(false)}
                   />
@@ -138,6 +154,25 @@ const LoginPage = () => {
                   />
                 )}
               </div>
+              <h4 className="text-center font-bold">OR</h4>
+              {role === 'company' && (
+                <input
+                  className="w-full px-5 py-5 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                  type="text"
+                  placeholder="Enter Company name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              )}
+              {role === 'doctor' && (
+                <input
+                  className="w-full px-5 py-5 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                  type="text"
+                  placeholder="Enter Doctor name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              )}
               <button
                 className="tracking-wide font-semibold mt-8 bg-[#3d52a1] text-gray-100 w-full py-5 rounded-lg hover:bg-[#7091E6] transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
                 onClick={handleLogin}
@@ -162,7 +197,6 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
-      {/* Login Success Popup */}
       {showPopup && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 shadow-lg rounded-lg text-center">
           <p className="text-xl text-green-500">Login Successful!</p>

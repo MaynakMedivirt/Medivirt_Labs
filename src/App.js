@@ -21,6 +21,17 @@ import AdminDashboard from './components/AdminDashboard';
 import Doctor from './components/Doctor';
 import AddDoctor from './components/AddDoctor';
 import EditDoctor from './components/EditDoctor';
+import DoctorDashboard from './components/DoctorDashboard';
+import DocdashProfile from './components/DocdashProfile';
+import EditDoctorAbout from './components/EditDoctorAbout';
+import EditDoctorExperience from './components/EditDoctorExperience';
+import EditDoctorEducation from './components/EditDoctorEducation';
+import EditDoctorCurrentposition from './components/EditDoctorCurrentposition';
+import EditDoctorImage from './components/EditDoctorImage';
+import DoctorSchedule from './components/DoctorSchedule';
+import ScheduleList from './components/ScheduleList';
+import AddManager from './components/AddManager';
+import Manager from './components/Manager';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -56,10 +67,20 @@ const App = () => {
           <Route path='/DocProfile' element={<DocProfile/>}/>
           <Route path='/admin' element={<AdminLogin/>}/>
           <Route path='/adminDash/*' element={<AdminDashboard/>}/>
-          <Route path='/admin/doctors*' element={<Doctor/>}/>
+          <Route path='/admin/doctors' element={<Doctor/>}/>
           <Route path='/add-doctor' element={<AddDoctor/>}/>
           <Route path='/edit-doctor/:id' element={<EditDoctor/>}/>
-          
+          <Route path='/doctorDashboard/:id' element={<DoctorDashboard/>}/>
+          <Route path='/doctor/profile/:id' element={<DocdashProfile/>}/>          
+          <Route path='/doctor/profile/edit-about/:id' element={<EditDoctorAbout/>}/>          
+          <Route path='/doctor/profile/edit-experience/:id' element={<EditDoctorExperience/>}/>          
+          <Route path='/doctor/profile/edit-education/:id' element={<EditDoctorEducation/>}/>          
+          <Route path='/doctor/profile/edit-currentposition/:id' element={<EditDoctorCurrentposition/>}/>          
+          <Route path='/doctor/profile/edit-image/:id' element={<EditDoctorImage/>}/>          
+          <Route path='/doctor/schedule/:id' element={<DoctorSchedule/>}/>          
+          <Route path='/admin/doctorSchedule' element={<ScheduleList />}/>    
+          <Route path='/admin/manager' element={<Manager />}/>    
+          <Route path='/add-manager' element={<AddManager/>}/>      
 
           {/* Route for the home page */}
           <Route path="*" element={isAuthorized ? <Home /> : <WarningPage />} />

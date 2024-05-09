@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { AiOutlineMenu, AiOutlineUser } from 'react-icons/ai';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, Link } from 'react-router-dom';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '../components/firebase'; 
+import { auth } from '../components/firebase';
 import { useAuth } from './AuthContext';
 import MedivirtLogo from '../assets/img/Medivirt.png'
 
@@ -10,7 +10,9 @@ const Header = () => {
   const location = useLocation();
   // const [currentUser, setCurrentUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const {currentUser} = useAuth()
+  const { currentUser } = useAuth();
+
+  
   // useEffect(() => {
   //   const unsubscribe = onAuthStateChanged(auth, user => {
   //     setCurrentUser(user);
@@ -42,6 +44,26 @@ const Header = () => {
     const isActive = location.pathname === path;
     return isActive ? <div className="absolute bottom-0 top-9 left-1/2 transform -translate-x-1/2 h-[10px] w-16 bg-white rounded-t-lg" /> : null;
   };
+
+
+  const renderUserDetails = () => {
+    if (currentUser) {
+      if (currentUser.name) {
+        const { name, role, id } = currentUser;
+        return (
+          <div className="">
+            <Link to={role === 'doctor' ? `/doctorDashboard/${id}` : `/companydash/${id}`} className='text-sm font-bold'>{name}</Link>
+            <p className='text-sm ml-2'>{role}</p>
+          </div>
+        );
+      } else if (currentUser.email) {
+        return currentUser.email;
+      }
+    }
+    // return 'User Profile';
+  };
+
+
 
   return (
     <div className="relative w-full h-16 bg-[#3D52A1] flex justify-between items-center px-6 md:px-10 lg:px-16">
@@ -77,11 +99,12 @@ const Header = () => {
         <div className="hidden md:block relative">
           {currentUser ? (
             <>
-              <AiOutlineUser className="w-6 h-6 text-white cursor-pointer" onClick={() => setMenuOpen(!menuOpen)} />
+              <div className="flex">
+                <p className="text-white px-2 cursor-pointer">{renderUserDetails()}</p>
+                <AiOutlineUser className="w-6 h-6 text-white cursor-pointer" onClick={() => setMenuOpen(!menuOpen)} />
+              </div>
               {menuOpen && (
                 <div className="absolute right-0 mt-2 w-40 bg-white rounded shadow z-10">
-                  <p className="p-2">Logged in as: {currentUser.email}</p>
-                  <hr />
                   <NavLink to="/dashboard" className="block w-full text-left p-2 hover:bg-gray-200" onClick={closeMenu}>Dashboard</NavLink>
                   <button className="block w-full text-left p-2 hover:bg-gray-200" onClick={handleLogout}>Logout</button>
                 </div>

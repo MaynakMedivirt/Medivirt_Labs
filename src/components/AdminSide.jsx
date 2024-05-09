@@ -1,8 +1,8 @@
-// AdminSide.jsx
 import React, { useState } from "react";
 import { IoIosArrowDropleftCircle } from "react-icons/io";
 import { FaChartPie, FaCompactDisc , FaCog, FaUser } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
+import { MdManageAccounts } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 const AdminSide = () => {
@@ -12,7 +12,8 @@ const AdminSide = () => {
     { title: "Dashboard", path: "/adminDash", icon: <FaChartPie className="text-[#82746b]" /> },
     { title: "Doctors", path: "/admin/doctors", icon: <FaUserDoctor className="text-[#82746b]" /> }, // Corrected path for Doctors
     { title: "Companies", path: "/admin/companies", icon: <FaCompactDisc  className="text-[#82746b]" /> }, // Corrected path for Companies
-    { title: "Profile", path: "/adminprofile", icon: <FaUser className="text-[#82746b]" /> },
+    { title: "Manager", path: "/admin/manager", icon: <FaCompactDisc  className="text-[#82746b]" /> }, // Corrected path for Companies
+    { title: "Doctor Schedule", path: "/admin/doctorSchedule", icon: <MdManageAccounts className="text-[#82746b]" /> },
     { title: "Setting", path: "setting", icon: <FaCog className="text-[#82746b]" /> },
   ];
 
