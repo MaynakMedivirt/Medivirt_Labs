@@ -100,7 +100,7 @@ const DoctorProfiles = () => {
                 </div>
               </div>
 
-              <div className="bg-white border-b-2 border-gray-300 mt-5">
+              <div className="bg-white border-b-2 border-gray-300 mt-8">
                 <h3 className="font-semibold text-xl mb-3">About Doctor</h3>
                 <p className="text-lg text-gray-600 mb-4">{doctor.about}</p>
               </div>

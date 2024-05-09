@@ -124,7 +124,9 @@ const Home = () => {
                   areas of interest, and preferred meeting times.
                 </div>
                 <button className="flex gap-0.5 justify-center self-start px-5 py-3.5 mt-[5.1rem] text-sm font-medium leading-5 text-indigo-800 border border-indigo-800 border-solid max-md:px-5 max-md:mt-10">
-                  <div className="grow my-auto">Book an Online Meeting</div>
+                  <div className="grow my-auto">
+                    <NavLink to="/signup">Book an Online Meeting</NavLink>
+                    </div>
                   <img
                     loading="lazy"
                     src="https://cdn.builder.io/api/v1/image/assets/TEMP/e95b5401bbc073fb293ada4aad809ecadc6202fd77aebedc576925d98a1c1bd1?"
@@ -162,7 +164,9 @@ const Home = () => {
                   reschedule, or decline based on their availability.
                 </div>
                 <button class="flex gap-0.5 justify-center self-start px-5 py-3.5 mt-12 text-sm font-medium leading-5 text-indigo-800 border border-indigo-800 border-solid max-md:px-5 max-md:mt-10">
-                  <div class="grow my-auto">Register Now</div>
+                  <div class="grow my-auto">
+                    <NavLink to="/signup">Register Now</NavLink>
+                    </div>
                   <img
                     loading="lazy"
                     src="https://cdn.builder.io/api/v1/image/assets/TEMP/e95b5401bbc073fb293ada4aad809ecadc6202fd77aebedc576925d98a1c1bd1?"
