@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import Image from "../assets/img/defaultAvatar.png";
 import Banner from "../assets/img/Banner.png";
 import Calendar from "react-calendar";
+import Swal from "sweetalert2";
 import "./style/Calendar.css";
 
 const DoctorProfiles = () => {
@@ -14,6 +15,8 @@ const DoctorProfiles = () => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
+  const [showMessaging, setShowMessaging] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchDoctor = async () => {
@@ -37,16 +40,50 @@ const DoctorProfiles = () => {
     setShowCalendar(!showCalendar);
   };
 
-  const onChange = (date) => {
-    setSelectedDate(date);
-    // You can perform further actions with the selected date here
+  const toggleMessaging = () => {
+    setShowMessaging(!showMessaging);
   };
 
-  const handleBookSchedule = () => {
-    // Handle booking the schedule here
-    console.log("Selected Date:", selectedDate);
-    console.log("Selected Time:", selectedTime);
+  const onChange = (date) => {
+    setSelectedDate(date);
   };
+
+// Inside handleBookSchedule and handleSendMessage functions
+
+const handleBookSchedule = () => {
+  console.log("Selected Date:", selectedDate);
+  console.log("Selected Time:", selectedTime);
+
+  Swal.fire({
+    position: "center",
+    icon: "success",
+    title: "Your scheduled meeting sent to the doctor successfully!",
+    showConfirmButton: false,
+    timer: 2000 // Adjusted timer to 2000 milliseconds (2 seconds)
+  });
+  
+  // Reload the page after 2 seconds
+  setTimeout(() => {
+    window.location.reload();
+  }, 2000);
+};
+
+const handleSendMessage = () => {
+  console.log("Message:", message);
+
+  Swal.fire({
+    position: "center",
+    icon: "success",
+    title: "Message sent successfully!",
+    showConfirmButton: false,
+    timer: 2000 // Adjusted timer to 2000 milliseconds (2 seconds)
+  });
+  
+  // Reload the page after 2 seconds
+  setTimeout(() => {
+    window.location.reload();
+  }, 2000);
+};
 
   if (!doctor) {
     return <div className="text-center">Loading...</div>;
@@ -80,7 +117,6 @@ const DoctorProfiles = () => {
                         />
                       ) : (
                         <div className="w-32 h-32 md:w-48 md:h-48 bg-gray-200 rounded-full flex items-center justify-center">
-                          {/* Placeholder image */}
                           <img src={Image} alt="Placeholder" />
                         </div>
                       )}
@@ -100,7 +136,7 @@ const DoctorProfiles = () => {
                 </div>
               </div>
 
-              <div className="bg-white border-b-2 border-gray-300 mt-8">
+              <div className="bg-white border-b-2 border-gray-300 mt-6">
                 <h3 className="font-semibold text-xl mb-3">About Doctor</h3>
                 <p className="text-lg text-gray-600 mb-4">{doctor.about}</p>
               </div>
@@ -214,6 +250,12 @@ const DoctorProfiles = () => {
                         >
                           {showCalendar ? "Hide Calendar" : "Schedule Meeting"}
                         </button>
+                        <button
+                          onClick={toggleMessaging}
+                          className="flex gap-1.5 justify-center items-center px-6 py-2 mt-5 ml-3 text-base font-bold text-center text-white uppercase bg-green-600 tracking-[2px] max-md:mt-5"
+                        >
+                          {showMessaging ? "Hide Messaging" : "Send Message"}
+                        </button>
                       </div>
                       {showCalendar && (
                         <div className="mt-5">
@@ -263,6 +305,27 @@ const DoctorProfiles = () => {
                             >
                               Book Schedule Meeting
                             </button>
+                          </div>
+                        </div>
+                      )}
+                      {showMessaging && (
+                        <div className="mt-5">
+                          <div className="bg-gray-200 p-4 rounded-md">
+                            <p className="text-md font-semibold mb-2">Send a Message</p>
+                            <textarea
+                              placeholder="Type your message here..."
+                              value={message}
+                              onChange={(e) => setMessage(e.target.value)}
+                              className="w-full h-32 p-2 border border-gray-300 rounded-md resize-none focus:outline-none"
+                            ></textarea>
+                            <div className="flex justify-end mt-3">
+                              <button 
+                                onClick={handleSendMessage}
+                                className="px-4 py-2 bg-indigo-800 text-white rounded-md font-semibold"
+                              >
+                                Send
+                              </button>
+                            </div>
                           </div>
                         </div>
                       )}
