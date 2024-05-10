@@ -22,7 +22,7 @@ const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('company');
+  const [role, setRole] = useState('Company');
   const [companyName, setCompanyName] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [setErrorMessage] = useState('');
@@ -61,7 +61,7 @@ const SignupPage = () => {
       await sendVerificationEmail(user);
       const userData = { email, name, phone, role };
 
-      if (role === 'company') {
+      if (role === 'Company') {
         userData.companyName = companyName;
       }
       await addUserToDatabase(userData);
@@ -78,7 +78,7 @@ const SignupPage = () => {
 
   const addUserToDatabase = async (userData) => {
     try {
-      const collectionName = role === 'doctor' ? 'doctors' : 'companies';
+      const collectionName = role === 'Doctor' ? 'doctors' : 'companies';
       await addDoc(collection(db, collectionName), userData);
     } catch (error) {
       console.error('Error adding user data to database:', error.message);
@@ -97,7 +97,7 @@ const SignupPage = () => {
       await sendVerificationEmail(user);
 
       const userData = { email: user.email, name: user.displayName, phone: user.phoneNumber, role,};
-      if (role === 'company') {
+      if (role === 'Company') {
         userData.companyName = companyName;
       }
       await addUserToDatabase(userData);
@@ -142,22 +142,22 @@ const SignupPage = () => {
           <div className="w-full md:w-[40%] p-6 sm:p-8 lg:">
             <div className="flex gap-5 text-base font-bold text-center uppercase mb-10 whitespace-nowrap tracking-[2px] max-md:flex-wrap">
               <button
-                className={`flex flex-1 gap-5 justify-center items-center py-6 pr-10 pl-5 rounded-lg ${role === 'company'
+                className={`flex flex-1 gap-5 justify-center items-center py-6 pr-10 pl-5 rounded-lg ${role === 'Company'
                     ? 'bg-[#3d52a1] text-white' // Active state for Company button
                     : 'bg-gray-200 text-zinc-500' // Inactive state for Company button
                   }`}
-                onClick={() => setRole('company')}
+                onClick={() => setRole('Company')}
               >
                 <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />
                 <div className="text-[1.5rem] font-sans">COMPANY</div>
                 <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />
               </button>
               <button
-                className={`flex flex-1 gap-5 justify-center items-center py-6 pr-10 pl-5 rounded-lg  ${role === 'doctor'
+                className={`flex flex-1 gap-5 justify-center items-center py-6 pr-10 pl-5 rounded-lg  ${role === 'Doctor'
                     ? 'bg-[#3d52a1] text-white' // Active state for Doctor button
                     : 'bg-gray-200 text-zinc-500' // Inactive state for Doctor button
                   }`}
-                onClick={() => setRole('doctor')}
+                onClick={() => setRole('Doctor')}
               >
                 <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />
                 <div className="text-[1.5rem] font-sans">DOCTOR</div>
@@ -176,7 +176,7 @@ const SignupPage = () => {
             {errorField === 'database' && (
               <p className="text-red-500 text-sm mb-2">Failed to add user data to database.</p>
             )}
-            {role === 'company' && (
+            {role === 'Company' && (
               <input
                 className="w-full px-4 py-5 mb-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                 type="text"

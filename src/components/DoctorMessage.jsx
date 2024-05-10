@@ -4,8 +4,8 @@ import DoctorNavbar from './DoctorNavbar';
 import DoctorSide from './DoctorSide';
 import { getFirestore, collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 
-const DoctorSchedule = () => {
-    const [scheduleMeetings, setScheduleMeetings] = useState([]);
+const DoctorMessage = () => {
+    const [message, setMessage] = useState([]);
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const { id } = useParams();
 
@@ -14,11 +14,11 @@ const DoctorSchedule = () => {
     };
 
     useEffect(() => {
-        const fetchScheduleMeetings = async () => {
+        const fetchMessages = async () => {
             try {
                 const db = getFirestore();
-                const scheduleMeetingsRef = collection(db, "scheduleMeeting");
-                const q = query(scheduleMeetingsRef, where("doctorID", "==", id));
+                const messageRef = collection(db, "messages");
+                const q = query(messageRef, where("doctorID", "==", id));
                 const querySnapshot = await getDocs(q);
                 // const meetingsData = [];
 
@@ -33,37 +33,33 @@ const DoctorSchedule = () => {
                 };
 
                 const promises = querySnapshot.docs.map(async (doc) => {
-                    const meetingData = doc.data();
-                    // console.log(meetingData);
-                    
+                    const messageData = doc.data();
+                    console.log(messageData);
+
                     // Fetch company data
-                    const companyData = await fetchCompanyData(meetingData.companyID);
+                    const companyData = await fetchCompanyData(messageData.companyID);
                     const companyName = companyData ? companyData.companyName : "Unknown Company";
                     const representativeName = companyData ? companyData.name : "Unknown Representative";
-                
-                    // Fetch doctor data
-                    // const doctorData = await fetchDoctorData(meetingData.doctorID);
-                    // const doctorName = doctorData ? doctorData.name : "Unknown Doctor";
-                    
+
                     return {
                         id: doc.id,
                         companyName,
                         representativeName,
-                        // doctorName,
-                        ...meetingData,
+                        ...messageData,
                     };
                 });
 
                 const resolvedData = await Promise.all(promises);
-                setScheduleMeetings(resolvedData);
+                setMessage(resolvedData);
             } catch (error) {
-                console.error("Error fetching schedule meetings:", error);
+                console.error("Error fetching schedule messages:", error);
             }
         };
 
-        fetchScheduleMeetings();
+        fetchMessages();
     }, [id]);
-    
+
+
     return (
         <div className="flex flex-col h-screen">
             <DoctorNavbar />
@@ -72,26 +68,23 @@ const DoctorSchedule = () => {
                 <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-20'}`}>
                     <div className="container max-w-6xl px-5 mx-auto my-10">
                         <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
-                            Schedule Meetings
+                            Messages
                         </h2>
-                        <div className="overflow-auto mt-3">
+                        <div className="overflow-auto mt-3 border">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
                                     <tr>
                                         <th scope="col" className="px-6 py-3 text-sm tracking-wider">
                                             S.N.
                                         </th>
-                                        <th scope="col"className="px-6 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="bg-gray-50 px-6 py-3 text-sm uppercase tracking-wider">
                                             Company Name
                                         </th>
                                         <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
                                             Representative Name
                                         </th>
-                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
-                                            Date
-                                        </th>
-                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
-                                            Time
+                                        <th scope="col" className="bg-gray-50 px-6 py-3 text-sm uppercase tracking-wider">
+                                            Message
                                         </th>
                                         <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
                                             Actions
@@ -99,29 +92,23 @@ const DoctorSchedule = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
-                                    {scheduleMeetings.map((meeting, index) => (
+                                    {message.map((messages, index) => (
                                         <tr key={index} className="border-b border-gray-200">
                                             <td scope="row" className="px-6 py-4">
                                                 {index + 1}
                                             </td>
                                             <td className="px-6 py-4 font-medium text-gray-900 bg-gray-50">
-                                                {meeting.companyName}
+                                                {messages.companyName}
                                             </td>
                                             <td className="px-6 py-4">
-                                                {meeting.representativeName}
+                                                {messages.representativeName}
                                             </td>
                                             <td className="px-6 py-4 bg-gray-50">
-                                                {meeting.date}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                {meeting.time}
+                                                {messages.messages}
                                             </td>
                                             <td className="px-6 py-4 bg-gray-50">
-                                                <button type="button" className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2">
-                                                    Modify
-                                                </button>
-                                                <button type="button" className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2">
-                                                    Accept
+                                                <button type="button" className="text-white bg-[#4BCB5D] rounded-lg px-3 py-2 text-center me-2 mb-2">
+                                                    Reply
                                                 </button>
                                             </td>
                                         </tr>
@@ -136,4 +123,4 @@ const DoctorSchedule = () => {
     )
 }
 
-export default DoctorSchedule;
+export default DoctorMessage;

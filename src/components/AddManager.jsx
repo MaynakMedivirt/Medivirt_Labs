@@ -12,6 +12,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import bcrypt from "bcryptjs";
 import "firebase/storage";
 
 import { firebaseConfig } from "../components/firebase";
@@ -25,10 +26,40 @@ const AddManager = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const customId = `${name}`;
+      const customDocRef = doc(db, "managers", customId);
+      await setDoc(customDocRef, {
+        name,
+        email,
+        password: hashedPassword
+      });
+
+      console.log("Document Written with ID : ", customId);
+      alert("Manager added successfully!");
+
+      // Clear the form fields after successful submission
+      setName("")
+      setEmail("")
+      setPassword("")
+
+      // Reload the page after 1 seconds
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      navigate('/admin/manager');
+    } catch (error) {
+      console.log("Error adding document :", error);
+    }
+  };
 
   return (
     <div className="flex">
@@ -52,7 +83,7 @@ const AddManager = () => {
                     name="name"
                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     value={name}
-                    onChange={(e) => setName(e.target.value )}
+                    onChange={(e) => setName(e.target.value)}
                     placeholder="Enter Manager name"
                   />
                 </div>
@@ -63,7 +94,7 @@ const AddManager = () => {
                     name="email"
                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value )}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your Email"
                   />
                 </div>
@@ -74,7 +105,7 @@ const AddManager = () => {
                     name="password"
                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value )}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your Password"
                   />
                 </div>

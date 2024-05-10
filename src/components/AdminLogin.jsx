@@ -14,7 +14,7 @@ const AdminLogin = () => {
         e.preventDefault();
 
         const adminEmail = 'meet@medivirt.com';
-        const adminPassword = 'Medivirt@meet.2024';
+        const adminPassword = 'Maynak@meet.2024';
 
         if (email === adminEmail && password === adminPassword) {
             navigate('/adminDash');

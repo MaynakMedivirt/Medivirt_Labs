@@ -74,6 +74,7 @@
 
 /* Style past dates */
 .react-calendar__tile--past {
-  opacity: 0.5; /* Faded past dates */
+  opacity: 0.1; /* Faded past dates */
+  text-decoration: gainsboro;
   pointer-events: none; /* Disable clicking on past dates */
 }

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import Header from "./Header";
 import Footer from "./Footer";
+import defaultAvatar from "../assets/img/defaultAvatar.png";
 
 const DoctorList = () => {
   const [doctors, setDoctors] = useState([]);
@@ -39,8 +40,21 @@ const DoctorList = () => {
     fetchDoctors();
   }, []);
 
+
+  // const handleViewProfile = (doctor) => {
+  //   if (currentUser && currentUser.emailVerified) {
+  //     navigate(`/doctor/${doctor.id}`);
+  //   } else {
+  //     setShowSignInMessage(true);
+  //     setTimeout(() => {
+  //       setShowSignInMessage(false);
+  //       navigate("/login");
+  //     }, 3000);
+  //   }
+  // };
+
   const handleViewProfile = (doctor) => {
-    if (currentUser && currentUser.emailVerified) {
+    if (currentUser && (currentUser.emailVerified || currentUser.name)) {
       navigate(`/doctor/${doctor.id}`);
     } else {
       setShowSignInMessage(true);
@@ -239,7 +253,7 @@ const DoctorList = () => {
       {/* top section */}
       <div className="flex flex-col items-center px-16 pt-6 bg-red-50 max-md:px-5">
         <div className="flex gap-5 justify-between items-start w-full max-w-[1176px] max-md:flex-wrap max-md:max-w-full">
-          <div className="flex flex-col self-start lg:ml-[14rem] text-base text-neutral-800 max-md:max-w-full mb-4">
+          <div className="flex flex-col self-start text-base text-neutral-800 max-md:max-w-full mb-4">
             <div className="text-4xl font-bold font-sans leading-8 max-md:max-w-full">
               Find Your Doctor Here
             </div>
@@ -254,16 +268,17 @@ const DoctorList = () => {
                     className="px-4 py-4 border-gray-300 rounded-md max-md:w-[200px]"
                   />
                 </div>
-                <div className="flex gap-5 justify-center self-stretch px-5 pt-4 pb-2.5 my-auto text-base leading-7 bg-white rounded-lg border  border-white border-solid max-md:w-full max-md:mb-4">
+                <div className="flex gap-5 justify-center self-stretch px-5 pt-4 pb-2.5 my-auto text-base leading-7 bg-white rounded-lg border border-white border-solid max-md:w-full max-md:mb-4">
                   <input
                     type="text"
                     placeholder="City, state, or zip"
                     className="flex-auto py-px"
                   />
+                  <div className="w-2 h-5 bg-gray-400" />
                 </div>
                 <button
                   onClick={() => console.log("Search logic here")}
-                  className="px-10 py-4 bg-[#3D52A1] text-white hover:bg-[7191E6] sm:justify-center focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                  className="px-10 py-4 bg-[#3D52A1] text-white hover:bg-[7191E6] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                 >
                   Search
                 </button>
@@ -373,12 +388,12 @@ const DoctorList = () => {
             {currentDoctors.map((doctor, index) => (
               <div 
                 key={index} 
-                className="max-w-sm bg-white border border-gray-200 rounded-lg shadow flex flex-col items-center text-center"
+                className=" bg-white border border-gray-200 rounded-lg shadow flex flex-col items-center text-center"
               >
                 {/* <a href="#"> */}
                 <img
                   loading="lazy"
-                  src={doctor.image || "/src/assets/img/defaultAvatar.png"}
+                  src={doctor.image || defaultAvatar}
                   alt={`Profile of ${doctor.name}`}
                   className="items-center aspect-square w-[90px] mt-3 rounded-full"
                 />
@@ -392,9 +407,9 @@ const DoctorList = () => {
                       {doctor.specialist}
                     </div>
                   </div>
-                  <div className="justify-center leading-7 mt-4 border-t border-gray-200 border-solid max-md:pr-5 max-md:pl-7">
+                  <div className="justify-center leading-7 mt-2 border-t border-gray-200 border-solid max-md:pr-5 max-md:pl-7">
                     <span className="">Location:</span>
-                    <span className=""> {doctor.location}</span>
+                    <span className="">{doctor.location}</span>
                   </div>
                   <button
                     onClick={() => handleViewProfile(doctor)}

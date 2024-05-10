@@ -32,6 +32,8 @@ import DoctorSchedule from './components/DoctorSchedule';
 import ScheduleList from './components/ScheduleList';
 import AddManager from './components/AddManager';
 import Manager from './components/Manager';
+import EditManager from './components/EditManager';
+import DoctorMessage from './components/DoctorMessage';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -80,7 +82,9 @@ const App = () => {
           <Route path='/doctor/schedule/:id' element={<DoctorSchedule/>}/>          
           <Route path='/admin/doctorSchedule' element={<ScheduleList />}/>    
           <Route path='/admin/manager' element={<Manager />}/>    
-          <Route path='/add-manager' element={<AddManager/>}/>      
+          <Route path='/add-manager' element={<AddManager/>}/> 
+          <Route path='/edit-manager/:id' element={<EditManager/>}/>     
+          <Route path='//doctor/message/:id' element={<DoctorMessage/>}/>     
 
           {/* Route for the home page */}
           <Route path="*" element={isAuthorized ? <Home /> : <WarningPage />} />

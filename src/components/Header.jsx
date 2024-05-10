@@ -51,9 +51,9 @@ const Header = () => {
       if (currentUser.name) {
         const { name, role, id } = currentUser;
         return (
-          <div className="">
-            <Link to={role === 'doctor' ? `/doctorDashboard/${id}` : `/companydash/${id}`} className='text-sm font-bold'>{name}</Link>
-            <p className='text-sm ml-2'>{role}</p>
+          <div className="mr-2">
+            <Link to={role === 'Doctor' ? `/doctorDashboard/${id}` : `/companydash/${id}`} className='text-sm font-bold'>{name}</Link>
+            <p className='text-sm'>{role}</p>
           </div>
         );
       } else if (currentUser.email) {
@@ -66,7 +66,7 @@ const Header = () => {
 
 
   return (
-    <div className="relative w-full h-16 bg-[#3D52A1] flex justify-between items-center px-6 md:px-10 lg:px-16">
+    <div className="relative w-full h-16 bg-[#3D52A1] flex justify-between items-center px-6 md:px-10 lg:px-18">
       <NavLink to="/" className="flex-shrink-0">
         <img className="h-8" alt="Medivirt" src={MedivirtLogo} />
       </NavLink>
@@ -105,7 +105,6 @@ const Header = () => {
               </div>
               {menuOpen && (
                 <div className="absolute right-0 mt-2 w-40 bg-white rounded shadow z-10">
-                  <NavLink to="/dashboard" className="block w-full text-left p-2 hover:bg-gray-200" onClick={closeMenu}>Dashboard</NavLink>
                   <button className="block w-full text-left p-2 hover:bg-gray-200" onClick={handleLogout}>Logout</button>
                 </div>
               )}
@@ -136,9 +135,6 @@ const Header = () => {
             <NavLink to="/companylist" className="text-white" onClick={closeMenu}>COMPANIES</NavLink>
             <NavLink to="/price" className="text-white" onClick={closeMenu}>PRICING</NavLink>
             <NavLink to="/signup" className="text-white" onClick={closeMenu}>JOIN NOW</NavLink>
-            {currentUser && (
-              <NavLink to="/dashboard" className="text-white" onClick={closeMenu}>Dashboard</NavLink>
-            )}
             {currentUser ? (
               <button className="text-white" onClick={handleLogout}>Logout</button>
             ) : (

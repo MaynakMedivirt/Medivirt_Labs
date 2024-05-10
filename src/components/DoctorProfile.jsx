@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { useAuth } from './AuthContext';
+import { getFirestore, doc, getDoc, addDoc, setDoc } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import Header from "./Header";
 import Footer from "./Footer";
 import Image from "../assets/img/defaultAvatar.png";
@@ -8,6 +11,12 @@ import Banner from "../assets/img/Banner.png";
 import Calendar from "react-calendar";
 import Swal from "sweetalert2";
 import "./style/Calendar.css";
+
+import { firebaseConfig } from "../components/firebase";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 const DoctorProfiles = () => {
   const { id } = useParams();
@@ -17,6 +26,7 @@ const DoctorProfiles = () => {
   const [selectedTime, setSelectedTime] = useState(null);
   const [showMessaging, setShowMessaging] = useState(false);
   const [message, setMessage] = useState("");
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     const fetchDoctor = async () => {
@@ -48,42 +58,89 @@ const DoctorProfiles = () => {
     setSelectedDate(date);
   };
 
-// Inside handleBookSchedule and handleSendMessage functions
+  // Inside handleBookSchedule and handleSendMessage functions
 
-const handleBookSchedule = () => {
-  console.log("Selected Date:", selectedDate);
-  console.log("Selected Time:", selectedTime);
+  const handleBookSchedule = async () => {
+    console.log("Selected Date:", selectedDate);
+    console.log("Selected Time:", selectedTime);
 
-  Swal.fire({
-    position: "center",
-    icon: "success",
-    title: "Your scheduled meeting sent to the doctor successfully!",
-    showConfirmButton: false,
-    timer: 2000 // Adjusted timer to 2000 milliseconds (2 seconds)
-  });
-  
-  // Reload the page after 2 seconds
-  setTimeout(() => {
-    window.location.reload();
-  }, 2000);
-};
+    try {
 
-const handleSendMessage = () => {
-  console.log("Message:", message);
+      const scheduleData = {
+        companyID: currentUser.id,
+        doctorID: doctor.id,
+        date: selectedDate.toISOString().split('T')[0],
+        time: selectedTime,
+      };
 
-  Swal.fire({
-    position: "center",
-    icon: "success",
-    title: "Message sent successfully!",
-    showConfirmButton: false,
-    timer: 2000 // Adjusted timer to 2000 milliseconds (2 seconds)
-  });
-  
-  // Reload the page after 2 seconds
-  setTimeout(() => {
-    window.location.reload();
-  }, 2000);
-};
+      const customId = `${doctor.id}_${currentUser.id}`;
+      const customDocRef = doc(db, "scheduleMeeting", customId);
+      await setDoc(customDocRef, scheduleData);
+
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Your scheduled meeting sent to the doctor successfully!",
+        showConfirmButton: false,
+        timer: 2000 // Adjusted timer to 2000 milliseconds (2 seconds)
+      });
+
+      // Reload the page after 2 seconds
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+
+    } catch (error) {
+      console.error("Error scheduling meeting:", error);
+      alert("Failed to schedule meeting. Please try again.");
+    }
+
+  };
+
+  const handleSendMessage = async () => {
+    console.log("Message:", message);
+    console.log("Doctor state:", doctor.id);
+    console.log(currentUser.id);
+
+    if (!doctor) {
+      console.error("Doctor object is null or undefined.");
+      return;
+    }
+
+    try {
+      console.log(message);
+      const messageData = {
+        companyID: currentUser.id,
+        doctorID: doctor.id,
+        messages: message,
+      };
+
+      console.log(messageData);
+
+      const customId = `${doctor.id}_${currentUser.id}`;
+      const customDocRef = doc(db, "messages", customId);
+      await setDoc(customDocRef, messageData);
+
+      // Show success message
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Message sent successfully!",
+        showConfirmButton: false,
+        timer: 2000
+      });
+
+      // Reload the page after 2 seconds
+      setTimeout(() => {
+        // window.location.reload();
+      }, 2000);
+    } catch (error) {
+      console.error("Error sending messages:", error);
+      alert("Failed to send message. Please try again.");
+    }
+  };
+
+
 
   if (!doctor) {
     return <div className="text-center">Loading...</div>;
@@ -259,7 +316,7 @@ const handleSendMessage = () => {
                       </div>
                       {showCalendar && (
                         <div className="mt-5">
-                          <Calendar onChange={onChange} value={selectedDate} minDate={new Date()}  className="custom-calendar" />
+                          <Calendar onChange={onChange} value={selectedDate} minDate={new Date()} className="custom-calendar" />
                           <div className="flex justify-between mt-3">
                             <select
                               value={selectedTime}
@@ -297,11 +354,10 @@ const handleSendMessage = () => {
                             <button
                               onClick={handleBookSchedule}
                               disabled={!selectedTime}
-                              className={`px-6 py-2 text-base font-bold text-center text-white uppercase ${
-                                selectedTime
-                                  ? "bg-blue-800 hover:bg-blue-600 cursor-pointer"
-                                  : "bg-gray-400 cursor-not-allowed"
-                              }`}
+                              className={`px-6 py-2 text-base font-bold text-center text-white uppercase ${selectedTime
+                                ? "bg-blue-800 hover:bg-blue-600 cursor-pointer"
+                                : "bg-gray-400 cursor-not-allowed"
+                                }`}
                             >
                               Book Schedule Meeting
                             </button>
@@ -319,7 +375,7 @@ const handleSendMessage = () => {
                               className="w-full h-32 p-2 border border-gray-300 rounded-md resize-none focus:outline-none"
                             ></textarea>
                             <div className="flex justify-end mt-3">
-                              <button 
+                              <button
                                 onClick={handleSendMessage}
                                 className="px-4 py-2 bg-indigo-800 text-white rounded-md font-semibold"
                               >

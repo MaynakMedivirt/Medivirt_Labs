@@ -20,7 +20,7 @@ const db = getFirestore(app);
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('company');
+  const [role, setRole] = useState('Company');
   const [name, setName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -67,7 +67,7 @@ const LoginPage = () => {
   };
 
   const getUserDocumentByRole = async (name, role) => {
-    const usersRef = collection(db, role === 'doctor' ? 'doctors' : 'companies');
+    const usersRef = collection(db, role === 'Doctor' ? 'doctors' : 'companies');
     const q = query(usersRef, where("name", "==", name));
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs[0];
@@ -109,16 +109,16 @@ const LoginPage = () => {
             <div className="flex gap-4 max-w-xl mx-auto mt-20 text-base font-bold text-center uppercase mb-10 whitespace-nowrap tracking-[2px] max-md:flex-wrap">
               {/* Role Selection Buttons */}
               <button
-                className={`flex justify-center items-center py-6 pr-10 pl-5 rounded-lg w-full ${role === 'company' ? 'bg-[#3d52a1] text-white' : 'bg-gray-200 text-zinc-500'}`}
-                onClick={() => setRole('company')}
+                className={`flex justify-center items-center py-6 pr-10 pl-5 rounded-lg w-full ${role === 'Company' ? 'bg-[#3d52a1] text-white' : 'bg-gray-200 text-zinc-500'}`}
+                onClick={() => setRole('Company')}
               >
                 <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />
                 <div className="self-stretch">COMPANY</div>
                 <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />
               </button>
               <button
-                className={`flex justify-center items-center py-6 pr-10 pl-5 rounded-lg w-full ${role === 'doctor' ? 'bg-[#3d52a1] text-white' : 'bg-gray-200 text-zinc-500'}`}
-                onClick={() => setRole('doctor')}
+                className={`flex justify-center items-center py-6 pr-10 pl-5 rounded-lg w-full ${role === 'Doctor' ? 'bg-[#3d52a1] text-white' : 'bg-gray-200 text-zinc-500'}`}
+                onClick={() => setRole('Doctor')}
               >
                 <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />
                 <div className="self-stretch">DOCTOR</div>
@@ -133,6 +133,25 @@ const LoginPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+              <h4 className="text-center font-bold">OR</h4>
+              {role === 'Company' && (
+                <input
+                  className="w-full px-5 py-5 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                  type="text"
+                  placeholder="Enter Company name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              )}
+              {role === 'Doctor' && (
+                <input
+                  className="w-full px-5 py-5 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                  type="text"
+                  placeholder="Enter Doctor name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              )}
               <div className="relative w-full"> {/* Password input wrapper with relative position */}
                 <input
                   className="w-full px-5 py-5 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
@@ -154,25 +173,7 @@ const LoginPage = () => {
                   />
                 )}
               </div>
-              <h4 className="text-center font-bold">OR</h4>
-              {role === 'company' && (
-                <input
-                  className="w-full px-5 py-5 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                  type="text"
-                  placeholder="Enter Company name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              )}
-              {role === 'doctor' && (
-                <input
-                  className="w-full px-5 py-5 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                  type="text"
-                  placeholder="Enter Doctor name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              )}
+              
               <button
                 className="tracking-wide font-semibold mt-8 bg-[#3d52a1] text-gray-100 w-full py-5 rounded-lg hover:bg-[#7091E6] transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
                 onClick={handleLogin}
