@@ -73,7 +73,7 @@ const AddManager = () => {
               className="bg-white shadow rounded px-8 pt-6 pb-8 mb-4"
             >
               <h2 className="text-center text-3xl font-bold my-5">
-                ADD MANAGER
+                ADD GROWTH MANAGER
               </h2>
               <div className="grid md:grid-cols-2 md:gap-6">
                 <div class="mb-5 mt-5">
@@ -84,7 +84,7 @@ const AddManager = () => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Enter Manager name"
+                    placeholder="Enter Growth Manager name"
                   />
                 </div>
                 <div class="mb-5 mt-5">

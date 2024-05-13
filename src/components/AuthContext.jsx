@@ -13,6 +13,16 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+
+  const login = () => {
+    setIsAdminLoggedIn(true);
+  };
+
+  const logout = () => {
+    setIsAdminLoggedIn(false);
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
@@ -24,7 +34,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Make setCurrentUser available in the context value
-  const contextValue = { currentUser, setCurrentUser };
+  const contextValue = { currentUser, setCurrentUser, isAdminLoggedIn, login, logout  };
 
   return (
     <AuthContext.Provider value={contextValue}>

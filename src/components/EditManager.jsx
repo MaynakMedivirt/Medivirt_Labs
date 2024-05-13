@@ -85,7 +85,7 @@ const EditManager = () => {
                             className="bg-white shadow rounded px-8 pt-6 pb-8 mb-4"
                         >
                             <h2 className="text-center text-3xl font-bold my-5">
-                                ADD MANAGER
+                                EDIT GROWTH MANAGER
                             </h2>
                             <div className="grid md:grid-cols-2 md:gap-6">
                                 <div class="mb-5 mt-5">

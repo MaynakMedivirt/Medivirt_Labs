@@ -2,20 +2,21 @@ import React, { useState } from "react";
 import { IoIosArrowDropleftCircle } from "react-icons/io";
 import { FaChartPie, FaCompactDisc , FaCog, FaUser } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
-import { MdManageAccounts } from "react-icons/md";
+import { MdManageAccounts, MdMessage } from "react-icons/md";
+import { RiCalendarScheduleFill, RiMessage3Fill  } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
 const AdminSide = () => {
   const [open, setOpen] = useState(true);
 
   const Menus = [
-    { title: "Dashboard", path: "admin/dash", icon: <FaChartPie className="text-[#82746b]" /> },
+    { title: "Dashboard", path: "/admin/dash", icon: <FaChartPie className="text-[#82746b]" /> },
     { title: "Doctors", path: "/admin/doctors", icon: <FaUserDoctor className="text-[#82746b]" /> }, // Corrected path for Doctors
     { title: "Companies", path: "/admin/companies", icon: <FaCompactDisc  className="text-[#82746b]" /> }, // Corrected path for Companies
-    { title: "Manager", path: "/admin/manager", icon: <FaCompactDisc  className="text-[#82746b]" /> }, // Corrected path for Companies
-    { title: "Doctor Schedule", path: "/admin/doctorSchedule", icon: <MdManageAccounts className="text-[#82746b]" /> },
-    { title: "Doctor Messages",  icon: <MdManageAccounts className="text-[#82746b]" /> },
-    { title: "Company Messages",  icon: <MdManageAccounts className="text-[#82746b]" /> },
+    { title: "Growth Manager", path: "/admin/manager", icon: <MdManageAccounts  className="text-[#82746b]" /> }, // Corrected path for Companies
+    { title: "Doctor Schedule", path: "/admin/doctorSchedule", icon: <RiCalendarScheduleFill className="text-[#82746b]" /> },
+    { title: "Doctor Messages", path: "/admin/doctorMessage", icon: <MdMessage className="text-[#82746b]" /> },
+    { title: "Company Messages", path: "/admin/companyMessage", icon: <RiMessage3Fill  className="text-[#82746b]" /> },
     { title: "Setting", path: "setting", icon: <FaCog className="text-[#82746b]" /> },
   ];
 

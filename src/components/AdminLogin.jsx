@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 
 
 const AdminLogin = () => {
@@ -9,6 +10,7 @@ const AdminLogin = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -17,7 +19,8 @@ const AdminLogin = () => {
         const adminPassword = 'Maynak@meet.2024';
 
         if (email === adminEmail && password === adminPassword) {
-            navigate('/dash');
+            login();
+            navigate('/admin/dash');
         } else {
             setError('Invalid email or password');
         }
