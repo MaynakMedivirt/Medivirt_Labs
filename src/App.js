@@ -68,7 +68,7 @@ const App = () => {
           <Route path='/footer' element={<Footer/>}/>
           <Route path='/DocProfile' element={<DocProfile/>}/>
           <Route path='/admin' element={<AdminLogin/>}/>
-          <Route path='/adminDash/*' element={<AdminDashboard/>}/>
+          <Route path='/admin/dash' element={<AdminDashboard/>}/>
           <Route path='/admin/doctors' element={<Doctor/>}/>
           <Route path='/add-doctor' element={<AddDoctor/>}/>
           <Route path='/edit-doctor/:id' element={<EditDoctor/>}/>

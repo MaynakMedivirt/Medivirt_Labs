@@ -253,7 +253,7 @@ const DoctorList = () => {
       {/* top section */}
       <div className="flex flex-col items-center px-16 pt-6 bg-red-50 max-md:px-5">
         <div className="flex gap-5 justify-between items-start w-full max-w-[1176px] max-md:flex-wrap max-md:max-w-full">
-          <div className="flex flex-col self-start text-base text-neutral-800 max-md:max-w-full mb-4">
+          <div className="flex flex-col ml-[14rem] text-base text-neutral-800 max-md:max-w-full mb-4">
             <div className="text-4xl font-bold font-sans leading-8 max-md:max-w-full">
               Find Your Doctor Here
             </div>

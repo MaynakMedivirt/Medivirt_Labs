@@ -17,7 +17,7 @@ const AdminLogin = () => {
         const adminPassword = 'Maynak@meet.2024';
 
         if (email === adminEmail && password === adminPassword) {
-            navigate('/adminDash');
+            navigate('/dash');
         } else {
             setError('Invalid email or password');
         }

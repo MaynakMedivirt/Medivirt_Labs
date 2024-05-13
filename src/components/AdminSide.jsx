@@ -9,7 +9,7 @@ const AdminSide = () => {
   const [open, setOpen] = useState(true);
 
   const Menus = [
-    { title: "Dashboard", path: "/adminDash", icon: <FaChartPie className="text-[#82746b]" /> },
+    { title: "Dashboard", path: "admin/dash", icon: <FaChartPie className="text-[#82746b]" /> },
     { title: "Doctors", path: "/admin/doctors", icon: <FaUserDoctor className="text-[#82746b]" /> }, // Corrected path for Doctors
     { title: "Companies", path: "/admin/companies", icon: <FaCompactDisc  className="text-[#82746b]" /> }, // Corrected path for Companies
     { title: "Manager", path: "/admin/manager", icon: <FaCompactDisc  className="text-[#82746b]" /> }, // Corrected path for Companies

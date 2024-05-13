@@ -29,7 +29,7 @@ const Pricing = () => {
           height: '170px', // Set the height of the banner 
         }}
       >
-        <h2 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-[#3d52a1] text-3xl font-bold font-sans">
+        <h2 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-[#3d52a1] text-[3rem] font-bold font-sans">
         PRICING & PLANS
         </h2>
       </div>

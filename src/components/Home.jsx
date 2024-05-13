@@ -78,7 +78,7 @@ const Home = () => {
             Virtual Visits, Demo products : <br />
             Meet Your Doctors Online!
           </div>
-          <div className="mt-20 text-2xl font-medium leading-9 text-zinc-500 max-md:mt-10 max-md:max-w-full">
+          <div className="mt-20 text-3xl font-medium leading-9 text-black max-md:mt-10 max-md:max-w-full">
             Our platform connects medical sales representatives with doctors{" "}
             <br /> for virtual product presentations remotely.
           </div>
