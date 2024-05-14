@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, getStorage, deleteObject, uploadBytes  } from "firebase/storage";
 import "firebase/storage"; 
 import AdminSide from "./AdminSide";
 import AdminNavbar from "./AdminNavbar";
+import { useAuth } from './AuthContext';
 
 
 
@@ -16,6 +17,7 @@ const EditDoctor = () => {
     const [imageFile, setImageFile] = useState(null);
     const storage = getStorage(); 
     const navigate = useNavigate();
+    const { isAdminLoggedIn } = useAuth()
 
 
     const fetchDoctor = async () => {
@@ -98,6 +100,9 @@ const EditDoctor = () => {
             console.error("Error updating document:", error);
         }
     };
+    if (!isAdminLoggedIn) {
+        return <Navigate to="/admin" />;
+      }
 
     if (!doctor) {
         return <div>Loading...</div>;

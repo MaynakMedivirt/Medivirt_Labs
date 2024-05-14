@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getFirestore, collection, getDocs, doc, getDoc, deleteDoc } from "firebase/firestore";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, Navigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import AdminSide from "./AdminSide";
 import AdminNavbar from "./AdminNavbar";
@@ -9,6 +9,7 @@ const AdminCompanyMessage = () => {
     const [message, setMessage] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { isAdminLoggedIn } = useAuth();
 
     const navigate = useNavigate();
 
@@ -65,6 +66,10 @@ const AdminCompanyMessage = () => {
 
         fetchMessage();
     }, []);
+
+    if (!isAdminLoggedIn) {
+        return <Navigate to="/admin" />;
+      }
 
     return (
         <div className="flex">

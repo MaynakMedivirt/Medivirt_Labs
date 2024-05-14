@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getFirestore, collection, getDocs, doc, deleteDoc } from "firebase/firestore";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, Navigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import AdminSide from "./AdminSide";
 import AdminNavbar from "./AdminNavbar";
@@ -16,6 +16,8 @@ const Doctor = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const { isAdminLoggedIn } = useAuth();
+
 
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -70,6 +72,11 @@ const Doctor = () => {
       }
     }
   };
+
+  if (!isAdminLoggedIn) {
+    return <Navigate to="/admin" />;
+  }
+
 
   const indexOfLastDoctor = currentPage * perPage;
   const indexOfFirstDoctor = indexOfLastDoctor - perPage;

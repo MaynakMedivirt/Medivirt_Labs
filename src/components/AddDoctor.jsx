@@ -3,7 +3,7 @@ import AdminSide from "./AdminSide";
 import AdminNavbar from "./AdminNavbar";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import {
   getFirestore,
   collection,
@@ -15,6 +15,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import "firebase/storage";
 
 import { firebaseConfig } from "../components/firebase";
+import { useAuth } from './AuthContext';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -37,6 +38,7 @@ const AddDoctor = () => {
   const [other, setOther] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [gender, setGender] = useState("");
+  const { isAdminLoggedIn } = useAuth();
 
   const navigate = useNavigate();
 
@@ -128,6 +130,10 @@ const AddDoctor = () => {
     preview.src = "";
     preview.style.display = "none";
   };
+
+  if (!isAdminLoggedIn) {
+    return <Navigate to="/admin" />;
+  }
 
   return (
     <div className="flex">
