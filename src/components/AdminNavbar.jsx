@@ -26,7 +26,7 @@ const AdminNavbar = () => {
               <li>
                 <a
                   className="block px-4 py-2 text-gray-600 hover:bg-gray-50"
-                  href="/admin"
+                  href="/home"
                 >
                   Logout
                 </a>

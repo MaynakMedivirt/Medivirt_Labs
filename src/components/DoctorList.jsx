@@ -82,6 +82,7 @@ const DoctorList = () => {
     "Bangalore",
     "Delhi",
     "Mumbai",
+    "Kolkata",
     "Hyderabad",
     "Chennai",
     // Add more locations as needed

@@ -5,7 +5,7 @@ import LoginPage from './components/LoginPage';
 import SignupPage from './components/SignupPage';
 import DoctorDash from './components/DoctorDash';
 /*import CompanyDash from './components/CompanyDash';*/
-import { AuthProvider } from './components/AuthContext';
+import { AuthProvider, useAuth } from './components/AuthContext';
 import DoctorList from './components/DoctorList';
 /*import CompanyList from './components/CompanyList';*/
 import DoctorProfile from './components/DoctorProfile';
@@ -16,11 +16,6 @@ import Sidebar from "./components/Side";
 import Pricing from './components/Pricing';
 import Footer from './components/Footer';
 import DocProfile from './components/DocProfile';
-import AdminLogin from './components/AdminLogin';
-import AdminDashboard from './components/AdminDashboard';
-import Doctor from './components/Doctor';
-import AddDoctor from './components/AddDoctor';
-import EditDoctor from './components/EditDoctor';
 import DoctorDashboard from './components/DoctorDashboard';
 import DocdashProfile from './components/DocdashProfile';
 import EditDoctorAbout from './components/EditDoctorAbout';
@@ -29,11 +24,18 @@ import EditDoctorEducation from './components/EditDoctorEducation';
 import EditDoctorCurrentposition from './components/EditDoctorCurrentposition';
 import EditDoctorImage from './components/EditDoctorImage';
 import DoctorSchedule from './components/DoctorSchedule';
+import DoctorMessage from './components/DoctorMessage';
+import AdminLogin from './components/AdminLogin';
+import AdminDashboard from './components/AdminDashboard';
+import Doctor from './components/Doctor';
+import AddDoctor from './components/AddDoctor';
+import EditDoctor from './components/EditDoctor';
 import ScheduleList from './components/ScheduleList';
 import AddManager from './components/AddManager';
 import Manager from './components/Manager';
 import EditManager from './components/EditManager';
-import DoctorMessage from './components/DoctorMessage';
+import AdminCompanyMessage from './components/AdminCompanyMessage';
+import AdminDoctorMessage from './components/AdminDoctorMessage';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -44,7 +46,6 @@ const ScrollToTop = () => {
 
   return null;
 };
-
 
 const App = () => {
   const isAuthorized = true; // You may need to set the authorization status
@@ -67,11 +68,6 @@ const App = () => {
           <Route path='/price' element={<Pricing/>}/>
           <Route path='/footer' element={<Footer/>}/>
           <Route path='/DocProfile' element={<DocProfile/>}/>
-          <Route path='/admin' element={<AdminLogin/>}/>
-          <Route path='/admin/dash' element={<AdminDashboard/>}/>
-          <Route path='/admin/doctors' element={<Doctor/>}/>
-          <Route path='/add-doctor' element={<AddDoctor/>}/>
-          <Route path='/edit-doctor/:id' element={<EditDoctor/>}/>
           <Route path='/doctorDashboard/:id' element={<DoctorDashboard/>}/>
           <Route path='/doctor/profile/:id' element={<DocdashProfile/>}/>          
           <Route path='/doctor/profile/edit-about/:id' element={<EditDoctorAbout/>}/>          
@@ -80,11 +76,18 @@ const App = () => {
           <Route path='/doctor/profile/edit-currentposition/:id' element={<EditDoctorCurrentposition/>}/>          
           <Route path='/doctor/profile/edit-image/:id' element={<EditDoctorImage/>}/>          
           <Route path='/doctor/schedule/:id' element={<DoctorSchedule/>}/>          
+          <Route path='/doctor/message/:id' element={<DoctorMessage/>}/>   
+          <Route path='/admin' element={<AdminLogin/>}/>
+          <Route path='/admin/dash' element={<AdminDashboard/>}/>
+          <Route path='/admin/doctors' element={<Doctor/>}/>
+          <Route path='/add-doctor' element={<AddDoctor/>}/>
+          <Route path='/edit-doctor/:id' element={<EditDoctor/>}/>
           <Route path='/admin/doctorSchedule' element={<ScheduleList />}/>    
           <Route path='/admin/manager' element={<Manager />}/>    
           <Route path='/add-manager' element={<AddManager/>}/> 
           <Route path='/edit-manager/:id' element={<EditManager/>}/>     
-          <Route path='//doctor/message/:id' element={<DoctorMessage/>}/>     
+          <Route path='/admin/companyMessage' element={<AdminCompanyMessage />} />  
+          <Route path='/admin/doctorMessage' element={<AdminDoctorMessage />} />  
 
           {/* Route for the home page */}
           <Route path="*" element={isAuthorized ? <Home /> : <WarningPage />} />

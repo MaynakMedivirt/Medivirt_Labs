@@ -3,7 +3,7 @@ import AdminSide from "./AdminSide";
 import AdminNavbar from "./AdminNavbar";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import {
   getFirestore,
   collection,
@@ -16,6 +16,7 @@ import bcrypt from "bcryptjs";
 import "firebase/storage";
 
 import { firebaseConfig } from "../components/firebase";
+import { useAuth } from './AuthContext';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -27,6 +28,7 @@ const AddManager = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { isAdminLoggedIn } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -60,6 +62,9 @@ const AddManager = () => {
       console.log("Error adding document :", error);
     }
   };
+  if (!isAdminLoggedIn) {
+    return <Navigate to="/admin" />;
+  }
 
   return (
     <div className="flex">

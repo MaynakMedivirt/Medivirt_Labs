@@ -59,22 +59,24 @@ const DoctorProfiles = () => {
   };
 
   // Inside handleBookSchedule and handleSendMessage functions
+
   const handleBookSchedule = async () => {
     console.log("Selected Date:", selectedDate);
     console.log("Selected Time:", selectedTime);
-  
+
     try {
+
       const scheduleData = {
         companyID: currentUser.id,
         doctorID: doctor.id,
         date: selectedDate.toISOString().split('T')[0],
         time: selectedTime,
       };
-  
+
       const customId = `${doctor.id}_${currentUser.id}`;
       const customDocRef = doc(db, "scheduleMeeting", customId);
       await setDoc(customDocRef, scheduleData);
-  
+
       Swal.fire({
         position: "center",
         icon: "success",
@@ -82,39 +84,43 @@ const DoctorProfiles = () => {
         showConfirmButton: false,
         timer: 2000 // Adjusted timer to 2000 milliseconds (2 seconds)
       });
-  
+
       // Reload the page after 2 seconds
       setTimeout(() => {
         window.location.reload();
       }, 2000);
-  
+
     } catch (error) {
       console.error("Error scheduling meeting:", error);
       alert("Failed to schedule meeting. Please try again.");
     }
+
   };
-  
+
   const handleSendMessage = async () => {
     console.log("Message:", message);
     console.log("Doctor state:", doctor.id);
     console.log(currentUser.id);
-  
+
     if (!doctor) {
       console.error("Doctor object is null or undefined.");
       return;
     }
-  
+
     try {
+      console.log(message);
       const messageData = {
         companyID: currentUser.id,
         doctorID: doctor.id,
         messages: message,
       };
-  
+
+      console.log(messageData);
+
       const customId = `${doctor.id}_${currentUser.id}`;
       const customDocRef = doc(db, "messages", customId);
       await setDoc(customDocRef, messageData);
-  
+
       // Show success message
       Swal.fire({
         position: "center",
@@ -123,10 +129,10 @@ const DoctorProfiles = () => {
         showConfirmButton: false,
         timer: 2000
       });
-  
+
       // Reload the page after 2 seconds
       setTimeout(() => {
-        window.location.reload();
+        // window.location.reload();
       }, 2000);
     } catch (error) {
       console.error("Error sending messages:", error);
