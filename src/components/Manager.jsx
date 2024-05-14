@@ -40,6 +40,10 @@ const Manager = () => {
         navigate(`/edit-manager/${managerId}`);
     };
 
+    const handleGoTo = (managerId) => {
+        navigate(`/manager/dash/${managerId}`);
+    }
+
     const handleDeleteProfile = async (managerId) => {
         const confirmed = window.confirm(
             "Are you sure you want to delete this profile?"
@@ -120,6 +124,9 @@ const Manager = () => {
                                                 </button>
                                                 <button type="button" onClick={() => handleDeleteProfile(manager.id)} className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2">
                                                     <MdDelete />
+                                                </button>
+                                                <button type="button" onClick={() => handleGoTo(manager.id)} className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2">
+                                                    Enter
                                                 </button>
                                             </td>
                                         </tr>

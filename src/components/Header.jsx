@@ -52,7 +52,7 @@ const Header = () => {
         const { name, role, id } = currentUser;
         return (
           <div className="mr-2">
-            <Link to={role === 'Doctor' ? `/doctorDashboard/${id}` : `/companydash/${id}`} className='text-sm font-bold'>{name}</Link>
+            <Link to={role === 'Doctor' ? `/doctorDashboard/${id}` : `/companyDashboard/${id}`} className='text-sm font-bold'>{name}</Link>
             <p className='text-sm'>{role}</p>
           </div>
         );

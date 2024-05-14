@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import DoctorNavbar from './DoctorNavbar';
-import DoctorSide from './DoctorSide';
+import CompanyNavbar from './CompanyNavbar';
+import CompanySide from './CompanySide';
 import { AiFillMessage } from "react-icons/ai";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { FaChartLine } from "react-icons/fa6";
 import { PiChartPieSliceFill } from "react-icons/pi";
 
-const DoctorDashboard = () => {
+const CompanyDashboard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     const toggleSidebar = () => {
@@ -15,9 +15,9 @@ const DoctorDashboard = () => {
 
     return (
         <div className="flex flex-col h-screen">
-            <DoctorNavbar />
+            <CompanyNavbar />
             <div className="flex flex-1">
-                <DoctorSide open={sidebarOpen} toggleSidebar={toggleSidebar} />
+                <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
                 <div className={`overflow-y-auto flex-1 transition-margin duration-300 ${sidebarOpen ? 'ml-72' : 'ml-20'}`}>
                     <div className="container max-w-6xl px-5 mx-auto my-10">
                         <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
@@ -55,7 +55,7 @@ const DoctorDashboard = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="text-gray-400">Projected Earnings</div>
+                                        <div className="text-gray-400">Credits</div>
                                         <div className="text-2xl font-bold text-black">$642.39</div>
                                     </div>
                                 </div>
@@ -81,4 +81,4 @@ const DoctorDashboard = () => {
     );
 };
 
-export default DoctorDashboard;
+export default CompanyDashboard;

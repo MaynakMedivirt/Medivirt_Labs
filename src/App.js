@@ -36,6 +36,17 @@ import Manager from './components/Manager';
 import EditManager from './components/EditManager';
 import AdminCompanyMessage from './components/AdminCompanyMessage';
 import AdminDoctorMessage from './components/AdminDoctorMessage';
+import ManagerDashboard from './components/ManagerDashboard';
+import ManagerSchedule from './components/ManagerSchedule';
+import ManagerCompany from './components/ManagerCompany';
+import ManagerDoctor from './components/ManagerDoctor';
+import ManageDoctors from './components/ManageDoctors';
+import ManageCompanies from './components/ManageCompanies';
+
+import CompanyDashboard from './components/CompanyDashboard';
+import CompanySchedule from './components/CompanySchedule';
+import CompanyMessage from './components/CompanyMessage';
+
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -87,7 +98,21 @@ const App = () => {
           <Route path='/add-manager' element={<AddManager/>}/> 
           <Route path='/edit-manager/:id' element={<EditManager/>}/>     
           <Route path='/admin/companyMessage' element={<AdminCompanyMessage />} />  
-          <Route path='/admin/doctorMessage' element={<AdminDoctorMessage />} />  
+          <Route path='/admin/doctorMessage' element={<AdminDoctorMessage />} /> 
+
+          {/* growth manager  */}
+          <Route path='/manager/dash/:id' element={<ManagerDashboard />} />  
+          <Route path='/manager/doctorSchedule' element={<ManagerSchedule />} />  
+          <Route path='/manager/companyMessage' element={<ManagerCompany />} />  
+          <Route path='/manager/doctorMessage' element={<ManagerDoctor />} />  
+          <Route path='/manager/doctors' element={<ManageDoctors />} />  
+          <Route path='/manager/companies' element={<ManageCompanies />} /> 
+
+          {/* company  */}
+          <Route path='/companyDashboard/:id' element={<CompanyDashboard/>}/>
+          <Route path='/company/schedule/:id' element={<CompanySchedule/>}/>
+          <Route path='/company/message/:id' element={<CompanyMessage/>}/>
+
 
           {/* Route for the home page */}
           <Route path="*" element={isAuthorized ? <Home /> : <WarningPage />} />

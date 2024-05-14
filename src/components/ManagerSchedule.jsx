@@ -1,27 +1,17 @@
 import React, { useState, useEffect } from "react";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-  deleteDoc,
-} from "firebase/firestore";
+import { getFirestore, collection, getDocs, doc, getDoc, deleteDoc} from "firebase/firestore";
 import { useNavigate, Link, Navigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
-import AdminSide from "./AdminSide";
-import AdminNavbar from "./AdminNavbar";
-import { FaEdit } from "react-icons/fa";
-import { TiTick } from "react-icons/ti";
+import ManagerNavbar from "./ManagerNavbar";
+import ManagerSide from "./ManagerSide";
 import { SiGooglemeet } from "react-icons/si";
 import { MdAutoDelete } from "react-icons/md";
 
-
-const ScheduleList = () => {
+const ManagerSchedule = () => {
   const [scheduleMeeting, setScheduleMeeting] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { isAdminLoggedIn } = useAuth();
+  const { isManagerLoggedIn } = useAuth();
 
   const navigate = useNavigate();
 
@@ -96,15 +86,15 @@ const ScheduleList = () => {
   //     return <div>Loading...</div>;
   // }
 
-  if (!isAdminLoggedIn) {
+  if (!isManagerLoggedIn) {
     return <Navigate to="/admin" />;
   }
 
   return (
     <div className="flex">
-      <AdminSide />
+      <ManagerSide />
       <div className="flex-1 overflow-hidden">
-        <AdminNavbar />
+        <ManagerNavbar />
         <div className="container mx-auto px-5 md:px-3 h-full overflow-y-scroll overflow-x-scroll">
           <div className="border mt-4 p-2">
             <div className="flex justify-between items-center mb-5">
@@ -184,18 +174,6 @@ const ScheduleList = () => {
                           type="button"
                           className="text-white bg-[#7091E6] rounded-lg p-2 text-center me-2 mb-2"
                         >
-                          <FaEdit /> {/* Modify */}
-                        </button>
-                        <button
-                          type="button"
-                          className="text-white bg-[#7091E6] rounded-lg p-2 text-center me-2 mb-2"
-                        >
-                          <TiTick /> {/* Accept */}
-                        </button>
-                        <button
-                          type="button"
-                          className="text-white bg-[#7091E6] rounded-lg p-2 text-center me-2 mb-2"
-                        >
                           <SiGooglemeet /> {/* Join Now */}
                         </button>
                         <button
@@ -217,4 +195,4 @@ const ScheduleList = () => {
   );
 };
 
-export default ScheduleList;
+export default ManagerSchedule;
