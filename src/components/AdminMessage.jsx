@@ -1,28 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import CompanySide from './CompanySide';
-import CompanyNavbar from './CompanyNavbar';
-import { getFirestore, collection, query, where, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
+import AdminNavbar from "./AdminNavbar";
+import AdminSide from "./AdminSide";
+import { getFirestore, collection, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
 import Swal from 'sweetalert2';
-import Chatbox from './Chatbox';
+import Adminbox from './Adminbox';
 
-const CompanyMessage = () => {
+const AdminMessage = () => {
     const [messages, setMessages] = useState([]);
     const [replyMessage, setReplyMessage] = useState("");
     const [currentConversation, setCurrentConversation] = useState(null);
-    const [showChatbox, setShowChatbox] = useState(false);
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [showAdminbox, setshowAdminbox] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
     const { id } = useParams();
 
-    const toggleSidebar = () => {
-        setSidebarOpen(!sidebarOpen);
-    };
-
-    const handleReplyMessageChange = (e) => {
-        setReplyMessage(e.target.value);
-    };
+    // const handleReplyMessageChange = (e) => {
+    //     setReplyMessage(e.target.value);
+    // };
 
     const handleSendReply = async () => {
         if (!replyMessage.trim()) {
@@ -36,18 +31,18 @@ const CompanyMessage = () => {
 
         try {
             const db = getFirestore();
-            if (!currentConversation || !currentConversation.doctorID) {
-                throw new Error("Conversation or doctor ID not found.");
+            if (!currentConversation || !currentConversation.companyID || !currentConversation.doctorID) {
+                throw new Error("Invalid conversation or missing IDs.");
             }
             const replyData = {
-                companyID: id,
+                companyID: currentConversation.companyID,
                 doctorID: currentConversation.doctorID,
                 messages: replyMessage,
-                sentBy: "company",
+                sentBy: "",
                 timestamp: new Date(),
             };
 
-            const customId = `${id}_${currentConversation.doctorID}_${Date.now()}`;
+            const customId = `${id}_${currentConversation.doctorID}_${currentConversation.companyID}_${Date.now()}`;
             const customDocRef = doc(db, "messages", customId);
             await setDoc(customDocRef, replyData);
 
@@ -77,16 +72,28 @@ const CompanyMessage = () => {
         try {
             const db = getFirestore();
             const messageRef = collection(db, "messages");
-            const q = query(messageRef, where("companyID", "==", id));
-            const querySnapshot = await getDocs(q);
+            // let q = query(messageRef, where("companyID", "==", id));
 
-            const fetchDoctorData = async (doctorId) => {
-                const doctorDocRef = doc(db, "doctors", doctorId);
+            const querySnapshot = await getDocs(messageRef);
+
+            const fetchCompanyData = async (companyID) => {
+                const companyDocRef = doc(db, "companies", companyID);
+                const companyDocSnapshot = await getDoc(companyDocRef);
+                if (companyDocSnapshot.exists()) {
+                    return companyDocSnapshot.data();
+                } else {
+                    console.error(`Company with ID ${companyID} not found`);
+                    return null;
+                }
+            };
+
+            const fetchDoctorData = async (doctorID) => {
+                const doctorDocRef = doc(db, "doctors", doctorID);
                 const doctorDocSnapshot = await getDoc(doctorDocRef);
                 if (doctorDocSnapshot.exists()) {
                     return doctorDocSnapshot.data();
                 } else {
-                    console.error(`Doctor with ID ${doctorId} not found`);
+                    console.error(`Company with ID ${doctorID} not found`);
                     return null;
                 }
             };
@@ -94,19 +101,25 @@ const CompanyMessage = () => {
             const groupedMessages = {};
             const promises = querySnapshot.docs.map(async (doc) => {
                 const messageData = doc.data();
+                const companyData = await fetchCompanyData(messageData.companyID);
+                const companyName = companyData ? companyData.companyName : "Unknown Company Name";
+                const representativeName = companyData ? companyData.name : "Unknown Representative Name";
+
                 const doctorData = await fetchDoctorData(messageData.doctorID);
-                const doctorName = doctorData ? doctorData.name : "Unknown Doctor";
+                const doctorName = doctorData ? doctorData.name :"unknown doctor name";
 
                 const key = `${messageData.doctorID}_${messageData.companyID}`;
                 if (!groupedMessages[key]) {
                     groupedMessages[key] = {
                         doctorName,
+                        companyName,
+                        representativeName,
                         doctorID: messageData.doctorID,
                         companyID: messageData.companyID,
                         messages: [],
                         recentMessage: {
                             text: "",
-                            isCompany: false,
+                            isDoctor: false,
                             date: "",
                             time: ""
                         }
@@ -129,7 +142,7 @@ const CompanyMessage = () => {
                 if (!groupedMessages[key].recentMessage.timestamp || timestamp > groupedMessages[key].recentMessage.timestamp) {
                     groupedMessages[key].recentMessage = {
                         text: messageData.messages,
-                        isCompany: messageData.sentBy === "company",
+                        isDoctor: messageData.sentBy === "doctor",
                         date,
                         time,
                         timestamp
@@ -143,7 +156,7 @@ const CompanyMessage = () => {
             const messagesArray = Object.keys(groupedMessages).map(key => groupedMessages[key]);
             setMessages(messagesArray);
         } catch (error) {
-            console.error("Error fetching schedule messages:", error);
+            console.error("Error fetching messages:", error);
         }
     };
 
@@ -153,79 +166,98 @@ const CompanyMessage = () => {
 
     const handleReply = (conversation) => {
         setCurrentConversation(conversation);
-        setShowChatbox(true);
+        setshowAdminbox(true);
     };
 
     const handleCloseChat = () => {
-        setShowChatbox(false); // Hide the chatbox
+        setshowAdminbox(false);
     };
 
     const indexOfLastMessage = currentPage * itemsPerPage;
     const indexOfFirstMessage = indexOfLastMessage - itemsPerPage;
     const currentMessages = messages.slice(indexOfFirstMessage, indexOfLastMessage);
 
-    // Handle pagination button click
     const handlePageClick = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
     return (
-        <div className="flex flex-col h-screen">
-            <CompanyNavbar />
-            <div className="flex flex-1">
-                <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
-                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-20'}`}>
-                    <div className="container max-w-6xl px-5 mx-auto my-10">
-                        <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
-                            Messages
-                        </h2>
+        <div className="flex">
+            <AdminSide />
+            <div className="flex-1 overflow-hidden">
+                <AdminNavbar />
+                <div className="container mx-auto px-5 md:px-3 h-full overflow-y-scroll overflow-x-scroll">
+                    <div className="border mt-4 p-2">
+                        <div className="flex justify-between items-center mb-5">
+                            <h2 className="text-center text-3xl font-bold">Messages</h2>
+                        </div>
                         <div className="overflow-auto mt-3 border">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
                                     <tr>
-                                        <th scope="col" className="px-6 py-3 text-sm tracking-wider">
+                                        <th scope="col" className="p-2 text-sm tracking-wider">
                                             S.N.
                                         </th>
-                                        <th scope="col" className="bg-gray-50 px-6 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="bg-gray-50 p-2 text-sm uppercase tracking-wider">
                                             Doctor Name
                                         </th>
-                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="p-2 text-sm uppercase tracking-wider">
+                                            Company Name
+                                        </th>
+                                        <th scope="col" className="bg-gray-50 p-2 text-sm uppercase tracking-wider">
+                                            Representative Name
+                                        </th>
+                                        <th scope="col" className="p-2 text-sm uppercase tracking-wider">
                                             Recent Message
                                         </th>
-                                        <th scope="col" className="bg-gray-50 px-6 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="bg-gray-50 p-2 text-sm uppercase tracking-wider">
                                             Date
                                         </th>
-                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="p-2 text-sm uppercase tracking-wider">
                                             Time
                                         </th>
-                                        <th scope="col" className="bg-gray-50 px-6 py-3 text-sm uppercase tracking-wider">
+
+                                        <th scope="col" className="p-2 text-sm uppercase tracking-wider">
                                             Action
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {currentMessages.map((conversation, index) => (
-                                        <tr key={index} className="border-b border-gray-200">
-                                            <td scope="row" className="px-6 py-4">
+                                        <tr key={index} className="text-sm border-b border-gray-200">
+                                            <td className="p-2">
                                                 {index + 1}
                                             </td>
-                                            <td className="px-6 py-4 font-medium text-gray-900 bg-gray-50">
+                                            <td className="p-2 bg-gray-50 font-bold">
                                                 {conversation.doctorName}
                                             </td>
-                                            <td className="px-6 py-4 font-medium text-gray-900">
-                                                {conversation.recentMessage.text}
+                                            <td className="p-2 font-bold">
+                                                {conversation.companyName}
                                             </td>
-                                            <td className="px-6 py-4 font-medium text-gray-900 bg-gray-50">
+                                            <td className="p-2 bg-gray-50 ">
+                                                {conversation.representativeName}
+                                            </td>
+                                            <td className="p-2">
+                                                {conversation.recentMessage && conversation.recentMessage.isDoctor !== undefined ? (
+                                                    conversation.recentMessage.isDoctor ? (
+                                                        <span style={{ color: "blue" }}>{conversation.recentMessage.text}</span>
+                                                    ) : (
+                                                        <span style={{ color: "green" }}>{conversation.recentMessage.text}</span>
+                                                    )
+                                                ) : (
+                                                    <span>-</span>
+                                                )}
+                                            </td>
+                                            <td className="p-2 bg-gray-50 ">
                                                 {conversation.recentMessage.date}
                                             </td>
-                                            <td className="px-6 py-4 font-medium text-gray-900">
+                                            <td className="p-2">
                                                 {conversation.recentMessage.time}
                                             </td>
-                                            <td className="px-6 py-4 bg-gray-50">
+                                            <td className="p-2 bg-gray-50 ">
                                                 <button
-                                                    type="button"
-                                                    className="text-white bg-[#4BCB5D] rounded-lg px-3 py-2 text-center me-2 mb-2"
                                                     onClick={() => handleReply(conversation)}
+                                                    className="text-white bg-[#4BCB5D] rounded-lg px-3 py-2 text-center me-2 mb-2"
                                                 >
                                                     Open ChatBox
                                                 </button>
@@ -235,29 +267,28 @@ const CompanyMessage = () => {
                                 </tbody>
                             </table>
                         </div>
-                        {currentConversation && showChatbox && (
-                            <Chatbox
-                                conversation={currentConversation}
-                                replyMessage={replyMessage}
-                                handleReplyMessageChange={(e) => setReplyMessage(e.target.value)}
-                                handleSendReply={handleSendReply}
-                                handleCloseChat={handleCloseChat}
-                            />
-                        )}
+                    </div>
+                    {currentConversation && showAdminbox && (
+                        <Adminbox
+                            conversation={currentConversation}
+                            replyMessage={replyMessage}
+                            handleReplyMessageChange={(e) => setReplyMessage(e.target.value)}
+                            handleSendReply={handleSendReply}
+                            handleCloseChat={handleCloseChat}
+                        />
+                    )}
 
-                        {/* Pagination */}
-                        <div className="flex justify-end my-4">
-                            {Array.from({ length: Math.ceil(messages.length / itemsPerPage) }, (_, i) => (
-                                <button
-                                    key={i}
-                                    className={`px-3 py-2 mx-1 rounded-md ${currentPage === i + 1 ? 'bg-[#7191E6] text-white' : 'bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300'}`}
-                                    onClick={() => handlePageClick(i + 1)}
-                                >
-                                    {i + 1}
-                                </button>
-                            ))}
-                        </div>
-
+                    {/* Pagination */}
+                    <div className="flex justify-end my-4">
+                        {Array.from({ length: Math.ceil(messages.length / itemsPerPage) }, (_, i) => (
+                            <button
+                                key={i}
+                                className={`px-3 py-2 mx-1 rounded-md ${currentPage === i + 1 ? 'bg-[#7191E6] text-white' : 'bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300'}`}
+                                onClick={() => handlePageClick(i + 1)}
+                            >
+                                {i + 1}
+                            </button>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -265,4 +296,4 @@ const CompanyMessage = () => {
     );
 }
 
-export default CompanyMessage;
+export default AdminMessage;

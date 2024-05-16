@@ -15,8 +15,7 @@ const AdminSide = () => {
     { title: "Companies", path: "/admin/companies", icon: <FaCompactDisc  className="text-[#82746b]" /> }, // Corrected path for Companies
     { title: "Growth Manager", path: "/admin/manager", icon: <MdManageAccounts  className="text-[#82746b]" /> }, // Corrected path for Companies
     { title: "Doctor Schedule", path: "/admin/doctorSchedule", icon: <RiCalendarScheduleFill className="text-[#82746b]" /> },
-    { title: "Doctor Messages", path: "/admin/doctorMessage", icon: <MdMessage className="text-[#82746b]" /> },
-    { title: "Company Messages", path: "/admin/companyMessage", icon: <RiMessage3Fill  className="text-[#82746b]" /> },
+    { title: "Messages", path: "/admin/messages", icon: <MdMessage className="text-[#82746b]" /> },
     { title: "Setting", path: "setting", icon: <FaCog className="text-[#82746b]" /> },
   ];
 

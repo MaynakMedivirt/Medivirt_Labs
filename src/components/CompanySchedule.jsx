@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import CompanySide from './CompanySide';
 import CompanyNavbar from './CompanyNavbar';
-import { getFirestore, collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import Calendar from 'react-calendar';
 import Swal from 'sweetalert2';
+import { FaEdit } from "react-icons/fa";
+import { SiGooglemeet } from "react-icons/si";
+import { MdAutoDelete } from "react-icons/md";
 
 const CompanySchedule = () => {
     const [scheduleMeetings, setScheduleMeetings] = useState([]);
@@ -12,6 +15,10 @@ const CompanySchedule = () => {
     const [showCalendar, setShowCalendar] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedTime, setSelectedTime] = useState(null);
+    const [searchDate, setSearchDate] = useState('');
+    const [searchTime, setSearchTime] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10);
     const { id } = useParams();
 
     const toggleSidebar = () => {
@@ -27,7 +34,12 @@ const CompanySchedule = () => {
             try {
                 const db = getFirestore();
                 const scheduleMeetingsRef = collection(db, "scheduleMeeting");
-                const q = query(scheduleMeetingsRef, where("companyID", "==", id));
+                let q = query(scheduleMeetingsRef, where("companyID", "==", id));
+
+                if (searchDate !== '') {
+                    q = query(q, where("date", "==", searchDate));
+                }
+
                 const querySnapshot = await getDocs(q);
 
                 const fetchDoctorData = async (doctorId) => {
@@ -62,9 +74,9 @@ const CompanySchedule = () => {
         };
 
         fetchScheduleMeetings();
-    }, [id]);
+    }, [id, searchDate]);
 
-    const handleModify = () => {
+    const handleModify = async (meetingId) => {
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -73,15 +85,82 @@ const CompanySchedule = () => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, save it!"
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                toggleCalendar();
-                setTimeout(() => {
-                    window.location.reload();
-                }, 900);
+                try {
+                    const db = getFirestore();
+                    const meetingDocRef = doc(db, "scheduleMeeting", meetingId);
+
+                    const meetingDocSnapshot = await getDoc(meetingDocRef);
+                    if (!meetingDocSnapshot.exists()) {
+                        throw new Error(`Document with ID ${meetingId} does not exist`);
+                    }
+
+                    const adjustedDate = new Date(selectedDate);
+                    const ISTOffset = 330;
+                    adjustedDate.setMinutes(adjustedDate.getMinutes() + ISTOffset);
+                    const formattedDate = adjustedDate.toISOString().split('T')[0];
+
+                    await updateDoc(meetingDocRef, {
+                        date: formattedDate,
+                        time: selectedTime,
+                    });
+                    toggleCalendar();
+
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 900);
+                } catch (error) {
+                    console.error("Error updating schedule meeting:", error);
+                    Swal.fire({
+                        title: "Error",
+                        text: "An error occurred while updating the schedule. Please try again later.",
+                        icon: "error",
+                    });
+                }
             }
         });
     };
+
+    const indexOfLastMeeting = currentPage * itemsPerPage;
+    const indexOfFirstMeeting = indexOfLastMeeting - itemsPerPage;
+    const currentMeetings = scheduleMeetings.slice(indexOfFirstMeeting, indexOfLastMeeting);
+
+    const sortedMeetings = [...currentMeetings].sort((a, b) => {
+        
+        const dateComparison = new Date(a.date) - new Date(b.date);
+        if (dateComparison !== 0) {
+            return dateComparison;
+        }
+       
+        const timeA = a.time.split(' ')[0];
+        const timeB = b.time.split(' ')[0];
+        return new Date(`1970/01/01 ${timeA}`) - new Date(`1970/01/01 ${timeB}`);
+    });
+
+
+    const handlePageClick = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const handleDeleteMeeting = async (meetingId) => {
+        const confirmed = window.confirm(
+          "Are you sure you want to delete this profile?"
+        );
+    
+        if (confirmed) {
+          try {
+            const db = getFirestore();
+            await deleteDoc(doc(db, "scheduleMeeting", meetingId));
+            setScheduleMeetings((prevMeetings) =>
+              prevMeetings.filter((scheduleMeetings) => scheduleMeetings.id !== meetingId)
+            );
+          } catch (error) {
+            console.error("Error deleting Meeting:", error);
+          }
+        }
+      };
+
 
     return (
         <div className="flex flex-col h-screen">
@@ -93,20 +172,38 @@ const CompanySchedule = () => {
                         <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
                             Schedule Meetings
                         </h2>
+
+                        <div className="flex justify-end items-center mb-5">
+                            <div className="flex flex-col mx-2 justify-center self-stretch my-auto border rounded-md">
+                                <input
+                                    type="date"
+                                    value={searchDate}
+                                    onChange={(e) => setSearchDate(e.target.value)}
+                                    className="p-2"
+                                />
+                            </div>
+                            <button
+                                onClick={() => console.log('Search logic here')}
+                                className="p-2 rounded bg-[#7191E6] text-white  hover:bg-[#3D52A1] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                            >
+                                Search
+                            </button>
+                        </div>
+
                         <div className="overflow-auto mt-3">
-                            <table className="min-w-full divide-y divide-gray-200">
+                            <table className="min-w-full divide-y border divide-gray-200">
                                 <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
                                     <tr>
                                         <th scope="col" className="px-6 py-3 text-sm tracking-wider">
                                             S.N.
                                         </th>
-                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="bg-gray-50 px-6 py-3 text-sm uppercase tracking-wider">
                                             Doctor Name
                                         </th>
                                         <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
                                             Date
                                         </th>
-                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="bg-gray-50 px-6 py-3 text-sm uppercase tracking-wider">
                                             Time
                                         </th>
                                         <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
@@ -115,7 +212,7 @@ const CompanySchedule = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
-                                    {scheduleMeetings.map((meeting, index) => (
+                                    {sortedMeetings.map((meeting, index) => (
                                         <tr key={index} className="border-b border-gray-200">
                                             <td scope="row" className="px-6 py-4">
                                                 {index + 1}
@@ -134,13 +231,20 @@ const CompanySchedule = () => {
                                                     onClick={toggleCalendar}
                                                     className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
                                                 >
-                                                    Modify
+                                                    <FaEdit />{/* Modify */}
                                                 </button>
                                                 <button
                                                     type="button"
                                                     className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
                                                 >
-                                                    Accept
+                                                    <SiGooglemeet />{/* Join Now */}
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteMeeting(meeting.id)}
+                                                    type="button"
+                                                    className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                                                >
+                                                    <MdAutoDelete />{/* Delete */}
                                                 </button>
                                             </td>
                                         </tr>
@@ -148,6 +252,20 @@ const CompanySchedule = () => {
                                 </tbody>
                             </table>
                         </div>
+
+                        {/* Pagination */}
+                        <div className="flex justify-end my-4">
+                            {Array.from({ length: Math.ceil(scheduleMeetings.length / itemsPerPage) }, (_, i) => (
+                                <button
+                                    key={i}
+                                    className={`px-3 py-2 mx-1 rounded-md ${currentPage === i + 1 ? 'bg-[#7191E6] text-white' : 'bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300'}`}
+                                    onClick={() => handlePageClick(i + 1)}
+                                >
+                                    {i + 1}
+                                </button>
+                            ))}
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -204,7 +322,7 @@ const CompanySchedule = () => {
                                 Cancel
                             </button>
                             <button
-                                onClick={handleModify}
+                                onClick={() => handleModify(scheduleMeetings[0].id)} 
                                 className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
                             >
                                 Save

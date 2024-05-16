@@ -34,8 +34,9 @@ import ScheduleList from './components/ScheduleList';
 import AddManager from './components/AddManager';
 import Manager from './components/Manager';
 import EditManager from './components/EditManager';
-import AdminCompanyMessage from './components/AdminCompanyMessage';
-import AdminDoctorMessage from './components/AdminDoctorMessage';
+import AdminMessage from './components/AdminMessage';
+// import AdminDoctorMessage from './components/AdminDoctorMessage';
+import Company from './components/Company';
 import ManagerDashboard from './components/ManagerDashboard';
 import ManagerSchedule from './components/ManagerSchedule';
 import ManagerCompany from './components/ManagerCompany';
@@ -97,8 +98,9 @@ const App = () => {
           <Route path='/admin/manager' element={<Manager />}/>    
           <Route path='/add-manager' element={<AddManager/>}/> 
           <Route path='/edit-manager/:id' element={<EditManager/>}/>     
-          <Route path='/admin/companyMessage' element={<AdminCompanyMessage />} />  
-          <Route path='/admin/doctorMessage' element={<AdminDoctorMessage />} /> 
+          <Route path='/admin/messages' element={<AdminMessage />} />  
+          {/* <Route path='/admin/doctorMessage' element={<AdminDoctorMessage />} />  */}
+          <Route path='/admin/companies' element={<Company />} /> 
 
           {/* growth manager  */}
           <Route path='/manager/dash/:id' element={<ManagerDashboard />} />  

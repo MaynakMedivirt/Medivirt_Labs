@@ -1,84 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import DoctorNavbar from './DoctorNavbar';
-import DoctorSide from './DoctorSide';
-import { getFirestore, collection, query, where, getDocs, doc, getDoc, addDoc, setDoc } from 'firebase/firestore';
+import DoctorNavbar from "./DoctorNavbar";
+import DoctorSide from "./DoctorSide";
+import { getFirestore, collection, query, where, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
 import Swal from 'sweetalert2';
+import Doctorbox from "./Doctorbox";
 
 const DoctorMessage = () => {
     const [messages, setMessages] = useState([]);
     const [replyMessage, setReplyMessage] = useState("");
-    const [currentMessageId, setCurrentMessageId] = useState(null);
-    const { id } = useParams();
-
+    const [currentConversation, setCurrentConversation] = useState(null);
+    const [showDoctorbox, setShowDoctorbox] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10);
+    const [searchDate, setSearchDate] = useState(''); // State for search date
+    const { id } = useParams();
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
 
-    useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                const db = getFirestore();
-                const messageRef = collection(db, "messages");
-                const q = query(messageRef, where("doctorID", "==", id));
-                const querySnapshot = await getDocs(q);
-    
-                const fetchCompanyData = async (companyId) => {
-                    const companyDocRef = doc(db, "companies", companyId);
-                    const companyDocSnapshot = await getDoc(companyDocRef);
-                    if (companyDocSnapshot.exists()) {
-                        return companyDocSnapshot.data();
-                    } else {
-                        return null;
-                    }
-                };
-    
-                const messagesArray = [];
-                const promises = querySnapshot.docs.map(async (doc) => {
-                    const messageData = doc.data();
-                    const companyData = await fetchCompanyData(messageData.companyID);
-                    const companyName = companyData ? companyData.companyName : "Unknown Company";
-                    const representativeName = companyData ? companyData.name : "Unknown Representative";
-
-                    if (messageData.sentBy === 'company') {
-                        messagesArray.push({
-                            id: doc.id,
-                            companyName,
-                            representativeName,
-                            message: messageData.messages,
-                            companyId: messageData.companyID // Include companyId in the message object
-                        });
-                    } else if (messageData.sentBy === 'doctor') {
-                        const index = messagesArray.findIndex(message => message.id === messageData.replyTo);
-                        if (index !== -1) {
-                            if (!messagesArray[index].replies) {
-                                messagesArray[index].replies = [];
-                            }
-                            messagesArray[index].replies.push({
-                                id: doc.id,
-                                message: messageData.messages
-                            });
-                        }
-                    }
-                });
-    
-                await Promise.all(promises);
-                setMessages(messagesArray);
-            } catch (error) {
-                console.error("Error fetching schedule messages:", error);
-            }
-        };
-    
-        fetchMessages();
-    }, [id]);
-
-    const handleReply = (messageId) => {
-        setCurrentMessageId(messageId);
+    const handleReplyMessageChange = (e) => {
+        setReplyMessage(e.target.value);
     };
 
-    const handleReplySubmit = async () => {
+    const handleSendReply = async () => {
         if (!replyMessage.trim()) {
             Swal.fire({
                 icon: 'error',
@@ -90,20 +37,18 @@ const DoctorMessage = () => {
 
         try {
             const db = getFirestore();
-            const originalMessage = messages.find(msg => msg.id === currentMessageId);
-            if (!originalMessage || !originalMessage.companyId) {
-                throw new Error("Original message or company ID not found.");
+            if (!currentConversation || !currentConversation.companyID) {
+                throw new Error("Conversation or company ID not found.");
             }
             const replyData = {
+                companyID: currentConversation.companyID,
                 doctorID: id,
-                companyID: originalMessage.companyId,
                 messages: replyMessage,
                 sentBy: "doctor",
-                replyTo: currentMessageId,
                 timestamp: new Date(),
             };
 
-            const customId = `${id}_${originalMessage.companyId}_${Date.now()}`;
+            const customId = `${id}_${currentConversation.companyID}_${Date.now()}`;
             const customDocRef = doc(db, "messages", customId);
             await setDoc(customDocRef, replyData);
 
@@ -116,8 +61,9 @@ const DoctorMessage = () => {
             });
 
             setReplyMessage("");
-            setCurrentMessageId(null);
+            setCurrentConversation(null);
 
+            fetchMessages();
         } catch (error) {
             console.error("Error sending reply:", error);
             Swal.fire({
@@ -126,6 +72,121 @@ const DoctorMessage = () => {
                 text: 'Failed to send reply. Please try again.',
             });
         }
+    };
+
+    const fetchMessages = async () => {
+        try {
+            const db = getFirestore();
+            const messageRef = collection(db, "messages");
+            let q = query(messageRef, where("doctorID", "==", id));
+
+            // if (searchDate !== '') {
+            //     const searchTimestamp = new Date(searchDate).toLocaleString('en-US', {
+            //         timeZone: 'UTC',
+            //         year: 'numeric',
+            //         month: 'long',
+            //         day: '2-digit'
+            //     });
+
+            //     console.log("Search Timestamp:", searchTimestamp); 
+            //     q = query(q, where("recentMessage.date", "==", searchTimestamp));
+
+            //     console.log("Query:", q);
+            // }
+
+
+            const querySnapshot = await getDocs(q);
+            console.log("Query Snapshot:", querySnapshot.docs); 
+
+            const fetchDoctorData = async (companyID) => {
+                const companyDocRef = doc(db, "companies", companyID);
+                const companyDocSnapshot = await getDoc(companyDocRef);
+                if (companyDocSnapshot.exists()) {
+                    return companyDocSnapshot.data();
+                } else {
+                    console.error(`company with ID ${companyID} not found`);
+                    return null;
+                }
+            };
+
+            const groupedMessages = {};
+            const promises = querySnapshot.docs.map(async (doc) => {
+                const messageData = doc.data();
+                const companyData = await fetchDoctorData(messageData.companyID);
+                const companyName = companyData ? companyData.companyName : "Unknown Company Name";
+                const representativeName = companyData ? companyData.name : "Unknown Name";
+
+                const key = `${messageData.doctorID}_${messageData.companyID}`;
+                if (!groupedMessages[key]) {
+                    groupedMessages[key] = {
+                        companyName,
+                        representativeName,
+                        doctorID: messageData.doctorID,
+                        companyID: messageData.companyID,
+                        messages: [],
+                        recentMessage: {
+                            text: "",
+                            isCompany: false,
+                            date: "",
+                            time: ""
+                        }
+                    };
+                }
+
+                const timestamp = messageData.timestamp?.toDate();
+                const date = timestamp ? timestamp.toLocaleDateString() : "N/A";
+                const time = timestamp ? timestamp.toLocaleTimeString() : "N/A";
+
+                groupedMessages[key].messages.push({
+                    id: doc.id,
+                    message: messageData.messages,
+                    sentBy: messageData.sentBy,
+                    date,
+                    time,
+                });
+
+                // Check if the current message is the most recent one
+                if (!groupedMessages[key].recentMessage.timestamp || timestamp > groupedMessages[key].recentMessage.timestamp) {
+                    groupedMessages[key].recentMessage = {
+                        text: messageData.messages,
+                        isDoctor: messageData.sentBy === "doctor",
+                        date,
+                        time,
+                        timestamp
+                    };
+                }
+            });
+
+            await Promise.all(promises);
+
+            // Convert groupedMessages object to array
+            const messagesArray = Object.keys(groupedMessages).map(key => groupedMessages[key]);
+            setMessages(messagesArray);
+        } catch (error) {
+            console.error("Error fetching schedule messages:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchMessages();
+    }, [id, searchDate]); 
+
+    const handleReply = (conversation) => {
+        setCurrentConversation(conversation);
+        setShowDoctorbox(true);
+    };
+
+    const handleCloseChat = () => {
+        setShowDoctorbox(false);
+    };
+
+    const indexOfLastMessage = currentPage * itemsPerPage;
+    const indexOfFirstMessage = indexOfLastMessage - itemsPerPage;
+    const currentMessages = messages.slice(indexOfFirstMessage, indexOfLastMessage);
+
+    // Handle pagination button click
+    const handlePageClick = (pageNumber) => {
+        setCurrentPage(pageNumber);
     };
 
     return (
@@ -138,82 +199,120 @@ const DoctorMessage = () => {
                         <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
                             Messages
                         </h2>
+
+                        {/* Date filter input */}
+                        {/* <div className="flex justify-end items-center mb-5">
+                            <div className="flex flex-col mx-2 justify-center self-stretch my-auto border rounded-md">
+                                <input
+                                    type="date"
+                                    value={searchDate}
+                                    onChange={(e) => setSearchDate(e.target.value)}
+                                    className="p-2"
+                                />
+                            </div>
+                            <button
+                                onClick={() => setSearchDate('')}
+                                className="p-2 rounded bg-[#7191E6] text-white  hover:bg-[#3D52A1] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                            >
+                                Search
+                            </button>
+                        </div> */}
+
+
                         <div className="overflow-auto mt-3 border">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
                                     <tr>
-                                        <th scope="col" className="px-6 py-3 text-sm tracking-wider">
+                                        <th scope="col" className="p-3 text-sm tracking-wider">
                                             S.N.
                                         </th>
-                                        <th scope="col" className="bg-gray-50 px-6 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="bg-gray-50 p-3 text-sm uppercase tracking-wider">
                                             Company Name
                                         </th>
-                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="p-3 text-sm uppercase tracking-wider">
                                             Representative Name
                                         </th>
-                                        <th scope="col" className="bg-gray-50 px-6 py-3 text-sm uppercase tracking-wider">
-                                            Message
+                                        <th scope="col" className="bg-gray-50 p-3 text-sm uppercase tracking-wider">
+                                            Recent Message
                                         </th>
-                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
-                                            Actions
+                                        <th scope="col" className="p-3 text-sm uppercase tracking-wider">
+                                            Date
+                                        </th>
+                                        <th scope="col" className="bg-gray-50 p-3 text-sm uppercase tracking-wider">
+                                            Time
+                                        </th>
+                                        <th scope="col" className="p-3 text-sm uppercase tracking-wider">
+                                            Action
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {messages.map((message, index) => (
-                                        <tr key={message.id} className="border-b border-gray-200">
-                                            <td scope="row" className="px-6 py-4">
-                                                {index + 1}
-                                            </td>
-                                            <td className="px-6 py-4 font-medium text-gray-900 bg-gray-50">
-                                                {message.companyName}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                {message.representativeName}
-                                            </td>
-                                            <td className="px-6 py-4 bg-gray-50">
-                                                {message.message}
-                                                {message.replies && (
-                                                    <ul className="text-gray-800">
-                                                        {message.replies.map((reply, idx) => (
-                                                            <li className="text-black" key={idx}>{reply.message}</li>
-                                                        ))}
-                                                    </ul>
-                                                )}
-                                            </td>
-                                            <td className="px-6 py-4 bg-gray-50">
-                                                <button
-                                                    type="button"
-                                                    className="text-white bg-[#4BCB5D] rounded-lg px-3 py-2 text-center me-2 mb-2"
-                                                    onClick={() => handleReply(message.id)}
-                                                >
-                                                    Reply
-                                                </button>
-                                            </td>
+                                {currentMessages.length > 0 ? (
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                        {currentMessages.map((conversation, index) => (
+                                            <tr key={index} className="border-b border-gray-200">
+                                                <td scope="row" className="p-2">
+                                                    {index + 1}
+                                                </td>
+                                                <td className="p-2 font-medium text-gray-900 bg-gray-50">
+                                                    {conversation.companyName}
+                                                </td>
+                                                <td className="p-2 font-medium text-gray-900">
+                                                    {conversation.representativeName}
+                                                </td>
+                                                <td className="p-2 font-medium text-gray-900 bg-gray-50">
+                                                    {conversation.recentMessage.text}
+                                                </td>
+                                                <td className="p-2 font-medium text-gray-900">
+                                                    {conversation.recentMessage.date}
+                                                </td>
+                                                <td className="p-2 font-medium text-gray-900 bg-gray-50">
+                                                    {conversation.recentMessage.time}
+                                                </td>
+                                                <td className="p-2">
+                                                    <button
+                                                        type="button"
+                                                        className="text-white bg-[#4BCB5D] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                                                        onClick={() => handleReply(conversation)}
+                                                    >
+                                                        Open ChatBox
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                ) : (
+                                    <tbody>
+                                        <tr>
+                                            <td colSpan="7" className="p-4 text-center">No messages found.</td>
                                         </tr>
-                                    ))}
-                                </tbody>
+                                    </tbody>
+                                )}
                             </table>
                         </div>
-                        {currentMessageId && (
-                            <div className="mt-5 bg-gray-100 p-5 rounded-md shadow-md">
-                                <h3 className="text-lg font-semibold mb-3">Reply to Message</h3>
-                                <textarea
-                                    placeholder="Type your reply here..."
-                                    value={replyMessage}
-                                    onChange={(e) => setReplyMessage(e.target.value)}
-                                    className="w-full h-32 p-2 border border-gray-300 rounded-md resize-none focus:outline-none"
-                                ></textarea>
-                                <div className="flex justify-end mt-3">
-                                    <button
-                                        onClick={handleReplySubmit}
-                                        className="px-4 py-2 bg-indigo-800 text-white rounded-md font-semibold"
-                                    >
-                                        Send Reply
-                                    </button>
-                                </div>
-                            </div>
+
+                        {currentConversation && showDoctorbox && (
+                            <Doctorbox
+                                conversation={currentConversation}
+                                replyMessage={replyMessage}
+                                handleReplyMessageChange={(e) => setReplyMessage(e.target.value)}
+                                handleSendReply={handleSendReply}
+                                handleCloseChat={handleCloseChat}
+                            />
                         )}
+
+                        {/* Pagination */}
+                        <div className="flex justify-end my-4">
+                            {Array.from({ length: Math.ceil(messages.length / itemsPerPage) }, (_, i) => (
+                                <button
+                                    key={i}
+                                    className={`px-3 py-2 mx-1 rounded-md ${currentPage === i + 1 ? 'bg-[#7191E6] text-white' : 'bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300'}`}
+                                    onClick={() => handlePageClick(i + 1)}
+                                >
+                                    {i + 1}
+                                </button>
+                            ))}
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -222,4 +321,3 @@ const DoctorMessage = () => {
 }
 
 export default DoctorMessage;
- 

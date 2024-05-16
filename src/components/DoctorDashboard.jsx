@@ -1,17 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DoctorNavbar from './DoctorNavbar';
 import DoctorSide from './DoctorSide';
 import { AiFillMessage } from "react-icons/ai";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { FaChartLine } from "react-icons/fa6";
 import { PiChartPieSliceFill } from "react-icons/pi";
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'; // Assuming Firestore is used
+import { useParams } from 'react-router-dom';
 
 const DoctorDashboard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [messageCount, setMessageCount] = useState(0);
+    const [meetingCount, setMeetingCount] = useState(0);
+    const [projectedEarnings, setProjectedEarnings] = useState(0);
+    const { id } = useParams();
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
+
+    useEffect(() => {
+        const fetchMessageCount = async () => {
+            try {
+                const db = getFirestore();
+                const messageRef = collection(db, "messages");
+                const q = query(messageRef, where("doctorID", "==", id)); 
+                const querySnapshot = await getDocs(q);
+
+                const uniqueCompanies = new Set();
+                querySnapshot.forEach((doc) => {
+                    const messageData = doc.data();
+                    uniqueCompanies.add(messageData.companyID);
+                });
+
+                setMessageCount(uniqueCompanies.size);
+            } catch (error) {
+                console.error("Error fetching unique company count:", error);
+            }
+        };
+
+        const fetchMeetingCount = async () => {
+            try {
+                const db = getFirestore();
+                const meetingRef = collection(db, "scheduleMeeting");
+                const q = query(meetingRef, where("doctorID", "==", id));
+                const querySnapshot = await getDocs(q);
+                setMeetingCount(querySnapshot.size);
+            } catch (error) {
+                console.error("Error fetching meeting count:", error);
+            }
+        };
+
+        fetchMessageCount();
+        fetchMeetingCount();
+    }, []);
+
+    useEffect(() => {
+        setProjectedEarnings(meetingCount * 150); 
+    }, [meetingCount]);
 
     return (
         <div className="flex flex-col h-screen">
@@ -30,7 +76,7 @@ const DoctorDashboard = () => {
                                     </div>
                                     <div>
                                         <div className="text-gray-400">Messages</div>
-                                        <div className="text-2xl font-bold text-black">12</div>
+                                        <div className="text-2xl font-bold text-black">{messageCount}</div>
                                     </div>
                                 </div>
                             </div>
@@ -43,7 +89,7 @@ const DoctorDashboard = () => {
                                     </div>
                                     <div>
                                         <div className="text-gray-400">Schedule-Meeting</div>
-                                        <div className="text-2xl font-bold text-black">4</div>
+                                        <div className="text-2xl font-bold text-black">{meetingCount}</div>
                                     </div>
                                 </div>
                             </div>
@@ -56,7 +102,7 @@ const DoctorDashboard = () => {
                                     </div>
                                     <div>
                                         <div className="text-gray-400">Projected Earnings</div>
-                                        <div className="text-2xl font-bold text-black">$642.39</div>
+                                        <div className="text-2xl font-bold text-black">${projectedEarnings}</div>
                                     </div>
                                 </div>
                             </div>

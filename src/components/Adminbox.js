@@ -1,16 +1,16 @@
 import React from "react";
 
-const Chatbox = ({ conversation, replyMessage, handleReplyMessageChange, handleSendReply, handleCloseChat }) => {
-
+const Adminbox = ({ conversation, replyMessage, handleReplyMessageChange, handleSendReply, handleCloseChat }) => {
+    
     const compareTimeStamps = (msg1, msg2) => {
-
+        
         const date1 = new Date(msg1.date);
         const date2 = new Date(msg2.date);
 
         if (date1.getTime() !== date2.getTime()) {
             return date1.getTime() - date2.getTime();
         } else {
-    
+           
             const time1 = new Date("2000-01-01 " + msg1.time);
             const time2 = new Date("2000-01-01 " + msg2.time);
             return time1.getTime() - time2.getTime();
@@ -38,13 +38,14 @@ const Chatbox = ({ conversation, replyMessage, handleReplyMessageChange, handleS
         <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
             <div className="bg-white p-4 rounded-lg max-w-lg w-full">
                 <div className="flex justify-between mb-4">
-                    <h3 className="text-lg font-semibold">Chat with {conversation.doctorName}</h3>
+                    <h3 className="text-lg font-semibold">Chat with {conversation.representativeName} and {conversation.doctorName}</h3>
                 </div>
                 <div className="overflow-auto max-h-60">
                     {/* Sort messages by timestamp before rendering */}
                     {conversation.messages.filter(msg => msg.time).sort(compareTimeStamps).map((msg, idx) => {
                         const showDate = msg.date !== currentDate;
                         currentDate = msg.date;
+                        const senderName = msg.sentBy === 'doctor' ? conversation.doctorName : conversation.representativeName;
                         return (
                             <div key={idx}>
                                 {showDate && (
@@ -52,8 +53,13 @@ const Chatbox = ({ conversation, replyMessage, handleReplyMessageChange, handleS
                                         {formatDate(msg.date)}
                                     </div>
                                 )}
-                                <div className={`mb-2 ${msg.sentBy === 'company' ? 'text-right' : 'text-left'}`}>
-                                    <span className="inline-block bg-gray-200 p-2 rounded-lg">{msg.message}</span>
+                                <div className={`mb-2 ${msg.sentBy === 'doctor' ? 'text-right' : 'text-left'}`}>
+                                    <span className="inline-block bg-gray-200 p-2 rounded-lg">
+                                        <span className="block text-[0.75rem] font-bold">
+                                            {senderName}
+                                        </span>
+                                        {msg.message}
+                                    </span>
                                     <p className="text-xs text-gray-500 mt-1">{msg.time}</p>
                                 </div>
                             </div>
@@ -79,4 +85,4 @@ const Chatbox = ({ conversation, replyMessage, handleReplyMessageChange, handleS
     );
 };
 
-export default Chatbox;
+export default Adminbox;

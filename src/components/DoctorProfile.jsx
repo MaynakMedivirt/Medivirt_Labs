@@ -62,19 +62,25 @@ const DoctorProfiles = () => {
   const handleBookSchedule = async () => {
     console.log("Selected Date:", selectedDate);
     console.log("Selected Time:", selectedTime);
-  
+
+    const adjustedDate = new Date(selectedDate);
+    const ISTOffset = 330;
+    adjustedDate.setMinutes(adjustedDate.getMinutes() + ISTOffset);
+    const formattedDate = adjustedDate.toISOString().split('T')[0];
+
+
     try {
       const scheduleData = {
         companyID: currentUser.id,
         doctorID: doctor.id,
-        date: selectedDate.toISOString().split('T')[0],
+        date: formattedDate,
         time: selectedTime,
       };
-  
+
       const customId = `${doctor.id}_${currentUser.id}`;
       const customDocRef = doc(db, "scheduleMeeting", customId);
       await setDoc(customDocRef, scheduleData);
-  
+
       Swal.fire({
         position: "center",
         icon: "success",
@@ -82,28 +88,28 @@ const DoctorProfiles = () => {
         showConfirmButton: false,
         timer: 2000 // Adjusted timer to 2000 milliseconds (2 seconds)
       });
-  
+
       // Reload the page after 2 seconds
       setTimeout(() => {
         window.location.reload();
       }, 2000);
-  
+
     } catch (error) {
       console.error("Error scheduling meeting:", error);
       alert("Failed to schedule meeting. Please try again.");
     }
   };
-  
+
   const handleSendMessage = async () => {
     console.log("Message:", message);
     console.log("Doctor state:", doctor.id);
     console.log(currentUser.id);
-  
+
     if (!doctor) {
       console.error("Doctor object is null or undefined.");
       return;
     }
-  
+
     try {
       const messageData = {
         companyID: currentUser.id,
@@ -112,11 +118,11 @@ const DoctorProfiles = () => {
         sentBy: 'company',
         timestamp: new Date(),
       };
-  
+
       const customId = `${doctor.id}_${currentUser.id}_${Date.now()}`;
       const customDocRef = doc(db, "messages", customId);
       await setDoc(customDocRef, messageData);
-  
+
       // Show success message
       Swal.fire({
         position: "center",
@@ -125,7 +131,7 @@ const DoctorProfiles = () => {
         showConfirmButton: false,
         timer: 2000
       });
-  
+
       // Reload the page after 2 seconds
       setTimeout(() => {
         window.location.reload();

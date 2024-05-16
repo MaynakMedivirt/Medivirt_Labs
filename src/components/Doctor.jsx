@@ -103,7 +103,7 @@ const Doctor = () => {
         >
           {doctor.name}
         </td>
-        <td className="px-6 py-4">{doctor.email}</td>
+        <td className="px-6 py-4">{doctor.location}</td>
         <td className="px-6 py-4 bg-gray-50 dark:bg-gray-800">
           {doctor.specialist}
         </td>
@@ -193,7 +193,7 @@ const Doctor = () => {
                 </div>
                 <button
                   onClick={() => console.log('Search logic here')}
-                  className="p-2 rounded bg-[#11A798] text-white  hover:bg-[7191E6] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                  className="p-2 rounded bg-[#11A798] text-white  hover:bg-[#7191E6] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                 >
                   Search
                 </button>
@@ -219,7 +219,7 @@ const Doctor = () => {
                       scope="col"
                       className="px-6 py-3 text-sm uppercase tracking-wider"
                     >
-                      Email
+                      Location
                     </th>
                     <th
                       scope="col"
