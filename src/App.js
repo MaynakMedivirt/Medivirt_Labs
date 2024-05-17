@@ -9,7 +9,7 @@ import { AuthProvider, useAuth } from './components/AuthContext';
 import DoctorList from './components/DoctorList';
 /*import CompanyList from './components/CompanyList';*/
 import DoctorProfile from './components/DoctorProfile';
-/*import CompanyProfile from './components/CompanyProfile';*/
+// import CompanyProfile from './components/CompanyProfile';
 import WarningPage from './pages/WarningPage';
 import Navbar from './components/Navbar';
 import Sidebar from "./components/Side";
@@ -37,16 +37,30 @@ import EditManager from './components/EditManager';
 import AdminMessage from './components/AdminMessage';
 // import AdminDoctorMessage from './components/AdminDoctorMessage';
 import Company from './components/Company';
+import AddCompany from './components/AddCompany';
+import EditCompany from './components/EditCompany';
+
 import ManagerDashboard from './components/ManagerDashboard';
 import ManagerSchedule from './components/ManagerSchedule';
-import ManagerCompany from './components/ManagerCompany';
-import ManagerDoctor from './components/ManagerDoctor';
+// import ManagerCompany from './components/ManagerCompany';
+// import ManagerDoctor from './components/ManagerDoctor';
 import ManageDoctors from './components/ManageDoctors';
 import ManageCompanies from './components/ManageCompanies';
+import ManagerMessages from './components/ManagerMessages';
 
+import ProfileComplete from './components/ProfileComplete';
 import CompanyDashboard from './components/CompanyDashboard';
 import CompanySchedule from './components/CompanySchedule';
 import CompanyMessage from './components/CompanyMessage';
+import ComdashProfile from './components/ComdashProfile';
+import Products from './components/Products';
+import Users from './components/Users';
+import AddProduct from './components/AddProduct';
+import AddUsers from './components/AddUsers';
+import CompanyCredits from './components/CompanyCredits';
+
+import DoctorEarning from './components/DoctorEarning';
+import LearnMore from './components/LearnMore';
 
 
 const ScrollToTop = () => {
@@ -101,19 +115,33 @@ const App = () => {
           <Route path='/admin/messages' element={<AdminMessage />} />  
           {/* <Route path='/admin/doctorMessage' element={<AdminDoctorMessage />} />  */}
           <Route path='/admin/companies' element={<Company />} /> 
+          <Route path='/admin/add-company' element={<AddCompany />} /> 
+          <Route path='/admin/edit-company/:id' element={<EditCompany />} /> 
 
           {/* growth manager  */}
           <Route path='/manager/dash/:id' element={<ManagerDashboard />} />  
           <Route path='/manager/doctorSchedule' element={<ManagerSchedule />} />  
-          <Route path='/manager/companyMessage' element={<ManagerCompany />} />  
-          <Route path='/manager/doctorMessage' element={<ManagerDoctor />} />  
+          {/* <Route path='/manager/companyMessage' element={<ManagerCompany />} />  
+          <Route path='/manager/doctorMessage' element={<ManagerDoctor />} />   */}
           <Route path='/manager/doctors' element={<ManageDoctors />} />  
           <Route path='/manager/companies' element={<ManageCompanies />} /> 
+          <Route path='/manager/messages' element={<ManagerMessages />} /> 
 
           {/* company  */}
+          <Route path='/profilecomplete/:id' element={<ProfileComplete/>}/>
           <Route path='/companyDashboard/:id' element={<CompanyDashboard/>}/>
           <Route path='/company/schedule/:id' element={<CompanySchedule/>}/>
           <Route path='/company/message/:id' element={<CompanyMessage/>}/>
+          <Route path='/company/profile/:id' element={<ComdashProfile/>}/>
+          <Route path='/company/products/:id' element={<Products/>}/>
+          <Route path='/company/users/:id' element={<Users/>}/>
+          <Route path='/company/add-product/:id' element={<AddProduct/>}/>
+          <Route path='/company/add-user/:id' element={<AddUsers/>}/>
+          <Route path='/company/credits/:id' element={<CompanyCredits/>}/>
+
+          <Route path='/doctor/earning/:id' element={<DoctorEarning/>}/>
+
+          <Route path='/learnMore' element={<LearnMore />}/>
 
 
           {/* Route for the home page */}

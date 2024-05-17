@@ -8,8 +8,6 @@ import Swal from 'sweetalert2';
 import { FaEdit } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
 import { SiGooglemeet } from "react-icons/si";
-// import moment from 'moment';
-
 
 const DoctorSchedule = () => {
     const [scheduleMeetings, setScheduleMeetings] = useState([]);
@@ -18,17 +16,18 @@ const DoctorSchedule = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedTime, setSelectedTime] = useState(null);
     const [searchDate, setSearchDate] = useState('');
-    const [searchTime, setSearchTime] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
+    const [selectedMeetingId, setSelectedMeetingId] = useState(null); 
     const { id } = useParams();
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
 
-    const toggleCalendar = () => {
+    const toggleCalendar = (meetingId = null) => {
         setShowCalendar(!showCalendar);
+        setSelectedMeetingId(meetingId); 
     };
 
     useEffect(() => {
@@ -78,7 +77,9 @@ const DoctorSchedule = () => {
         fetchScheduleMeetings();
     }, [id, searchDate]);
 
-    const handleModify = async (meetingId) => {
+    const handleModify = async () => {
+        if (!selectedMeetingId) return; 
+
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -91,11 +92,13 @@ const DoctorSchedule = () => {
             if (result.isConfirmed) {
                 try {
                     const db = getFirestore();
-                    const meetingDocRef = doc(db, "scheduleMeeting", meetingId);
+                    const meetingDocRef = doc(db, "scheduleMeeting", selectedMeetingId);
+
+                    console.log(selectedMeetingId);
 
                     const meetingDocSnapshot = await getDoc(meetingDocRef);
                     if (!meetingDocSnapshot.exists()) {
-                        throw new Error(`Document with ID ${meetingId} does not exist`);
+                        throw new Error(`Document with ID ${selectedMeetingId} does not exist`);
                     }
 
                     const adjustedDate = new Date(selectedDate);
@@ -129,22 +132,18 @@ const DoctorSchedule = () => {
     const currentMeetings = scheduleMeetings.slice(indexOfFirstMeeting, indexOfLastMeeting);
 
     const sortedMeetings = [...currentMeetings].sort((a, b) => {
-        
         const dateComparison = new Date(a.date) - new Date(b.date);
         if (dateComparison !== 0) {
             return dateComparison;
         }
-       
         const timeA = a.time.split(' ')[0];
         const timeB = b.time.split(' ')[0];
         return new Date(`1970/01/01 ${timeA}`) - new Date(`1970/01/01 ${timeB}`);
     });
-    
+
     const handlePageClick = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
-
-
 
     return (
         <div className="flex flex-col h-screen">
@@ -168,12 +167,11 @@ const DoctorSchedule = () => {
                             </div>
                             <button
                                 onClick={() => console.log('Search logic here')}
-                                className="p-2 rounded bg-[#7191E6] text-white  hover:bg-[#3D52A1] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                                className="p-2 rounded bg-[#7191E6] text-white hover:bg-[#3D52A1] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                             >
                                 Search
                             </button>
                         </div>
-
 
                         <div className="overflow-auto mt-3">
                             <table className="min-w-full divide-y divide-gray-200">
@@ -201,7 +199,7 @@ const DoctorSchedule = () => {
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {sortedMeetings.map((meeting, index) => (
-                                        <tr key={index} className="border-b border-gray-200">
+                                        <tr key={meeting.id} className="border-b border-gray-200">
                                             <td scope="row" className="px-6 py-4">
                                                 {index + 1}
                                             </td>
@@ -219,7 +217,7 @@ const DoctorSchedule = () => {
                                             </td>
                                             <td className="px-6 py-4 bg-gray-50">
                                                 <button
-                                                    onClick={toggleCalendar}
+                                                    onClick={() => toggleCalendar(meeting.id)} 
                                                     className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
                                                 >
                                                     <FaEdit />{/* Modify */}
@@ -254,7 +252,6 @@ const DoctorSchedule = () => {
                                 </button>
                             ))}
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -305,13 +302,13 @@ const DoctorSchedule = () => {
                         </select>
                         <div className="flex justify-end mt-4">
                             <button
-                                onClick={toggleCalendar}
+                                onClick={() => toggleCalendar(null)}
                                 className="px-4 py-2 mr-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400"
                             >
                                 Cancel
                             </button>
                             <button
-                                onClick={() => handleModify(scheduleMeetings[0].id)} 
+                                onClick={handleModify}
                                 className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
                             >
                                 Save
@@ -324,4 +321,4 @@ const DoctorSchedule = () => {
     )
 }
 
-export default DoctorSchedule; 
+export default DoctorSchedule;

@@ -15,8 +15,9 @@ const ManagerSide = () => {
     { title: "Doctors", path: "/manager/doctors", icon: <FaUserDoctor className="text-[#82746b]" /> }, 
     { title: "Companies", path: "/manager/companies", icon: <FaCompactDisc  className="text-[#82746b]" /> },
     { title: "Doctor Schedule", path: "/manager/doctorSchedule", icon: <RiCalendarScheduleFill className="text-[#82746b]" /> },
-    { title: "Doctor Messages", path: "/manager/doctorMessage", icon: <MdMessage className="text-[#82746b]" /> },
-    { title: "Company Messages", path: "/manager/companyMessage", icon: <RiMessage3Fill  className="text-[#82746b]" /> },
+    { title: "Messages", path: "/manager/messages", icon: <MdMessage className="text-[#82746b]" /> },
+    // { title: "Doctor Messages", path: "/manager/doctorMessage", icon: <MdMessage className="text-[#82746b]" /> },
+    // { title: "Company Messages", path: "/manager/companyMessage", icon: <RiMessage3Fill  className="text-[#82746b]" /> },
     { title: "Setting", path: "/manager/setting", icon: <FaCog className="text-[#82746b]" /> },
   ];
 

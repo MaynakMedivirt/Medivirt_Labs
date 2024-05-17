@@ -53,7 +53,12 @@ const Chatbox = ({ conversation, replyMessage, handleReplyMessageChange, handleS
                                     </div>
                                 )}
                                 <div className={`mb-2 ${msg.sentBy === 'company' ? 'text-right' : 'text-left'}`}>
-                                    <span className="inline-block bg-gray-200 p-2 rounded-lg">{msg.message}</span>
+                                    <span className="inline-block bg-gray-200 p-2 rounded-lg">
+                                        <span className="block text-[0.75rem] font-bold">
+                                            {msg.sentBy === 'admin' ? 'Admin' : ''}
+                                        </span>
+                                        {msg.message}
+                                    </span>
                                     <p className="text-xs text-gray-500 mt-1">{msg.time}</p>
                                 </div>
                             </div>

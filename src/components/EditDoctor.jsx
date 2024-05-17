@@ -9,7 +9,6 @@ import AdminNavbar from "./AdminNavbar";
 import { useAuth } from './AuthContext';
 
 
-
 const EditDoctor = () => {
     const { id } = useParams();
     const [doctor, setDoctor] = useState(null);
@@ -78,8 +77,8 @@ const EditDoctor = () => {
             if (imageFile) {
                 const imageRef = ref(storage, `images/${imageFile.name}`);
                 await uploadBytes(imageRef, imageFile);
-                const downloadURL = await getDownloadURL(imageRef); // Get the download URL
-                newData.image = downloadURL; // Update newData.image with the download URL
+                const downloadURL = await getDownloadURL(imageRef); 
+                newData.image = downloadURL; 
             }else if (!imageUrl) {
                 
                 newData.image = ""; 
@@ -89,10 +88,10 @@ const EditDoctor = () => {
 
             console.log("Document successfully updated!");
             alert("Data successfully updated!");
-            // setDoctor(null);
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
+           
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, 1000);
             navigate('/admin/doctors');
             
             // fetchDoctor();

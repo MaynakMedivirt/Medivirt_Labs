@@ -1,6 +1,6 @@
 import React from "react";
 
-const Adminbox = ({ conversation, replyMessage, handleReplyMessageChange, handleSendReply, handleCloseChat }) => {
+const Managerbox = ({ conversation, replyMessage, handleReplyMessageChange, handleSendReply, handleCloseChat }) => {
     
     const getSenderName = (sentBy) => {
         switch(sentBy) {
@@ -97,4 +97,4 @@ const Adminbox = ({ conversation, replyMessage, handleReplyMessageChange, handle
     );
 };
 
-export default Adminbox;
+export default Managerbox;

@@ -1,16 +1,16 @@
 import React from "react";
 
 const Doctorbox = ({ conversation, replyMessage, handleReplyMessageChange, handleSendReply, handleCloseChat }) => {
-    
+
     const compareTimeStamps = (msg1, msg2) => {
-        
+
         const date1 = new Date(msg1.date);
         const date2 = new Date(msg2.date);
 
         if (date1.getTime() !== date2.getTime()) {
             return date1.getTime() - date2.getTime();
         } else {
-           
+
             const time1 = new Date("2000-01-01 " + msg1.time);
             const time2 = new Date("2000-01-01 " + msg2.time);
             return time1.getTime() - time2.getTime();
@@ -52,8 +52,13 @@ const Doctorbox = ({ conversation, replyMessage, handleReplyMessageChange, handl
                                         {formatDate(msg.date)}
                                     </div>
                                 )}
-                                <div className={`mb-2 ${msg.sentBy === 'doctor' ? 'text-right' : 'text-left'}`}>
-                                    <span className="inline-block bg-gray-200 p-2 rounded-lg">{msg.message}</span>
+                                <div className={`mb-2 ${msg.sentBy === 'company' ? 'text-left' : 'text-right'}`}>
+                                    <span className="inline-block bg-gray-200 p-2 rounded-lg">
+                                        <span className="block text-[0.75rem] font-bold">
+                                            {msg.sentBy === 'admin' ? 'Admin' : ''}
+                                        </span>
+                                        {msg.message}
+                                    </span>
                                     <p className="text-xs text-gray-500 mt-1">{msg.time}</p>
                                 </div>
                             </div>

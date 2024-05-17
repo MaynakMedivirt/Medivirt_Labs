@@ -19,7 +19,7 @@ import "slick-carousel/slick/slick-theme.css";
 import left from "../assets/img/arrow-left.png";
 import right from "../assets/img/arrow-right.png";
 import "./style/Home.css";
-import { NavLink } from "react-router-dom";
+import { NavLink , Link} from "react-router-dom";
 
 const Home = () => {
   const [email, setEmail] = useState("");
@@ -474,7 +474,7 @@ const Home = () => {
           <div className="mt-10 flex gap-5 mb-5 justify-between items-start w-full max-md:flex-wrap max-md:pr-5 max-md:max-w-full">
             <div className="flex gap-5 justify-center items-center self-start px-4 py-6 text-base font-bold text-center text-white uppercase bg-indigo-800 tracking-[2px]">
               <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />
-              <div className="flex-auto self-stretch">learn more</div>
+              <Link to="/learnMore" className="flex-auto self-stretch">learn more</Link>
               <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />
             </div>
           </div>

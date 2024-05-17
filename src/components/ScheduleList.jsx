@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-  deleteDoc,
-  query,
-  where,
-} from "firebase/firestore";
+import { getFirestore, collection, getDocs, doc, getDoc, deleteDoc, updateDoc, query, where } from "firebase/firestore";
 import { useNavigate, Link, Navigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import AdminSide from "./AdminSide";
 import AdminNavbar from "./AdminNavbar";
+import Calendar from 'react-calendar';
+import Swal from 'sweetalert2';
 import { FaEdit } from "react-icons/fa";
 import { TiTick } from "react-icons/ti";
 import { SiGooglemeet } from "react-icons/si";
@@ -23,15 +16,22 @@ const ScheduleList = () => {
   const [scheduleMeeting, setScheduleMeeting] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
   const [searchDate, setSearchDate] = useState('');
-  const [searchTime, setSearchTime] = useState('');
+  // const [searchTime, setSearchTime] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [selectedMeetingId, setSelectedMeetingId] = useState(null);
   const { isAdminLoggedIn } = useAuth();
 
   const navigate = useNavigate();
+
+  const toggleCalendar = (meetingId = null) => {
+    setShowCalendar(!showCalendar);
+    setSelectedMeetingId(meetingId); 
+};
 
   useEffect(() => {
     const fetchMeetings = async () => {
@@ -43,10 +43,10 @@ const ScheduleList = () => {
           meetingCollection = query(meetingCollection, where("date", "==", searchDate));
         }
 
-        if (searchTime !== '') {
-          const trimmedSearchTime = searchTime.trim().toLowerCase();
-          meetingCollection = query(meetingCollection, where("time", "==", trimmedSearchTime));
-        }
+        // if (searchTime !== '') {
+        //   const trimmedSearchTime = searchTime.trim().toLowerCase();
+        //   meetingCollection = query(meetingCollection, where("time", "==", trimmedSearchTime));
+        // }
 
         const snapshot = await getDocs(meetingCollection);
 
@@ -108,11 +108,63 @@ const ScheduleList = () => {
     };
 
     fetchMeetings();
-  }, [searchDate, searchTime]);
+  }, [searchDate]);
 
-  // if (loading) {
-  //     return <div>Loading...</div>;
-  // }
+  const handleModify = async () => {
+    if (!selectedMeetingId) return; 
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, save it!"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const db = getFirestore();
+          const meetingDocRef = doc(db, "scheduleMeeting", selectedMeetingId);
+
+          console.log(selectedMeetingId)
+
+          const meetingDocSnapshot = await getDoc(meetingDocRef);
+          if (!meetingDocSnapshot.exists()) {
+            throw new Error(`Document with ID ${selectedMeetingId} does not exist`);
+          }
+
+          const adjustedDate = new Date(selectedDate);
+          const ISTOffset = 330;
+          adjustedDate.setMinutes(adjustedDate.getMinutes() + ISTOffset);
+          const formattedDate = adjustedDate.toISOString().split('T')[0];
+
+          await updateDoc(meetingDocRef, {
+            date: formattedDate,
+            time: selectedTime,
+          });
+
+          setScheduleMeeting((prevMeetings) =>
+            prevMeetings.map((meeting) =>
+              meeting.id === selectedMeetingId
+                ? { ...meeting, date: formattedDate, time: selectedTime }
+                : meeting
+            )
+          );
+
+          toggleCalendar();
+
+        } catch (error) {
+          console.error("Error updating schedule meeting:", error);
+          Swal.fire({
+            title: "Error",
+            text: "An error occurred while updating the schedule. Please try again later.",
+            icon: "error",
+          });
+        }
+      }
+    });
+  };
 
   if (!isAdminLoggedIn) {
     return <Navigate to="/admin" />;
@@ -281,6 +333,7 @@ const ScheduleList = () => {
                       <td className="px-2 py-2 bg-gray-50">{meeting.time}</td>
                       <td className="px-2 py-2">
                         <button
+                          onClick={() => toggleCalendar(meeting.id)} 
                           type="button"
                           className="text-white bg-[#11A798] rounded-lg p-2 text-center me-2 mb-2"
                         >
@@ -311,6 +364,69 @@ const ScheduleList = () => {
                 </tbody>
               </table>
             </div>
+
+            {showCalendar && (
+              <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+                <div className="bg-white p-6 rounded-lg">
+                  <div className="w-full max-w-xs">
+                    <Calendar
+                      onChange={setSelectedDate}
+                      value={selectedDate}
+                      className="border border-gray-300 rounded-md shadow-md"
+                      calendarClassName="bg-white p-4 rounded-lg shadow-lg"
+                      tileClassName={({ date, view }) =>
+                        view === 'month' && date.getDay() === 0 ? 'bg-red-200' : null
+                      }
+                    />
+                  </div>
+                  <select
+                    value={selectedTime}
+                    onChange={(e) => setSelectedTime(e.target.value)}
+                    className="mt-3 block w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option value="">Select Time</option>
+                    <option value="09:00 AM">09:00 AM</option>
+                    <option value="09:30 AM">09:30 AM</option>
+                    <option value="10:00 AM">10:00 AM</option>
+                    <option value="10:30 AM">10:30 AM</option>
+                    <option value="11:00 AM">11:00 AM</option>
+                    <option value="11:30 AM">11:30 AM</option>
+                    <option value="12:00 PM">12:00 PM</option>
+                    <option value="12:30 PM">12:30 PM</option>
+                    <option value="1:00 PM">1:00 PM</option>
+                    <option value="1:30 PM">1:30 PM</option>
+                    <option value="2:00 PM">2:00 PM</option>
+                    <option value="2:30 PM">2:30 PM</option>
+                    <option value="3:00 PM">3:00 PM</option>
+                    <option value="3:30 PM">3:30 PM</option>
+                    <option value="4:00 PM">4:00 PM</option>
+                    <option value="4:30 PM">4:30 PM</option>
+                    <option value="5:00 PM">5:00 PM</option>
+                    <option value="5:30 PM">5:30 PM</option>
+                    <option value="6:00 PM">6:00 PM</option>
+                    <option value="6:30 PM">6:30 PM</option>
+                    <option value="7:00 PM">7:00 PM</option>
+                    <option value="7:30 PM">7:30 PM</option>
+                    <option value="8:00 PM">8:00 PM</option>
+                    <option value="8:30 PM">8:30 PM</option>
+                  </select>
+                  <div className="flex justify-end mt-4">
+                    <button
+                      onClick={() => toggleCalendar(null)}
+                      className="px-4 py-2 mr-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleModify}
+                      className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Pagination */}
             <div className="flex justify-end my-4">

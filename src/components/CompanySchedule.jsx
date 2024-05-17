@@ -19,14 +19,16 @@ const CompanySchedule = () => {
     const [searchTime, setSearchTime] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
+    const [selectedMeetingId, setSelectedMeetingId] = useState(null);
     const { id } = useParams();
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
 
-    const toggleCalendar = () => {
+    const toggleCalendar = (meetingId = null) => {
         setShowCalendar(!showCalendar);
+        setSelectedMeetingId(meetingId); 
     };
 
     useEffect(() => {
@@ -76,7 +78,9 @@ const CompanySchedule = () => {
         fetchScheduleMeetings();
     }, [id, searchDate]);
 
-    const handleModify = async (meetingId) => {
+    const handleModify = async () => {
+        if (!selectedMeetingId) return;
+
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -89,11 +93,11 @@ const CompanySchedule = () => {
             if (result.isConfirmed) {
                 try {
                     const db = getFirestore();
-                    const meetingDocRef = doc(db, "scheduleMeeting", meetingId);
+                    const meetingDocRef = doc(db, "scheduleMeeting", selectedMeetingId);
 
                     const meetingDocSnapshot = await getDoc(meetingDocRef);
                     if (!meetingDocSnapshot.exists()) {
-                        throw new Error(`Document with ID ${meetingId} does not exist`);
+                        throw new Error(`Document with ID ${selectedMeetingId} does not exist`);
                     }
 
                     const adjustedDate = new Date(selectedDate);
@@ -228,7 +232,7 @@ const CompanySchedule = () => {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <button
-                                                    onClick={toggleCalendar}
+                                                     onClick={() => toggleCalendar(meeting.id)}
                                                     className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
                                                 >
                                                     <FaEdit />{/* Modify */}
@@ -316,13 +320,13 @@ const CompanySchedule = () => {
                         </select>
                         <div className="flex justify-end mt-4">
                             <button
-                                onClick={toggleCalendar}
+                                onClick={() => toggleCalendar(null)}
                                 className="px-4 py-2 mr-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400"
                             >
                                 Cancel
                             </button>
                             <button
-                                onClick={() => handleModify(scheduleMeetings[0].id)} 
+                                onClick={handleModify}
                                 className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
                             >
                                 Save

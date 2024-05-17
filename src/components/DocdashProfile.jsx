@@ -237,7 +237,7 @@ const DocdashProfile = () => {
                       {doctor.education_2 && (
                         <div className="mt-5 flex items-center">
                           <button className="bg-white shadow px-3 border text-[#7091E6] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
-                            A
+                            B
                           </button>
                           <div className="px-5">
                             <p className="text-sm ">{doctor.education_2}</p>
@@ -248,7 +248,7 @@ const DocdashProfile = () => {
                       {doctor.education_3 && (
                         <div className="mt-5 flex items-center">
                           <button className="bg-white shadow px-3 border text-[#7091E6] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
-                            A
+                            C
                           </button>
                           <div className="px-5">
                             <p className="text-sm ">{doctor.education_3}</p>

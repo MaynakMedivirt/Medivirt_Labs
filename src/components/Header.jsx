@@ -12,7 +12,7 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { currentUser } = useAuth();
 
-  
+
   // useEffect(() => {
   //   const unsubscribe = onAuthStateChanged(auth, user => {
   //     setCurrentUser(user);
@@ -46,21 +46,56 @@ const Header = () => {
   };
 
 
+  // const renderUserDetails = () => {
+  //   if (currentUser) {
+  //     if (currentUser.name) {
+  //       const { name, role, id } = currentUser;
+  //       return (
+  //         <div className="mr-2">
+  //           <Link to={role === 'Doctor' ? `/doctorDashboard/${id}` : `/profilecomplete/${id}`} className='text-sm font-bold'>{name}</Link>
+  //           <p className='text-sm'>{role}</p>
+  //         </div>
+  //       );
+  //     } else if (currentUser.email) {
+  //       return currentUser.email;
+  //     }
+  //   }
+  //   // return 'User Profile';
+  // };
+
   const renderUserDetails = () => {
     if (currentUser) {
-      if (currentUser.name) {
-        const { name, role, id } = currentUser;
+      if (currentUser.role === 'Company') {
+        if (currentUser.profileComplete) {
+          return (
+            <div className="mr-2">
+              <Link to={`/companydashboard/${currentUser.id}`} className='text-sm font-bold'>
+                {currentUser.name}
+              </Link>
+              <p className='text-sm'>{currentUser.companyName}</p>
+            </div>
+          );
+        } else {
+          return (
+            <div className="mr-2">
+              <Link to={`/profilecomplete/${currentUser.id}`} className='text-sm font-bold'>
+                {currentUser.name}
+              </Link>
+            </div>
+          );
+        }
+      } else if (currentUser.role === 'Doctor') {
         return (
           <div className="mr-2">
-            <Link to={role === 'Doctor' ? `/doctorDashboard/${id}` : `/companyDashboard/${id}`} className='text-sm font-bold'>{name}</Link>
-            <p className='text-sm'>{role}</p>
+            <Link to={`/doctorDashboard/${currentUser.id}`} className='text-sm font-bold'>
+              {currentUser.name}
+            </Link>
+            <p className='text-sm'>{currentUser.role}</p>
           </div>
         );
-      } else if (currentUser.email) {
-        return currentUser.email;
       }
     }
-    // return 'User Profile';
+    return null;
   };
 
 
@@ -99,7 +134,7 @@ const Header = () => {
         <div className="hidden md:block relative">
           {currentUser ? (
             <>
-              <div className="flex">
+              <div className="flex items-center">
                 <p className="text-white px-2 cursor-pointer">{renderUserDetails()}</p>
                 <AiOutlineUser className="w-6 h-6 text-white cursor-pointer" onClick={() => setMenuOpen(!menuOpen)} />
               </div>

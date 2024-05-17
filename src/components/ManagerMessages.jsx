@@ -1,25 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Navigate } from "react-router-dom";
-import AdminNavbar from "./AdminNavbar";
-import AdminSide from "./AdminSide";
+import { useParams } from "react-router-dom";
+import ManagerNavbar from './ManagerNavbar';
+import ManagerSide from './ManagerSide';
 import { getFirestore, collection, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
 import Swal from 'sweetalert2';
-import { useAuth } from "./AuthContext";
-import Adminbox from './Adminbox';
+import Managerbox from "./Managerbox";
 
-const AdminMessage = () => {
+const ManagerMessages = () => {
     const [messages, setMessages] = useState([]);
     const [replyMessage, setReplyMessage] = useState("");
     const [currentConversation, setCurrentConversation] = useState(null);
-    const [showAdminbox, setshowAdminbox] = useState(false);
+    const [showManagerbox, setShowManagerbox] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
     const { id } = useParams();
-    const { isAdminLoggedIn } = useAuth();
-
-    // const handleReplyMessageChange = (e) => {
-    //     setReplyMessage(e.target.value);
-    // };
 
     const handleSendReply = async () => {
         if (!replyMessage.trim()) {
@@ -168,11 +162,11 @@ const AdminMessage = () => {
 
     const handleReply = (conversation) => {
         setCurrentConversation(conversation);
-        setshowAdminbox(true);
+        setShowManagerbox(true);
     };
 
     const handleCloseChat = () => {
-        setshowAdminbox(false);
+        setShowManagerbox(false);
     };
 
     const indexOfLastMessage = currentPage * itemsPerPage;
@@ -183,15 +177,11 @@ const AdminMessage = () => {
         setCurrentPage(pageNumber);
     };
 
-    if (!isAdminLoggedIn) {
-        return <Navigate to="/admin" />;
-    }
-
     return (
         <div className="flex">
-            <AdminSide />
+            <ManagerSide />
             <div className="flex-1 overflow-hidden">
-                <AdminNavbar />
+                <ManagerNavbar />
                 <div className="container mx-auto px-5 md:px-3 h-full overflow-y-scroll overflow-x-scroll">
                     <div className="border mt-4 p-2">
                         <div className="flex justify-between items-center mb-5">
@@ -276,8 +266,8 @@ const AdminMessage = () => {
                             </table>
                         </div>
                     </div>
-                    {currentConversation && showAdminbox && (
-                        <Adminbox
+                    {currentConversation && showManagerbox && (
+                        <Managerbox
                             conversation={currentConversation}
                             replyMessage={replyMessage}
                             handleReplyMessageChange={(e) => setReplyMessage(e.target.value)}
@@ -291,7 +281,7 @@ const AdminMessage = () => {
                         {Array.from({ length: Math.ceil(messages.length / itemsPerPage) }, (_, i) => (
                             <button
                                 key={i}
-                                className={`px-3 py-2 mx-1 rounded-md font-bold ${currentPage === i + 1 ? 'bg-transparent text-gray-800 border border-[#11A798] hover:bg-[#11A798] hover:text-white' : 'bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300'}`}
+                                className={`px-3 py-2 mx-1 rounded-md ${currentPage === i + 1 ? 'bg-[#7191E6] text-white' : 'bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300'}`}
                                 onClick={() => handlePageClick(i + 1)}
                             >
                                 {i + 1}
@@ -304,4 +294,4 @@ const AdminMessage = () => {
     );
 }
 
-export default AdminMessage;
+export default ManagerMessages;

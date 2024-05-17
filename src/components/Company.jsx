@@ -45,15 +45,15 @@ const Company = () => {
     company.companyName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // const handleViewProfile = (managerId) => {
-  //   navigate(`/manager/${managerId}`);
+  // const handleViewProfile = (companyId) => {
+  //   navigate(`/manager/${companyId}`);
   // };
 
-  // const handleEditProfile = (managerId) => {
-  //   navigate(`/edit-doctor/${managerId}`);
-  // };
+  const handleEditProfile = (companyId) => {
+    navigate(`/admin/edit-company/${companyId}`);
+  };
 
-  const handleDeleteProfile = async (managerId) => {
+  const handleDeleteProfile = async (companyId) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this profile?"
     );
@@ -62,9 +62,9 @@ const Company = () => {
     if (confirmed) {
       try {
         const db = getFirestore();
-        await deleteDoc(doc(db, "companies", managerId));
+        await deleteDoc(doc(db, "companies", companyId));
         setCompanies((prevCompanies) =>
-          prevCompanies.filter((company) => company.id !== managerId)
+          prevCompanies.filter((company) => company.id !== companyId)
         );
       } catch (error) {
         console.error("Error deleting company profile:", error);
@@ -116,7 +116,7 @@ const Company = () => {
           <button
             type="button"
             className="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-3 py-2 text-center me-2 mb-2"
-            // onClick={() => handleEditProfile(company.id)}
+            onClick={() => handleEditProfile(company.id)}
           >
             <FaRegEdit />
           </button>
@@ -170,7 +170,7 @@ const Company = () => {
             <div className="flex justify-between items-center mb-5">
               <h2 className="text-center text-3xl font-bold">Company List</h2>
               <Link
-                to=""
+                to="/admin/add-company"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               >
                 Add Company

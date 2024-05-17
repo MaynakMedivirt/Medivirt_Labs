@@ -12,7 +12,7 @@ const CompanyNavbar = () => {
 
     const [company, setCompany] = useState(null);
     const { id } = useParams();
-    const [dropdownOpen, setDropdownOpen] = useState(false); // Define dropdownOpen state
+    const [dropdownOpen, setDropdownOpen] = useState(false); 
     const navigate = useNavigate();
 
     useEffect(() => {

@@ -5,7 +5,7 @@ import { AiFillMessage } from "react-icons/ai";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { FaChartLine } from "react-icons/fa6";
 import { PiChartPieSliceFill } from "react-icons/pi";
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore'; // Assuming Firestore is used
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { useParams } from 'react-router-dom';
 
 const DoctorDashboard = () => {
@@ -102,7 +102,7 @@ const DoctorDashboard = () => {
                                     </div>
                                     <div>
                                         <div className="text-gray-400">Projected Earnings</div>
-                                        <div className="text-2xl font-bold text-black">${projectedEarnings}</div>
+                                        <div className="text-2xl font-bold text-black">{projectedEarnings}</div>
                                     </div>
                                 </div>
                             </div>

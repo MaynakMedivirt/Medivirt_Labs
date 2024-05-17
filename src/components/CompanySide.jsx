@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { IoIosArrowDropleftCircle } from "react-icons/io";
-import { FaHome, FaUser } from "react-icons/fa";
+import { FaHome, FaUser, FaProductHunt } from "react-icons/fa";
 import { AiFillMessage } from "react-icons/ai";
 import { RiCalendarScheduleLine } from "react-icons/ri";
-import { FaChartLine } from "react-icons/fa6";
+import { FaChartLine, FaUserDoctor } from "react-icons/fa6";
 import { PiChartPieSliceFill } from "react-icons/pi";
+import { TiUserAdd } from "react-icons/ti";
 import { IoSettings } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -12,19 +13,23 @@ import { useParams } from "react-router-dom";
 const CompanySide = ({ open, toggleSidebar }) => {
 
     const [activeMenu, setActiveMenu] = useState("/companyDashboard");
+    const [selectedCity, setSelectedCity] = useState("");
     const { id } = useParams();
 
     const Menus = [
         { title: "Dashboard", path: `/companyDashboard/${id}`, icon: <FaHome className="text-[#7191E6]" /> },
         { title: "Message", path: `/company/message/${id}`, icon: <AiFillMessage className="text-[#7191E6]" /> },
         { title: "Schedule", path: `/company/schedule/${id}`, icon: <RiCalendarScheduleLine className="text-[#7191E6]" /> },
-        { title: "Credits", path: `/company/earning/${id}`, icon: <FaChartLine className="text-[#7191E6]" /> },
+        { title: "Credits", path: `/company/credits/${id}`, icon: <FaChartLine className="text-[#7191E6]" /> },
         { title: "Profile", path: `/company/profile/${id}`, icon: <FaUser className="text-[#7191E6]" /> },
         { title: "Analytics", path: `/company/analytics/${id}`, icon: <PiChartPieSliceFill className="text-[#7191E6]" /> },
-        { title: "Products", path: `/company/products/${id}`, icon: <PiChartPieSliceFill className="text-[#7191E6]" /> },
-        { title: "My Doctors", path: `/company/doctors/${id}`, icon: <PiChartPieSliceFill className="text-[#7191E6]" /> },
+        { title: "My Products", path: `/company/products/${id}`, icon: <FaProductHunt className="text-[#7191E6]" /> },
+        { title: "My Doctors", path: `/company/doctors/${id}`, icon: <FaUserDoctor className="text-[#7191E6]" /> },
+        { title: "Add Users", path: `/company/users/${id}`, icon: <TiUserAdd className="text-[#7191E6]" /> },
         { title: "Setting", path: `/company/setting/${id}`, icon: <IoSettings className="text-[#7191E6]" /> },
     ];
+
+    const cities = ["Bangalore", "Delhi", "Mumbai", "Kolkata", "Hyderabad", "Chennai", "default-All"];
 
     useEffect(() => {
         const handleResize = () => {
@@ -43,6 +48,10 @@ const CompanySide = ({ open, toggleSidebar }) => {
         setActiveMenu(path);
     };
 
+    const handleCityChange = (e) => {
+        setSelectedCity(e.target.value);
+    };
+
     return (
         <div className="flex flex-col h-screen fixed top-[4.2rem]">
             <div className="flex flex-1">
@@ -55,6 +64,21 @@ const CompanySide = ({ open, toggleSidebar }) => {
                         onClick={toggleSidebar}
                     >
                         <IoIosArrowDropleftCircle className="h-6 w-6 text-[#7191E6]" />
+                    </div>
+
+                    <div className="my-3">
+                        <select
+                            className="w-full px-4 py-2 border bg-white shadow-lg border rounded-md focus:outline-none"
+                            value={selectedCity}
+                            onChange={handleCityChange}
+                        >
+                            <option value="">Select City</option>
+                            {cities.map((city, index) => (
+                                <option key={index} value={city}>
+                                    {city}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     <ul>

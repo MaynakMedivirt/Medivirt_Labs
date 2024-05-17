@@ -4,6 +4,7 @@ import { FaChartPie, FaCompactDisc , FaCog, FaUser } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
 import { MdManageAccounts, MdMessage } from "react-icons/md";
 import { RiCalendarScheduleFill, RiMessage3Fill  } from "react-icons/ri";
+import { GrCompliance } from "react-icons/gr";
 import { Link } from "react-router-dom";
 
 const AdminSide = () => {
@@ -16,6 +17,7 @@ const AdminSide = () => {
     { title: "Growth Manager", path: "/admin/manager", icon: <MdManageAccounts  className="text-[#82746b]" /> }, // Corrected path for Companies
     { title: "Doctor Schedule", path: "/admin/doctorSchedule", icon: <RiCalendarScheduleFill className="text-[#82746b]" /> },
     { title: "Messages", path: "/admin/messages", icon: <MdMessage className="text-[#82746b]" /> },
+    { title: "Completed Meetings", icon: <GrCompliance className="text-[#82746b]" /> },
     { title: "Setting", path: "setting", icon: <FaCog className="text-[#82746b]" /> },
   ];
 
