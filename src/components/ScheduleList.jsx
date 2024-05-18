@@ -345,11 +345,12 @@ const ScheduleList = () => {
                         >
                           <TiTick /> {/* Accept */}
                         </button>
-                        <Link to={meeting.meetingLink}
+                        <Link
+                          to={meeting.meetingLink}
                           type="button"
-                          className="text-white bg-[#11A798] rounded-lg p-2 text-center me-2 mb-2"
+                          className="text-white bg-[#7091E6] rounded-lg px-3 py-[.4rem] text-center me-2 mb-2"
                         >
-                          <SiGooglemeet /> {/* Join Now */}
+                          <SiGooglemeet className="inline-block" />
                         </Link>
                         <button
                           onClick={() => handleDeleteMeeting(meeting.id)}
