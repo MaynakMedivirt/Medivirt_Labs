@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import CompanySide from './CompanySide';
 import CompanyNavbar from './CompanyNavbar';
 import { getFirestore, collection, query, where, getDocs, doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
@@ -237,12 +237,12 @@ const CompanySchedule = () => {
                                                 >
                                                     <FaEdit />{/* Modify */}
                                                 </button>
-                                                <button
+                                                <Link to={meeting.meetingLink}
                                                     type="button"
                                                     className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
                                                 >
                                                     <SiGooglemeet />{/* Join Now */}
-                                                </button>
+                                                </Link>
                                                 <button
                                                     onClick={() => handleDeleteMeeting(meeting.id)}
                                                     type="button"

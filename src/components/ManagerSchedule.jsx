@@ -300,12 +300,12 @@ const ManagerSchedule = () => {
                         >
                           <FaEdit /> {/* Modify */}
                         </button>
-                        <button
+                        <Link to={meeting.MeetingLink}
                           type="button"
                           className="text-white bg-[#11A798] rounded-lg p-2 text-center me-2 mb-2"
                         >
                           <SiGooglemeet /> {/* Join Now */}
-                        </button>
+                        </Link>
                         <button
                           onClick={() => handleDeleteMeeting(meeting.id)}
                           type="button"

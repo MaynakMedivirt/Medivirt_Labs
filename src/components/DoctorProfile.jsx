@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useAuth } from './AuthContext';
-import { getFirestore, doc, getDoc, addDoc, setDoc } from "firebase/firestore";
+import { useAuth } from "./AuthContext";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 import Header from "./Header";
 import Footer from "./Footer";
 import Image from "../assets/img/defaultAvatar.png";
@@ -11,11 +10,10 @@ import Banner from "../assets/img/Banner.png";
 import Calendar from "react-calendar";
 import Swal from "sweetalert2";
 import "./style/Calendar.css";
-
 import { firebaseConfig } from "../components/firebase";
+import Jitsi from "react-jitsi";
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const db = getFirestore(app);
 
 const DoctorProfiles = () => {
@@ -26,12 +24,12 @@ const DoctorProfiles = () => {
   const [selectedTime, setSelectedTime] = useState(null);
   const [showMessaging, setShowMessaging] = useState(false);
   const [message, setMessage] = useState("");
+  const [meetingLink, setMeetingLink] = useState("");
   const { currentUser } = useAuth();
 
   useEffect(() => {
     const fetchDoctor = async () => {
       try {
-        const db = getFirestore();
         const docRef = doc(db, "doctors", id);
         const doctorSnapshot = await getDoc(docRef);
         if (doctorSnapshot.exists()) {
@@ -58,23 +56,21 @@ const DoctorProfiles = () => {
     setSelectedDate(date);
   };
 
-  // Inside handleBookSchedule and handleSendMessage functions
   const handleBookSchedule = async () => {
-    console.log("Selected Date:", selectedDate);
-    console.log("Selected Time:", selectedTime);
-
-    const adjustedDate = new Date(selectedDate);
-    const ISTOffset = 330;
-    adjustedDate.setMinutes(adjustedDate.getMinutes() + ISTOffset);
-    const formattedDate = adjustedDate.toISOString().split('T')[0];
-
+    const formattedDate = selectedDate.toISOString().split("T")[0];
 
     try {
+      const meetingLink = `https://meet.jit.si/${doctor.name.replace(
+        /\s+/g,
+        ""
+      )}-${currentUser.id}-${Date.now()}`;
+
       const scheduleData = {
         companyID: currentUser.id,
         doctorID: doctor.id,
         date: formattedDate,
         time: selectedTime,
+        meetingLink: meetingLink,
       };
 
       const customId = `${doctor.id}_${currentUser.id}`;
@@ -86,14 +82,12 @@ const DoctorProfiles = () => {
         icon: "success",
         title: "Your scheduled meeting sent to the doctor successfully!",
         showConfirmButton: false,
-        timer: 2000 // Adjusted timer to 2000 milliseconds (2 seconds)
+        timer: 2000,
       });
 
-      // Reload the page after 2 seconds
       setTimeout(() => {
         window.location.reload();
       }, 2000);
-
     } catch (error) {
       console.error("Error scheduling meeting:", error);
       alert("Failed to schedule meeting. Please try again.");
@@ -101,10 +95,6 @@ const DoctorProfiles = () => {
   };
 
   const handleSendMessage = async () => {
-    console.log("Message:", message);
-    console.log("Doctor state:", doctor.id);
-    console.log(currentUser.id);
-
     if (!doctor) {
       console.error("Doctor object is null or undefined.");
       return;
@@ -115,7 +105,7 @@ const DoctorProfiles = () => {
         companyID: currentUser.id,
         doctorID: doctor.id,
         messages: message,
-        sentBy: 'company',
+        sentBy: "company",
         timestamp: new Date(),
       };
 
@@ -123,16 +113,14 @@ const DoctorProfiles = () => {
       const customDocRef = doc(db, "messages", customId);
       await setDoc(customDocRef, messageData);
 
-      // Show success message
       Swal.fire({
         position: "center",
         icon: "success",
         title: "Message sent successfully!",
         showConfirmButton: false,
-        timer: 2000
+        timer: 2000,
       });
 
-      // Reload the page after 2 seconds
       setTimeout(() => {
         window.location.reload();
       }, 2000);
@@ -141,8 +129,6 @@ const DoctorProfiles = () => {
       alert("Failed to send message. Please try again.");
     }
   };
-
-
 
   if (!doctor) {
     return <div className="text-center">Loading...</div>;
@@ -299,7 +285,9 @@ const DoctorProfiles = () => {
                       <hr className="mb-3 border-gray-300"></hr>
                       <div className="flex items-center justify-between mb-5">
                         <p className="text-lg">Gender: </p>
-                        <p className="text-lg font-semibold capitalize">{doctor.gender}</p>
+                        <p className="text-lg font-semibold capitalize">
+                          {doctor.gender}
+                        </p>
                       </div>
                       <hr className="mb-3 border-gray-300"></hr>
                       <div className="flex items-center justify-center">
@@ -318,7 +306,12 @@ const DoctorProfiles = () => {
                       </div>
                       {showCalendar && (
                         <div className="mt-5">
-                          <Calendar onChange={onChange} value={selectedDate} minDate={new Date()} className="custom-calendar" />
+                          <Calendar
+                            onChange={onChange}
+                            value={selectedDate}
+                            minDate={new Date()}
+                            className="custom-calendar"
+                          />
                           <div className="flex justify-between mt-3">
                             <select
                               value={selectedTime}
@@ -356,10 +349,11 @@ const DoctorProfiles = () => {
                             <button
                               onClick={handleBookSchedule}
                               disabled={!selectedTime}
-                              className={`px-6 py-2 text-base font-bold text-center text-white uppercase ${selectedTime
-                                ? "bg-blue-800 hover:bg-blue-600 cursor-pointer"
-                                : "bg-gray-400 cursor-not-allowed"
-                                }`}
+                              className={`px-6 py-2 text-base font-bold text-center text-white uppercase ${
+                                selectedTime
+                                  ? "bg-blue-800 hover:bg-blue-600 cursor-pointer"
+                                  : "bg-gray-400 cursor-not-allowed"
+                              }`}
                             >
                               Book Schedule Meeting
                             </button>
@@ -369,7 +363,9 @@ const DoctorProfiles = () => {
                       {showMessaging && (
                         <div className="mt-5">
                           <div className="bg-gray-200 p-4 rounded-md">
-                            <p className="text-md font-semibold mb-2">Send a Message</p>
+                            <p className="text-md font-semibold mb-2">
+                              Send a Message
+                            </p>
                             <textarea
                               placeholder="Type your message here..."
                               value={message}
