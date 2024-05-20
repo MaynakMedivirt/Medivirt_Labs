@@ -14,6 +14,7 @@ const Doctor = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(25); // Number of items per page
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSpecialist, setSelectedSpecialist] = useState('');
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { isAdminLoggedIn } = useAuth();
@@ -40,11 +41,17 @@ const Doctor = () => {
     fetchDoctors();
   }, []);
 
-  // Filter doctors based on searchQuery for name and specialist
-  const filteredDoctors = doctors.filter((doctor) =>
-    doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    doctor.specialist.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Get unique list of specialists
+  const uniqueSpecialists = [...new Set(doctors.map((doctor) => doctor.specialist))];
+
+  // Filter doctors based on searchQuery and selectedSpecialist
+  const filteredDoctors = doctors.filter((doctor) => {
+    return (
+      (doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        doctor.specialist.toLowerCase().includes(searchQuery.toLowerCase())) &&
+      (selectedSpecialist === '' || doctor.specialist === selectedSpecialist)
+    );
+  });
 
   const handleViewProfile = (doctorId) => {
     navigate(`/doctor/${doctorId}`);
@@ -179,18 +186,28 @@ const Doctor = () => {
               </Link>
 
             </div>
-            <div className="flex justify-end items-center py-2.5 pr-2.5 pl-5 mt-6 bg-white rounded max-md:flex-wrap max-md:max-w-full">
 
+            <div className="flex justify-end items-center py-2.5 pr-2.5 pl-5 mt-6 bg-white rounded max-md:flex-wrap max-md:max-w-full">
               <div className="flex items-center">
                 <div className="flex flex-col mx-2 justify-center self-stretch my-auto border rounded-md">
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by name or specialist"
+                    placeholder="Search by name"
                     className="p-2"
                   />
                 </div>
+                <select
+                  value={selectedSpecialist}
+                  onChange={(e) => setSelectedSpecialist(e.target.value)}
+                  className="p-2 mx-2 border rounded-md"
+                >
+                  <option value="">All Specialists</option>
+                  {uniqueSpecialists.map((specialist, index) => (
+                    <option key={index} value={specialist}>{specialist}</option>
+                  ))}
+                </select>
                 <button
                   onClick={() => console.log('Search logic here')}
                   className="p-2 rounded bg-[#11A798] text-white  hover:bg-[#7191E6] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
@@ -199,6 +216,7 @@ const Doctor = () => {
                 </button>
               </div>
             </div>
+
             <div className="overflow-auto mt-3">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase dark:text-gray-400">

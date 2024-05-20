@@ -301,7 +301,7 @@ const DoctorProfiles = () => {
                           onClick={toggleMessaging}
                           className="flex gap-1.5 justify-center items-center px-6 py-2 mt-5 ml-3 text-base font-bold text-center text-white uppercase bg-green-600 tracking-[2px] max-md:mt-5"
                         >
-                          {showMessaging ? "Hide Messaging" : "Send Message"}
+                          {showMessaging ? "Hide Message" : "Send Message"}
                         </button>
                       </div>
                       {showCalendar && (

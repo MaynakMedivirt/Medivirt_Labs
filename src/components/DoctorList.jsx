@@ -275,7 +275,6 @@ const DoctorList = () => {
                     placeholder="City, state, or zip"
                     className="flex-auto py-px"
                   />
-                  <div className="w-2 h-5 bg-gray-400" />
                 </div>
                 <button
                   onClick={() => console.log("Search logic here")}

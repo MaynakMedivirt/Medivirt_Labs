@@ -10,9 +10,9 @@ import CompanySide from "./CompanySide";
 const ComdashProfile = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [activeTab, setActiveTab] = useState("about");
-
     const [company, setCompany] = useState(null);
     const { id } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCompany = async () => {
@@ -32,9 +32,36 @@ const ComdashProfile = () => {
         fetchCompany();
     }, [id]);
 
+    const saveProfile = async () => {
+        try {
+            const db = getFirestore();
+            const companyRef = doc(db, "companies", id);
+            await updateDoc(companyRef, company);
+            console.log("Company profile updated successfully!");
+            alert("profile updated successfully!");
+            navigate(`/companyDashboard/${id}`);
+        } catch (error) {
+            console.error("Error updating company profile:", error);
+        }
+    };
+
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
+
+    const EditAbout = () => {
+        navigate(`/company/profile/edit-about/${id}`);
+    };
+
+    const EditCompanyName = () => {
+        navigate(`/company/profile/edit-Name/${id}`);
+    };
+
+    const EditCompanyDetails = () => {
+        navigate(`/company/profile/edit-details/${id}`);
+    };
+
+    // Add more edit navigation functions as needed
 
     return (
         <div className="flex flex-col h-screen">
@@ -72,13 +99,20 @@ const ComdashProfile = () => {
                                                         )}
                                                     </div>
                                                     <div>
-                                                        <h1 className="text-xl text-gray-800 font-bold">
-                                                            {company.companyName}
-                                                        </h1>
+                                                        <div className="flex space-x-4">
+                                                            <h1 className="text-xl text-gray-800 font-bold">
+                                                                {company.companyName}
+                                                            </h1>
+                                                            <FaPen
+                                                                className="text-[#7091E6] cursor-pointer text-center m-auto"
+                                                                onClick={EditCompanyName}
+                                                            />
+                                                        </div>
                                                         <p className="text-lg text-gray-600">
                                                             {company.location}
                                                         </p>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -107,9 +141,14 @@ const ComdashProfile = () => {
                                                         <hr className="mb-3 border-gray-300"></hr>
                                                         <div className="flex items-center justify-between mb-5">
                                                             <p className="text-sm">Location: </p>
-                                                            <p className="text-sm font-semibold capitalize">{company.location}</p>
+                                                            <p className="text-sm font-semibold capitalize">{company.headquarter}</p>
                                                         </div>
                                                         <hr className="mb-3 border-gray-300"></hr>
+                                                        <FaPen
+                                                            className="text-[#7091E6] cursor-pointer ml-auto"
+                                                            onClick={EditCompanyDetails}
+                                                        />
+                                                        {/* <hr className="mb-3 border-gray-300"></hr> */}
                                                         <div className="flex items-center justify-center">
                                                             <button
                                                                 className="flex gap-1.5 justify-center items-center px-6 py-2 mt-5 text-base font-bold text-center text-white uppercase bg-indigo-800 tracking-[2px] max-md:mt-5"
@@ -138,52 +177,62 @@ const ComdashProfile = () => {
                                             Product
                                         </h1>
                                     </div>
-                                    {activeTab === "about" && (
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-y-5">
-                                            <div className="col-span-1 md:col-span-2 mt-5">
-                                                <p style={{ wordSpacing: '5px' }}>{company.about}</p>
-
+                                    <div className="mt-5">
+                                        {activeTab === "about" && (
+                                            <div className="flex flex-col md:flex-row justify-between px-4 bg-white shadow-lg border p-3">
+                                                <p className="p-4 mb-5">{company.about}</p>
+                                                <p className="text-end p-4" onClick={EditAbout}>
+                                                    <FaPen className="text-[#7091E6]" style={{ float: "inline-end" }} />
+                                                </p>
                                             </div>
-                                        </div>
-                                    )}
-                                    {activeTab === "product" && (
-                                        <div className="overflow-auto mt-3">
-                                            <table className="min-w-full divide-y border divide-gray-200">
-                                                <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
-                                                    <tr>
-                                                        <th scope="col" className="px-6 py-3 text-sm tracking-wider">
-                                                            S.N.
-                                                        </th>
-                                                        <th scope="col" className="bg-gray-50 px-6 py-3 text-sm uppercase tracking-wider">
-                                                            Product Name
-                                                        </th>
-                                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
-                                                            Action
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="bg-white divide-y divide-gray-200">
+                                        )}
+                                        {activeTab === "product" && (
+                                            <div className="overflow-auto mt-3">
+                                                <table className="min-w-full divide-y border divide-gray-200">
+                                                    <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
+                                                        <tr>
+                                                            <th scope="col" className="px-6 py-3 text-sm tracking-wider">
+                                                                S.N.
+                                                            </th>
+                                                            <th scope="col" className="bg-gray-50 px-6 py-3 text-sm uppercase tracking-wider">
+                                                                Product Name
+                                                            </th>
+                                                            <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
+                                                                Action
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="bg-white divide-y divide-gray-200">
 
-                                                    <tr className="border-b border-gray-200">
-                                                        <td scope="row" className="px-6 py-4">
-                                                            1
-                                                        </td>
-                                                        <td className="px-6 py-4 font-medium text-gray-900 bg-gray-50">
-                                                            product
-                                                        </td>
-                                                        <td scope="row" className="px-6 py-4">
-                                                            <button
-                                                                className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
-                                                            >
-                                                                Enquiry About The Product
-                                                            </button>
-                                                        </td>
-                                                    </tr>
+                                                        <tr className="border-b border-gray-200">
+                                                            <td scope="row" className="px-6 py-4">
+                                                                1
+                                                            </td>
+                                                            <td className="px-6 py-4 font-medium text-gray-900 bg-gray-50">
+                                                                product
+                                                            </td>
+                                                            <td scope="row" className="px-6 py-4">
+                                                                <button
+                                                                    className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                                                                >
+                                                                    Enquiry About The Product
+                                                                </button>
+                                                            </td>
+                                                        </tr>
 
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    )}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="flex justify-end items-center mb-[3rem]">
+                                    <button
+                                        onClick={saveProfile}
+                                        className="flex gap-1.5 justify-center items-center px-10 py-2 mt-5 text-base font-bold text-center text-white uppercase bg-indigo-800 tracking-[2px] max-md:mt-5"
+                                    >
+                                        save
+                                    </button>
                                 </div>
                             </div>
                         </div>

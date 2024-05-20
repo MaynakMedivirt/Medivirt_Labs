@@ -16,7 +16,8 @@ const EditManager = () => {
     const [manager, setManager] = useState({
         name: "",
         email: "",
-        password: ""
+        password: "",
+        location: "",
     });
     const storage = getStorage();
     const navigate = useNavigate();
@@ -33,13 +34,14 @@ const EditManager = () => {
                     id: docSnap.id,
                     name: data.name,
                     email: data.email,
-                    password: data.password // Set password without hashing
+                    password: data.password,
+                    location: data.location,
                 });
             } else {
                 console.log("No such document!");
             }
         } catch (error) {
-            console.error("Error fetching doctor:", error);
+            console.error("Error fetching Manager:", error);
         }
     };
 
@@ -57,14 +59,15 @@ const EditManager = () => {
             await updateDoc(managerRef, {
                 name: manager.name,
                 email: manager.email,
-                password: hashedPassword // Update with new hashed password
+                password: hashedPassword,
+                location: manager.location
             });
 
             console.log("Document successfully updated!");
             alert("Data successfully updated!");
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, 1000);
             navigate('/admin/manager');
 
             // fetchDoctor();
@@ -105,6 +108,17 @@ const EditManager = () => {
                                     />
                                 </div>
                                 <div class="mb-5 mt-5">
+                                    <label htmlFor="location" class="block mb-2 px-2 text-lg font-bold text-gray-900 dark:text-white">Location :</label>
+                                    <input
+                                        type="text"
+                                        name="location"
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        value={manager.location}
+                                        onChange={(e) => setManager({ ...manager, location: e.target.value })}
+                                        placeholder="Enter Location"
+                                    />
+                                </div>
+                                <div class="mb-5 mt-5">
                                     <label htmlFor="email" class="block mb-2 px-2 text-lg font-bold text-gray-900 dark:text-white">Email :</label>
                                     <input
                                         type="email"
@@ -115,7 +129,7 @@ const EditManager = () => {
                                         placeholder="Enter your Email"
                                     />
                                 </div>
-                                <div className="mb-5">
+                                <div className="mb-5 mt-5">
                                     <label htmlFor="password" className="block mb-2 px-2 text-lg font-bold text-gray-900 dark:text-white">Password :</label>
                                     <div className="relative">
                                         <input

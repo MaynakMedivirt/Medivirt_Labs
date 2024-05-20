@@ -94,11 +94,11 @@ const Footer = () => {
                     </li>
                     <li>
                       <NavLink
-                        to="/admin"
+                        to="/learnMore"
                         className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm"
-                        href="/admin"
+                        href="/learnMore"
                       >
-                        Admin
+                        How It Works ?
                       </NavLink>
                     </li>
                   </ul>
@@ -115,7 +115,7 @@ const Footer = () => {
               src={MedivirtLogo}
             />
             <div className="mt-5 text-white">
-              Follow us on these platforms for more updates!
+              Follow us on Medivirt for more updates !
             </div>
             <div className="mt-6 mb-8 relative">
               <form
@@ -161,7 +161,7 @@ const Footer = () => {
               className="text-sm font-medium text-white mt-6"
               style={{ lineHeight: "2.5" }}
             >
-              Better yet, see us in person!
+              Better yet, Meet us Virttually!
               <br />
               MEDIVIRT LABS PVT LTD
               <br />

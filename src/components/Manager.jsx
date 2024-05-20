@@ -40,9 +40,9 @@ const Manager = () => {
         navigate(`/edit-manager/${managerId}`);
     };
 
-    const handleGoTo = (managerId) => {
-        navigate(`/manager/dash/${managerId}`);
-    }
+    // const handleGoTo = (managerId) => {
+    //     navigate(`/manager/dash/${managerId}`);
+    // }
 
     const handleDeleteProfile = async (managerId) => {
         const confirmed = window.confirm(
@@ -92,16 +92,19 @@ const Manager = () => {
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
                                     <tr>
-                                        <th scope="col" className="px-6 py-3 text-sm tracking-wider">
+                                        <th scope="col" className="px-6 py-3 bg-gray-50 text-sm tracking-wider">
                                             S.N.
                                         </th>
                                         <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
                                             Manager Name
                                         </th>
-                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="px-6 py-3 bg-gray-50 text-sm uppercase tracking-wider">
                                             Email
                                         </th>
                                         <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
+                                            Location
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 bg-gray-50text-sm uppercase tracking-wider">
                                             Actions
                                         </th>
                                     </tr>
@@ -109,14 +112,17 @@ const Manager = () => {
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {managers.map((manager, index) => (
                                         <tr key={manager.id} className="border-b border-gray-200">
-                                            <td scope="row" className="px-6 py-4">
+                                            <td scope="row" className="px-6 py-4 bg-gray-50">
                                                 {index + 1}
                                             </td>
-                                            <td scope="row" className="px-6 py-4 font-medium text-gray-900 bg-gray-50">
+                                            <td scope="row" className="px-6 py-4 font-medium text-gray-900">
                                                 {manager.name}
                                             </td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-6 py-4 bg-gray-50">
                                                 {manager.email}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                {manager.location}
                                             </td>
                                             <td className="px-6 py-4 bg-gray-50">
                                                 <button type="button" onClick={() => handleEditProfile(manager.id)} className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2">
@@ -125,9 +131,9 @@ const Manager = () => {
                                                 <button type="button" onClick={() => handleDeleteProfile(manager.id)} className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2">
                                                     <MdDelete />
                                                 </button>
-                                                <button type="button" onClick={() => handleGoTo(manager.id)} className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2">
+                                                {/* <button type="button" onClick={() => handleGoTo(manager.id)} className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2">
                                                     Enter
-                                                </button>
+                                                </button> */}
                                             </td>
                                         </tr>
                                     ))}

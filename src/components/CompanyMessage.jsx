@@ -16,6 +16,15 @@ const CompanyMessage = () => {
     const [itemsPerPage] = useState(10);
     const { id } = useParams();
 
+    const predefinedMessages = [
+        // "Welcome! How can I help you today?",
+        // "Thank you for reaching out to us.",
+        // "Please let us know if you have any questi    ons.",
+        // "We appreciate your feedback.",
+        "Welcome!",
+        "Thank You.",
+    ];
+
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
@@ -227,7 +236,7 @@ const CompanyMessage = () => {
                                                     className="text-white bg-[#4BCB5D] rounded-lg px-3 py-2 text-center me-2 mb-2"
                                                     onClick={() => handleReply(conversation)}
                                                 >
-                                                    Open ChatBox
+                                                    Reply
                                                 </button>
                                             </td>
                                         </tr>
@@ -235,13 +244,15 @@ const CompanyMessage = () => {
                                 </tbody>
                             </table>
                         </div>
-                        {currentConversation && showChatbox && (
+
+                        {showChatbox && (
                             <Chatbox
                                 conversation={currentConversation}
                                 replyMessage={replyMessage}
-                                handleReplyMessageChange={(e) => setReplyMessage(e.target.value)}
+                                handleReplyMessageChange={handleReplyMessageChange}
                                 handleSendReply={handleSendReply}
                                 handleCloseChat={handleCloseChat}
+                                predefinedMessages={predefinedMessages}
                             />
                         )}
 

@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import CompanyNavbar from './CompanyNavbar';
 import CompanySide from './CompanySide';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { MdCreditScore } from "react-icons/md";
 import { useParams } from 'react-router-dom';
-
+import Swal from 'sweetalert2';
 
 const CompanyCredits = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [meetingCount, setMeetingCount] = useState(0);
+    const [totalCredits, setTotalCredits] = useState(35); // Initialize with default value
     const { id } = useParams();
-
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
@@ -30,10 +30,33 @@ const CompanyCredits = () => {
         };
 
         fetchMeetingCount();
-    }, []);
+    }, [id]);
 
-    const totalCredits = 35;
     const availableCredits = totalCredits - meetingCount;
+
+    const handleAddCredits = async () => {
+        const { value: newCredits } = await Swal.fire({
+            title: 'Enter new credits',
+            input: 'number',
+            inputLabel: 'Number of credits to add',
+            inputPlaceholder: 'Enter number of credits',
+            showCancelButton: true,
+        });
+
+        if (newCredits) {
+            const updatedCredits = totalCredits + parseInt(newCredits);
+            setTotalCredits(updatedCredits);
+
+            // Update Firestore if needed
+            // try {
+            //     const db = getFirestore();
+            //     const companyDocRef = doc(db, "companies", id);
+            //     await updateDoc(companyDocRef, { credits: updatedCredits });
+            // } catch (error) {
+            //     console.error("Error updating credits:", error);
+            // }
+        }
+    };
 
     return (
         <div className="flex flex-col h-screen">
@@ -80,11 +103,22 @@ const CompanyCredits = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="text-gray-400">Consume Credits</div>
+                                        <div className="text-gray-400">Consumed Credits</div>
                                         <div className="text-2xl font-bold text-black">{meetingCount}</div>
                                     </div>
                                 </div>
                             </div>
+                            <div className="bg-white border shadow-sm rounded">
+                                <div className="flex justify-center items-center">
+                                    <button
+                                        onClick={handleAddCredits}
+                                        className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md"
+                                    >
+                                        Add Credits
+                                    </button>
+                                </div>  
+                            </div>
+
                         </div>
                     </div>
                 </div>

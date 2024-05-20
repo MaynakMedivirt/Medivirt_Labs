@@ -269,9 +269,9 @@ const DoctorSchedule = () => {
                         <Link
                           to={meeting.meetingLink}
                           type="button"
-                          className="text-white bg-[#7091E6] rounded-lg px-3 py-[.4rem] text-center me-2 mb-2"
+                          className="text-white bg-[#7091E6] rounded-lg px-3 py-[7px] text-center me-2 mb-2"
                         >
-                          <SiGooglemeet className="inline-block" />
+                          <SiGooglemeet className="inline-block mb-[5px]" />
                         </Link>
                       </td>
                     </tr>

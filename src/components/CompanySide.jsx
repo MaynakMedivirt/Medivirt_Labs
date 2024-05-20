@@ -29,7 +29,7 @@ const CompanySide = ({ open, toggleSidebar }) => {
         { title: "Setting", path: `/company/setting/${id}`, icon: <IoSettings className="text-[#7191E6]" /> },
     ];
 
-    const cities = ["Bangalore", "Delhi", "Mumbai", "Kolkata", "Hyderabad", "Chennai", "default-All"];
+    const cities = ["Bangalore", "Delhi", "Mumbai", "Kolkata", "Hyderabad", "Chennai", "All"];
 
     useEffect(() => {
         const handleResize = () => {

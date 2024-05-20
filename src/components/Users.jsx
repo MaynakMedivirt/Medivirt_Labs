@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import CompanySide from './CompanySide';
 import CompanyNavbar from './CompanyNavbar';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
@@ -13,6 +13,8 @@ const Users = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [usersPerPage] = useState(5);
     const { id } = useParams(); 
+
+    const navigate = useNavigate();
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
@@ -55,6 +57,10 @@ const Users = () => {
     for (let i = 1; i <= Math.ceil(filteredUsers.length / usersPerPage); i++) {
         pageNumbers.push(i);
     }
+
+    const handleEditProfile = (userId) => {
+        navigate(`/company/edit-user/${userId}`);
+    };
 
     return (
         <div className="flex flex-col h-screen">
@@ -109,6 +115,9 @@ const Users = () => {
                                             Role
                                         </th>
                                         <th scope="col" className="bg-gray-50 px-4 py-3 text-sm uppercase tracking-wider">
+                                            Location
+                                        </th>
+                                        <th scope="col" className="px-4 py-3 text-sm uppercase tracking-wider">
                                             Action
                                         </th>
                                     </tr>
@@ -125,8 +134,12 @@ const Users = () => {
                                             <td className="px-4 py-2 font-medium text-gray-900 ">
                                                 {user.role}
                                             </td>
-                                            <td className="px-4 py-2 bg-gray-50">
+                                            <td className="px-4 py-2 font-medium text-gray-900 bg-gray-50">
+                                                {user.location}
+                                            </td>
+                                            <td className="px-4 py-2">
                                                 <button
+                                                    onClick={() => handleEditProfile(user.id)}
                                                     type="button"
                                                     className="text-white bg-[#7191E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
                                                 >

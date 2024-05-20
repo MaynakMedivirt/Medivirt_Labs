@@ -58,6 +58,10 @@ import Users from './components/Users';
 import AddProduct from './components/AddProduct';
 import AddUsers from './components/AddUsers';
 import CompanyCredits from './components/CompanyCredits';
+import EditCompanyName from './components/EditCompanyName';
+import EditCompanyAbout from './components/EditCompanyAbout';
+import EditCompanyDetails from './components/EditCompanyDetails';
+import EditCompanyUser from './components/EditCompanyUser';
 
 import DoctorEarning from './components/DoctorEarning';
 import LearnMore from './components/LearnMore';
@@ -138,6 +142,10 @@ const App = () => {
           <Route path='/company/add-product/:id' element={<AddProduct/>}/>
           <Route path='/company/add-user/:id' element={<AddUsers/>}/>
           <Route path='/company/credits/:id' element={<CompanyCredits/>}/>
+          <Route path='/company/profile/edit-Name/:id' element={<EditCompanyName/>}/>
+          <Route path='/company/profile/edit-about/:id' element={<EditCompanyAbout/>}/>
+          <Route path='/company/profile/edit-details/:id' element={<EditCompanyDetails/>}/>
+          <Route path='/company/edit-user/:id' element={<EditCompanyUser/>}/>
 
           <Route path='/doctor/earning/:id' element={<DoctorEarning/>}/>
 

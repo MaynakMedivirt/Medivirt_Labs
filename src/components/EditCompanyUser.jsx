@@ -1,73 +1,81 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import CompanySide from './CompanySide';
-import CompanyNavbar from './CompanyNavbar';
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore, collection, addDoc, doc, setDoc, } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
-import "firebase/storage";
+import { useParams, useNavigate } from "react-router-dom";
+import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
+import CompanyNavbar from "./CompanyNavbar";
+import CompanySide from "./CompanySide";
+import { TbEye, TbEyeClosed } from "react-icons/tb";
 import bcrypt from "bcryptjs";
 
-import { firebaseConfig } from "../components/firebase";
-
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-const AddProduct = () => {
-
-    const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [userName, setUserName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [location, setLocation] = useState("");
-    const [role, setRole] = useState("");
+const EditCompanyUser = () => {
     const { id } = useParams();
-
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [showPassword, setShowPassword] = useState(false);
+    const [user, setUser] = useState({
+        userName: "",
+        email: "",
+        password: "",
+        role: "",
+        location: ""
+    });
     const navigate = useNavigate();
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
     };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        let companyId = id;
-
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
+    const fetchCompanyUser = async () => {
         try {
-            const customId = `${userName}_${companyId}`;
-            const customDocRef = doc(db, "users", customId);
-            await setDoc(customDocRef, {
-                userName,
-                email,
+            const db = getFirestore();
+            const userRef = doc(db, "users", id);
+            const docSnap = await getDoc(userRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                setUser({
+                    id: docSnap.id,
+                    userName: data.userName,
+                    email: data.email,
+                    password: data.password,
+                    role: data.role,
+                    location: data.location,
+                    companyId: data.companyId
+                });
+            } else {
+                console.log("No such document!");
+            }
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchCompanyUser();
+    }, [id]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const db = getFirestore();
+            const userRef = doc(db, "users", id);
+            const hashedPassword = await bcrypt.hash(user.password, 10);
+            await updateDoc(userRef, {
+                userName: user.userName, // Change name to userName
+                email: user.email,
                 password: hashedPassword,
-                role,
-                companyId
+                role: user.role,
+                location: user.location,
             });
 
-            console.log("Document Written with ID : ", customId);
-            alert("User added successfully!");
-
-            setUserName("");
-            setEmail("");
-            setPassword("");
-            setRole("");
-
+            console.log("Document successfully updated!");
+            alert("Data successfully updated!");
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
-
-            navigate(`/company/users/${id}`);
+            navigate(`/company/users/${user.companyId}`);
 
         } catch (error) {
-            console.log("Error adding document :", error);
+            console.error("Error updating document:", error);
         }
-    }
+    };
 
     return (
         <div className="flex flex-col h-screen">
@@ -80,7 +88,7 @@ const AddProduct = () => {
                             onSubmit={handleSubmit}
                             className="bg-white shadow rounded px-8 pt-6 pb-8 mb-4"
                         >
-                            <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">Add Users</h2>
+                            <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">Edit User</h2>
                             <div className="grid md:grid-cols-2 md:gap-6">
                                 <div className="mb-3">
                                     <label htmlFor="userName" className="block mb-2 px-2 text-lg font-bold text-gray-900 dark:text-white">User Name :</label>
@@ -88,10 +96,9 @@ const AddProduct = () => {
                                         type="text"
                                         name="userName"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2"
-                                        value={userName}
-                                        onChange={(e) => setUserName(e.target.value)}
+                                        value={user.userName}
+                                        onChange={(e) => setUser({ ...user, userName: e.target.value })}
                                         placeholder="Enter User name"
-                                    // required
                                     />
                                 </div>
                                 <div className="mb-3">
@@ -100,21 +107,26 @@ const AddProduct = () => {
                                         type="email"
                                         name="email"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        value={user.email}
+                                        onChange={(e) => setUser({ ...user, email: e.target.value })}
                                         placeholder="Enter Email"
                                     />
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="password" className="block mb-2 px-2 text-lg font-bold text-gray-900 dark:text-white">Password :</label>
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="Enter password"
-                                    />
+                                    <div className="relative">
+                                        <input
+                                            type={showPassword ? "text" : "password"}
+                                            name="password"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            value={user.password}
+                                            onChange={(e) => setUser({ ...user, password: e.target.value })}
+                                            placeholder="Enter your Password"
+                                        />
+                                        <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3" onClick={() => setShowPassword(!showPassword)}>
+                                            {showPassword ? <TbEye /> : <TbEyeClosed />}
+                                        </button>
+                                    </div>
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="location" className="block mb-2 px-2 text-lg font-bold text-gray-900 dark:text-white">Location :</label>
@@ -122,8 +134,8 @@ const AddProduct = () => {
                                         type="text"
                                         name="location"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2"
-                                        value={location}
-                                        onChange={(e) => setLocation(e.target.value)}
+                                        value={user.location}
+                                        onChange={(e) => setUser({ ...user, location: e.target.value })}
                                         placeholder="Enter Location"
                                     />
                                 </div>
@@ -132,8 +144,8 @@ const AddProduct = () => {
                                     <select
                                         name="role"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2"
-                                        value={role}
-                                        onChange={(e) => setRole(e.target.value)}
+                                        value={user.role}
+                                        onChange={(e) => setUser({ ...user, role: e.target.value })}
                                     >
                                         <option value="">Select Role</option>
                                         <option value="Sales Head">Sales Head</option>
@@ -144,7 +156,7 @@ const AddProduct = () => {
                             <div className="text-center my-4">
                                 <button
                                     type="submit"
-                                    className="text-white font-bold bg-[#7191E6] hover:bg-[#3a60c6] px-4 py-2 hover:bg-[#7091E6] rounded-lg"
+                                    className="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
                                 >
                                     Submit
                                 </button>
@@ -154,7 +166,7 @@ const AddProduct = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default AddProduct
+export default EditCompanyUser;

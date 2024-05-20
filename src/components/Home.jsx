@@ -300,8 +300,8 @@ const Home = () => {
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
-                  <div className="flex flex-col">
-                    <div className="text-2xl py-[6.5rem]  leading-5">
+                  <div className="flex flex-col ">
+                    <div className="text-2xl py-[6.6rem] leading-5">
                       User Registration and Profile Creation
                     </div>
                   </div>

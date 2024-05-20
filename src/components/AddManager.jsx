@@ -27,6 +27,7 @@ const AddManager = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [location, setLocation] = useState("");
   const navigate = useNavigate();
   const { isAdminLoggedIn } = useAuth();
 
@@ -42,7 +43,8 @@ const AddManager = () => {
       await setDoc(customDocRef, {
         name,
         email,
-        password: hashedPassword
+        password: hashedPassword,
+        location
       });
 
       console.log("Document Written with ID : ", customId);
@@ -52,6 +54,7 @@ const AddManager = () => {
       setName("")
       setEmail("")
       setPassword("")
+      setLocation("")
 
       // Reload the page after 1 seconds
       setTimeout(() => {
@@ -90,6 +93,17 @@ const AddManager = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Enter Growth Manager name"
+                  />
+                </div>
+                <div class="mb-5 mt-5">
+                  <label htmlFor="location" class="block mb-2 px-2 text-lg font-bold text-gray-900 dark:text-white">Location :</label>
+                  <input
+                    type="text"
+                    name="location"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    placeholder="Enter Location"
                   />
                 </div>
                 <div class="mb-5 mt-5">
