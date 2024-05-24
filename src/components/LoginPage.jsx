@@ -181,13 +181,15 @@ const LoginPage = () => {
                 <PiSignIn className="mr-4 h-5 w-5" />
                 Sign In
               </button>
-              <button
-                className="tracking-wide font-semibold bg-[#3d52a1] text-gray-100 w-full py-5 rounded-lg hover:bg-[#7091E6] transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
-                onClick={handleLoginWithGoogle}
-              >
-                <FcGoogle className="mr-4 h-6 w-6" />
-                Sign In with Google
-              </button>
+              {role === 'Doctor' && (
+                <button
+                  className="tracking-wide font-semibold bg-[#3d52a1] text-gray-100 w-full py-5 rounded-lg hover:bg-[#7091E6] transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                  onClick={handleLoginWithGoogle}
+                >
+                  <FcGoogle className="mr-4 h-6 w-6" />
+                  Sign In with Google
+                </button>
+              )}
               <p className="md:mt-4 text-lg text-gray-600 text-center">
                 Don't have an account?{' '}
                 <Link to="/signup" className="text-[#3d52a1] font-semibold text-lg">

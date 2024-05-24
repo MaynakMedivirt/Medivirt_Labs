@@ -9,7 +9,7 @@ import Header from './Header';
 import Footer from './Footer';
 import { TbEye, TbEyeClosed } from "react-icons/tb";
 import { PiSignIn } from 'react-icons/pi';
-import MedivirtLogo from '../assets/img/Medivirt.png'
+import MedivirtLogo from '../assets/img/Medivirt.png';
 
 import { firebaseConfig } from '../components/firebase';
 
@@ -25,9 +25,9 @@ const SignupPage = () => {
   const [role, setRole] = useState('Company');
   const [companyName, setCompanyName] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [errorField, setErrorField] = useState('');
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -41,6 +41,16 @@ const SignupPage = () => {
     }
   }, [showSuccessMessage]);
 
+  const isWorkEmail = (email) => {
+    // List of free email domains
+    const freeEmailDomains = [
+      'gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'aol.com',
+      'icloud.com', 'mail.com', 'yandex.com', 'protonmail.com', 'reddif.com'
+    ];
+    const emailDomain = email.split('@')[1];
+    return !freeEmailDomains.includes(emailDomain);
+  };
+
   const sendVerificationEmail = async (user) => {
     try {
       await sendEmailVerification(user);
@@ -53,6 +63,11 @@ const SignupPage = () => {
 
   const handleSignup = async (event) => {
     event.preventDefault();
+    if (role === 'Company' && !isWorkEmail(email)) {
+      setErrorMessage('Please use a valid work email for company registration !!');
+      setErrorField('email');
+      return;
+    }
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -68,7 +83,7 @@ const SignupPage = () => {
 
       setShowSuccessMessage(true);
 
-      redirectToLogin()
+      redirectToLogin();
     } catch (error) {
       console.error('Error signing up:', error.message);
       setErrorMessage('Failed to create account. Please try again.');
@@ -96,7 +111,7 @@ const SignupPage = () => {
       // Send verification email after signup with Google
       await sendVerificationEmail(user);
 
-      const userData = { email: user.email, name: user.displayName, phone: user.phoneNumber, role,};
+      const userData = { email: user.email, name: user.displayName, phone: user.phoneNumber, role };
       if (role === 'Company') {
         userData.companyName = companyName;
       }
@@ -123,12 +138,12 @@ const SignupPage = () => {
                 height: '900px'
               }}
             >
-
               <div className="mt-[6rem] ml-10 mr-10">
                 <img
                   loading="lazy"
-                  srcSet= {MedivirtLogo}
+                  srcSet={MedivirtLogo}
                   className="max-w-full aspect-[7.14] w-[156px] mb-[5rem]"
+                  alt="Medivirt Logo"
                 />
                 <h1 className="text-2xl xl:text-3xl font-semibold text-[#FFF]">
                   Sign Up as {role}
@@ -143,8 +158,8 @@ const SignupPage = () => {
             <div className="flex gap-5 text-base font-bold text-center uppercase mb-10 whitespace-nowrap tracking-[2px] max-md:flex-wrap">
               <button
                 className={`flex flex-1 gap-5 justify-center items-center py-6 pr-10 pl-5 rounded-lg ${role === 'Company'
-                    ? 'bg-[#3d52a1] text-white' // Active state for Company button
-                    : 'bg-gray-200 text-zinc-500' // Inactive state for Company button
+                  ? 'bg-[#3d52a1] text-white' // Active state for Company button
+                  : 'bg-gray-200 text-zinc-500' // Inactive state for Company button
                   }`}
                 onClick={() => setRole('Company')}
               >
@@ -154,8 +169,8 @@ const SignupPage = () => {
               </button>
               <button
                 className={`flex flex-1 gap-5 justify-center items-center py-6 pr-10 pl-5 rounded-lg  ${role === 'Doctor'
-                    ? 'bg-[#3d52a1] text-white' // Active state for Doctor button
-                    : 'bg-gray-200 text-zinc-500' // Inactive state for Doctor button
+                  ? 'bg-[#3d52a1] text-white' // Active state for Doctor button
+                  : 'bg-gray-200 text-zinc-500' // Inactive state for Doctor button
                   }`}
                 onClick={() => setRole('Doctor')}
               >
@@ -166,68 +181,81 @@ const SignupPage = () => {
             </div>
 
             {/* Company name input for company role */}
-            {/* Error messages based on errorField */}
-            {errorField === 'signup' && (
-              <p className="text-red-500 text-sm mb-2">Failed to create account. Please try again.</p>
-            )}
-            {errorField === 'verification' && (
-              <p className="text-red-500 text-sm mb-2">Failed to send verification email. Please try again.</p>
-            )}
-            {errorField === 'database' && (
-              <p className="text-red-500 text-sm mb-2">Failed to add user data to database.</p>
-            )}
             {role === 'Company' && (
-              <input
-                className="w-full px-4 py-5 mb-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                type="text"
-                placeholder="Company Name"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-              />
-            )}
-            {/* Input fields for name, email, phone, password */}
-            <input
-              className="w-full px-4 py-5 mb-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-              type="text"
-              placeholder="Full Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <input
-              className="w-full px-4 py-5 mb-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-             <div className="relative w-full"> {/* Password input wrapper with relative position */}
+              <div className="mb-4">
                 <input
-                  className="w-full px-5 py-5 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-5 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                  type="text"
+                  placeholder="Company Name"
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
                 />
-                {/* Password visibility toggle icon */}
-                {showPassword ? (
-                  <TbEyeClosed 
-                    className="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
-                    onClick={() => setShowPassword(false)}
-                  />
-                ) : (
-                  <TbEye
-                    className="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
-                    onClick={() => setShowPassword(true)}
-                  />
+                {errorField === 'companyName' && (
+                  <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
                 )}
               </div>
-            <input
-              className="w-full px-3 py-5 mb-4 mt-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-              type="tel"
-              placeholder="Phone Number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
+            )}
+            <div className="mb-4">
+              <input
+                className="w-full px-4 py-5 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                type="text"
+                placeholder="Full Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              {errorField === 'name' && (
+                <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+              )}
+            </div>
+            
+            <div className="mb-4">
+              <input
+                className={`w-full px-4 py-5 rounded-lg font-medium bg-gray-100 border ${errorField === 'email' ? 'border-red-500' : 'border-gray-200'} placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white`}
+                type="email"
+                placeholder={role === 'Company' ? 'Work Email' : 'Email'}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              {errorField === 'email' && (
+                <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+              )}
+            </div>
+            <div className="mb-4 relative w-full"> {/* Password input wrapper with relative position */}
+              <input
+                className="w-full px-5 py-5 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {errorField === 'password' && (
+                <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+              )}
+              {/* Password visibility toggle icon */}
+              {showPassword ? (
+                <TbEyeClosed
+                  className="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
+                  onClick={() => setShowPassword(false)}
+                />
+              ) : (
+                <TbEye
+                  className="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
+                  onClick={() => setShowPassword(true)}
+                />
+              )}
+            </div>
+            <div className="mb-4">
+              <input
+                className="w-full px-3 py-5 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                type="tel"
+                placeholder="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+              {errorField === 'phone' && (
+                <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+              )}
+            </div>
             {/* Sign up button */}
             <button
               className="mt-4 tracking-wide font-semibold bg-[#3d52a1] text-gray-100 w-full py-5 rounded-lg hover:bg-[#9a9a9a] transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
@@ -236,14 +264,16 @@ const SignupPage = () => {
               <PiSignIn className="mr-4 h-6 w-6" />
               Sign Up
             </button>
-            {/* Sign up with Google button */}
-            <button
-              className="mt-4 tracking-wide font-semibold bg-[#3d52a1] text-gray-100 w-full py-5 rounded-lg hover:bg-[#9a9a9a] transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
-              onClick={handleSignupWithGoogle}
-            >
-              <FcGoogle className="mr-4 h-6 w-6" />
-              Sign Up with Google
-            </button>
+            {/* Conditionally render Sign up with Google button */}
+            {role === 'Doctor' && (
+              <button
+                className="mt-4 tracking-wide font-semibold bg-[#3d52a1] text-gray-100 w-full py-5 rounded-lg hover:bg-[#9a9a9a] transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                onClick={handleSignupWithGoogle}
+              >
+                <FcGoogle className="mr-4 h-6 w-6" />
+                Sign Up with Google
+              </button>
+            )}
             {/* Link to login page */}
             <p className="mt-5 text-lg text-gray-600 text-center">
               Already have an account?{' '}
