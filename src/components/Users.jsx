@@ -12,7 +12,7 @@ const Users = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [usersPerPage] = useState(5);
-    const { id } = useParams(); 
+    const { id } = useParams();
 
     const navigate = useNavigate();
 
@@ -43,9 +43,12 @@ const Users = () => {
     };
 
     const filteredUsers = users.filter(user =>
-        user.userName.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        user.role.toLowerCase().includes(searchQuery.toLowerCase())
+        (user.firstName && user.firstName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (user.lastName && user.lastName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (user.role && user.role.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (user.location && user.location.toLowerCase().includes(searchQuery.toLowerCase()))
     );
+
 
     const indexOfLastUser = currentPage * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -109,7 +112,7 @@ const Users = () => {
                                             S.N.
                                         </th>
                                         <th scope="col" className="bg-gray-50 px-4 py-3 text-sm uppercase tracking-wider">
-                                            User Name
+                                            Name
                                         </th>
                                         <th scope="col" className="px-4 py-3 text-sm uppercase tracking-wider">
                                             Role
@@ -129,7 +132,7 @@ const Users = () => {
                                                 {indexOfFirstUser + index + 1}
                                             </td>
                                             <td className="px-4 py-2 font-medium text-gray-900 bg-gray-50">
-                                                {user.userName}
+                                                {user.firstName} {user.lastName}
                                             </td>
                                             <td className="px-4 py-2 font-medium text-gray-900 ">
                                                 {user.role}

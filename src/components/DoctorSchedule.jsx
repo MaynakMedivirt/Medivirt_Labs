@@ -2,20 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import DoctorNavbar from "./DoctorNavbar";
 import DoctorSide from "./DoctorSide";
-import {
-  getFirestore,
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc,} from "firebase/firestore";
 import Calendar from "react-calendar";
 import Swal from "sweetalert2";
-import { FaEdit } from "react-icons/fa";
-import { TiTick } from "react-icons/ti";
+import { FaEdit, FaCheck } from "react-icons/fa";
 import { SiGooglemeet } from "react-icons/si";
 
 const DoctorSchedule = () => {
@@ -72,23 +62,63 @@ const DoctorSchedule = () => {
             ? companyData.name
             : "Unknown Representative";
 
-          return {
-            id: doc.id,
-            companyName,
-            representativeName,
-            ...meetingData,
-          };
+          // Check if the meeting date is in the future
+          const currentDate = new Date().toISOString().split("T")[0];
+          const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const meetingDateTime = new Date(`${meetingData.date} ${meetingData.time}`);
+          const isUpcoming = meetingDateTime > new Date(currentDate + ' ' + currentTime);
+          console.log(`Meeting: ${companyName} - ${meetingData.date} ${meetingData.time} - Upcoming: ${isUpcoming}`);
+
+          if (isUpcoming) {
+            return {
+              id: doc.id,
+              companyName,
+              representativeName,
+              ...meetingData,
+            };
+          } else {
+            // If the meeting has already occurred or is ongoing, do not include it
+            return null;
+          }
         });
 
-        const resolvedData = await Promise.all(promises);
+        const resolvedData = (await Promise.all(promises)).filter(meeting => meeting !== null);
         setScheduleMeetings(resolvedData);
       } catch (error) {
         console.error("Error fetching schedule meetings:", error);
       }
     };
 
+
     fetchScheduleMeetings();
-  }, [id, searchDate]);
+
+  }, [id, searchDate, scheduleMeetings]);
+  // const checkAndCompleteMeetings = async () => {
+  //   const db = getFirestore();
+  //   const now = new Date();
+  //   const currentDate = now.toISOString().split("T")[0];
+  //   const currentTime = now.toTimeString().split(" ")[0];
+
+  //   const updatedMeetings = scheduleMeetings.map(async (meeting) => {
+  //     if (
+  //       meeting.date === currentDate &&
+  //       meeting.time <= currentTime &&
+  //       meeting.status === "accepted"
+  //     ) {
+  //       const meetingDocRef = doc(db, "scheduleMeeting", meeting.id);
+  //       await updateDoc(meetingDocRef, { status: "completed" });
+  //       meeting.status = "completed";
+  //     }
+  //     return meeting;
+  //   });
+
+  //   const resolvedUpdatedMeetings = await Promise.all(updatedMeetings);
+  //   setScheduleMeetings(resolvedUpdatedMeetings);
+  // };
+
+  // const intervalId = setInterval(checkAndCompleteMeetings, 60000);
+
+  // return () => clearInterval(intervalId);
 
   const handleModify = async () => {
     if (!selectedMeetingId) return;
@@ -124,6 +154,7 @@ const DoctorSchedule = () => {
           await updateDoc(meetingDocRef, {
             date: formattedDate,
             time: selectedTime,
+            status: "Rescheduled",
           });
           toggleCalendar();
 
@@ -140,6 +171,34 @@ const DoctorSchedule = () => {
         }
       }
     });
+  };
+
+  const handleAccept = async (meetingId) => {
+    try {
+      const db = getFirestore();
+      const meetingDocRef = doc(db, "scheduleMeeting", meetingId);
+      await updateDoc(meetingDocRef, { status: "accepted" });
+
+      Swal.fire({
+        title: "Accepted",
+        text: "Meeting has been accepted.",
+        icon: "success",
+        timer: 2000,
+      });
+
+      setScheduleMeetings((prevMeetings) =>
+        prevMeetings.map((meeting) =>
+          meeting.id === meetingId ? { ...meeting, status: "accepted" } : meeting
+        )
+      );
+    } catch (error) {
+      console.error("Error accepting meeting:", error);
+      Swal.fire({
+        title: "Error",
+        text: "An error occurred while accepting the meeting. Please try again later.",
+        icon: "error",
+      });
+    }
   };
 
   const indexOfLastMeeting = currentPage * itemsPerPage;
@@ -169,9 +228,8 @@ const DoctorSchedule = () => {
       <div className="flex flex-1">
         <DoctorSide open={sidebarOpen} toggleSidebar={toggleSidebar} />
         <div
-          className={`overflow-y-auto flex-1 transition-all duration-300 ${
-            sidebarOpen ? "ml-72" : "ml-20"
-          }`}
+          className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-72" : "ml-20"
+            }`}
         >
           <div className="container max-w-6xl px-5 mx-auto my-10">
             <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
@@ -196,42 +254,48 @@ const DoctorSchedule = () => {
             </div>
 
             <div className="overflow-auto mt-3">
-              <table className="min-w-full divide-y divide-gray-200">
+              <table className="min-w-full divide-y divide-gray-200 border">
                 <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-sm tracking-wider"
+                      className="px-3 py-3 text-sm tracking-wider"
                     >
                       S.N.
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-gray-50"
                     >
                       Company Name
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider"
                     >
                       Representative Name
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-gray-50"
                     >
                       Date
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider"
                     >
                       Time
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-gray-50"
+                    >
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-sm uppercase tracking-wider"
                     >
                       Actions
                     </th>
@@ -240,18 +304,20 @@ const DoctorSchedule = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {sortedMeetings.map((meeting, index) => (
                     <tr key={meeting.id} className="border-b border-gray-200">
-                      <td scope="row" className="px-6 py-4">
+                      <td scope="row" className="px-3 py-4">
                         {index + 1}
                       </td>
-                      <td className="px-6 py-4 font-medium text-gray-900 bg-gray-50">
+                      <td className="px-3 py-4 font-medium text-gray-900 bg-gray-50">
                         {meeting.companyName}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-4">
                         {meeting.representativeName}
                       </td>
-                      <td className="px-6 py-4 bg-gray-50">{meeting.date}</td>
-                      <td className="px-6 py-4">{meeting.time}</td>
-                      <td className="px-6 py-4 bg-gray-50">
+                      <td className="px-3 py-4 bg-gray-50">{meeting.date}</td>
+                      <td className="px-3 py-4">{meeting.time}</td>
+                      <td className="px-3 py-4 capitalize bg-gray-50">{meeting.status}</td>
+                      <td className="px-3 py-4">
+
                         <button
                           onClick={() => toggleCalendar(meeting.id)}
                           className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
@@ -259,17 +325,20 @@ const DoctorSchedule = () => {
                           <FaEdit />
                           {/* Modify */}
                         </button>
-                        <button
-                          type="button"
-                          className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
-                        >
-                          <TiTick />
-                          {/* Accept */}
-                        </button>
+
+                        {meeting.status !== "Rescheduled" && (
+                          <button
+                            type="button"
+                            className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                            onClick={() => handleAccept(meeting.id)}
+                          >
+                            <FaCheck />
+                          </button>
+                        )}
                         <Link
                           to={meeting.meetingLink}
                           type="button"
-                          className="text-white bg-[#7091E6] rounded-lg px-3 py-[7px] text-center me-2 mb-2"
+                          className="text-white bg-[#7091E6] rounded-lg px-3 py-[6px] text-center me-2 mb-2"
                         >
                           <SiGooglemeet className="inline-block mb-[5px]" />
                         </Link>
@@ -286,11 +355,10 @@ const DoctorSchedule = () => {
                 (_, i) => (
                   <button
                     key={i}
-                    className={`px-3 py-2 mx-1 rounded-md ${
-                      currentPage === i + 1
-                        ? "bg-[#7191E6] text-white"
-                        : "bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300"
-                    }`}
+                    className={`px-3 py-2 mx-1 rounded-md ${currentPage === i + 1
+                      ? "bg-[#7191E6] text-white"
+                      : "bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300"
+                      }`}
                     onClick={() => handlePageClick(i + 1)}
                   >
                     {i + 1}

@@ -3,7 +3,8 @@ import { IoIosArrowDropleftCircle } from "react-icons/io";
 import { FaChartPie, FaCompactDisc , FaCog, FaUser } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
 import { MdManageAccounts, MdMessage } from "react-icons/md";
-import { RiCalendarScheduleFill, RiMessage3Fill  } from "react-icons/ri";
+import { RiCalendarScheduleFill } from "react-icons/ri";
+import { MdMissedVideoCall } from "react-icons/md";
 import { GrCompliance } from "react-icons/gr";
 import { Link } from "react-router-dom";
 
@@ -18,6 +19,7 @@ const AdminSide = () => {
     { title: "Doctor Schedule", path: "/admin/doctorSchedule", icon: <RiCalendarScheduleFill className="text-[#82746b]" /> },
     { title: "Messages", path: "/admin/messages", icon: <MdMessage className="text-[#82746b]" /> },
     { title: "Completed Meetings", icon: <GrCompliance className="text-[#82746b]" /> },
+    { title: "Missed Meetings", path: "/admin/missedMeeting", icon: <MdMissedVideoCall className="text-[#82746b]" /> },
     { title: "Setting", path: "setting", icon: <FaCog className="text-[#82746b]" /> },
   ];
 

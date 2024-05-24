@@ -2,20 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import CompanySide from "./CompanySide";
 import CompanyNavbar from "./CompanyNavbar";
-import {
-  getFirestore,
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  getDoc,
-  deleteDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, doc, getDoc, deleteDoc, updateDoc, } from "firebase/firestore";
 import Calendar from "react-calendar";
 import Swal from "sweetalert2";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaCheck } from "react-icons/fa";
 import { SiGooglemeet } from "react-icons/si";
 import { MdAutoDelete } from "react-icons/md";
 
@@ -30,6 +20,7 @@ const CompanySchedule = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [selectedMeetingId, setSelectedMeetingId] = useState(null);
+  const [searchLocation, setSearchLocation] = useState("");
   const { id } = useParams();
 
   const toggleSidebar = () => {
@@ -48,9 +39,13 @@ const CompanySchedule = () => {
         const scheduleMeetingsRef = collection(db, "scheduleMeeting");
         let q = query(scheduleMeetingsRef, where("companyID", "==", id));
 
-        if (searchDate !== "") {
-          q = query(q, where("date", "==", searchDate));
-        }
+        // if (searchDate !== "") {
+        //   q = query(q, where("date", "==", searchDate));
+        // }
+
+        // if (searchLocation !== "") {
+        //   q = query(q, where("location", "==", searchLocation));
+        // }
 
         const querySnapshot = await getDocs(q);
 
@@ -69,24 +64,40 @@ const CompanySchedule = () => {
           const meetingData = doc.data();
           const doctorData = await fetchDoctorData(meetingData.doctorID);
           const doctorName = doctorData ? doctorData.name : "Unknown Doctor";
+          const location = doctorData ? doctorData.location : "Unknown location";
 
-          return {
-            id: doc.id,
-            doctorName,
-            ...meetingData,
-          };
+          const currentDate = new Date().toISOString().split("T")[0];
+          const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const meetingDateTime = new Date(`${meetingData.date} ${meetingData.time}`);
+          const isUpcoming = meetingDateTime > new Date(currentDate + ' ' + currentTime);
+          // console.log(`Meeting: ${doctorName} - ${meetingData.date} ${meetingData.time} - Upcoming: ${isUpcoming}`);
+
+          if (isUpcoming) {
+            return {
+              id: doc.id,
+              doctorName,
+              location,
+              ...meetingData,
+            };
+          } else {
+            return null;
+          }
         });
 
-        const resolvedData = await Promise.all(promises);
-        console.log("Resolved data:", resolvedData);
-        setScheduleMeetings(resolvedData);
+        const resolvedData = (await Promise.all(promises)).filter(meeting => meeting !== null);
+
+        const filteredByDate = resolvedData.filter(meeting => !searchDate || meeting.date === searchDate);
+
+        const filteredByLocation = filteredByDate.filter(meeting => meeting.location.toLowerCase().includes(searchLocation.toLowerCase()));
+        setScheduleMeetings(filteredByLocation);
+
       } catch (error) {
         console.error("Error fetching schedule meetings:", error);
       }
     };
 
     fetchScheduleMeetings();
-  }, [id, searchDate]);
+  }, [id, searchDate, searchLocation]);
 
   const handleModify = async () => {
     if (!selectedMeetingId) return;
@@ -120,6 +131,7 @@ const CompanySchedule = () => {
           await updateDoc(meetingDocRef, {
             date: formattedDate,
             time: selectedTime,
+            status: "Rescheduled",
           });
           toggleCalendar();
 
@@ -180,15 +192,42 @@ const CompanySchedule = () => {
     }
   };
 
+  const handleAccept = async (meetingId) => {
+    try {
+      const db = getFirestore();
+      const meetingDocRef = doc(db, "scheduleMeeting", meetingId);
+      await updateDoc(meetingDocRef, { status: "accepted" });
+
+      Swal.fire({
+        title: "Accepted",
+        text: "Meeting has been accepted.",
+        icon: "success",
+        timer: 2000,
+      });
+
+      setScheduleMeetings((prevMeetings) =>
+        prevMeetings.map((meeting) =>
+          meeting.id === meetingId ? { ...meeting, status: "accepted" } : meeting
+        )
+      );
+    } catch (error) {
+      console.error("Error accepting meeting:", error);
+      Swal.fire({
+        title: "Error",
+        text: "An error occurred while accepting the meeting. Please try again later.",
+        icon: "error",
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen">
       <CompanyNavbar />
       <div className="flex flex-1">
         <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
         <div
-          className={`overflow-y-auto flex-1 transition-all duration-300 ${
-            sidebarOpen ? "ml-72" : "ml-20"
-          }`}
+          className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-72" : "ml-20"
+            }`}
         >
           <div className="container max-w-6xl px-5 mx-auto my-10">
             <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
@@ -204,6 +243,16 @@ const CompanySchedule = () => {
                   className="p-2"
                 />
               </div>
+              <div className="flex flex-col mx-2 justify-center self-stretch my-auto border rounded-md">
+                <input
+                  type="text"
+                  value={searchLocation}
+                  onChange={(e) => setSearchLocation(e.target.value)}
+                  placeholder="Search Location"
+                  className="p-2"
+                />
+
+              </div>
               <button
                 onClick={() => console.log("Search logic here")}
                 className="p-2 rounded bg-[#7191E6] text-white  hover:bg-[#3D52A1] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
@@ -218,31 +267,49 @@ const CompanySchedule = () => {
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-sm tracking-wider"
+                      className="px-3 py-3 text-sm tracking-wider"
                     >
                       S.N.
                     </th>
                     <th
                       scope="col"
-                      className="bg-gray-50 px-6 py-3 text-sm uppercase tracking-wider"
+                      className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider"
                     >
                       Doctor Name
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider"
+                    >
+                      Assigned
+                    </th>
+                    <th
+                      scope="col"
+                      className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider"
                     >
                       Date
                     </th>
                     <th
                       scope="col"
-                      className="bg-gray-50 px-6 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider"
                     >
                       Time
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider"
+                    >
+                      Location
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 bg-gray-50 text-sm uppercase tracking-wider"
+                    >
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider"
                     >
                       Action
                     </th>
@@ -251,15 +318,18 @@ const CompanySchedule = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {sortedMeetings.map((meeting, index) => (
                     <tr key={index} className="border-b border-gray-200">
-                      <td scope="row" className="px-6 py-4">
+                      <td scope="row" className="px-3 py-3">
                         {index + 1}
                       </td>
-                      <td className="px-6 py-4 font-medium text-gray-900 bg-gray-50">
+                      <td className="px-3 py-3 font-medium text-gray-900 bg-gray-50">
                         {meeting.doctorName}
                       </td>
-                      <td className="px-6 py-4">{meeting.date}</td>
-                      <td className="px-6 py-4 bg-gray-50">{meeting.time}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-3 py-3"></td>
+                      <td className="px-3 py-3 bg-gray-50">{meeting.date}</td>
+                      <td className="px-3 py-3">{meeting.time}</td>
+                      <td className="px-3 py-3 capitalize bg-gray-50">{meeting.location}</td>
+                      <td className="px-3 py-3">{meeting.status}</td>
+                      <td className="px-3 py-3 bg-gray-50">
                         <button
                           onClick={() => toggleCalendar(meeting.id)}
                           className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
@@ -270,18 +340,29 @@ const CompanySchedule = () => {
                         <Link
                           to={meeting.meetingLink}
                           type="button"
-                          className="text-white bg-[#7091E6] rounded-lg px-3 py-[.4rem] text-center me-2 mb-2"
+                          className="text-white bg-[#7091E6] rounded-lg px-3 py-[6px] text-center me-2 mb-2"
                         >
-                          <SiGooglemeet className="inline-block" />
+                          <SiGooglemeet className="inline-block mb-[5px]" />
                         </Link>
-                        <button
-                          onClick={() => handleDeleteMeeting(meeting.id)}
-                          type="button"
-                          className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
-                        >
-                          <MdAutoDelete />
-                          {/* Delete */}
-                        </button>
+                        {meeting.status !== "accepted" && meeting.status !== "Rescheduled" ? (
+                          <button
+                            onClick={() => handleDeleteMeeting(meeting.id)}
+                            type="button"
+                            className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                          >
+                            <MdAutoDelete />
+                            {/* Delete */}
+                          </button>
+                        ) : null}
+                        {meeting.status === "Rescheduled" ? (
+                          <button
+                            type="button"
+                            onClick={() => handleAccept(meeting.id)}
+                            className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                          >
+                            <FaCheck />
+                          </button>
+                        ) : null}
                       </td>
                     </tr>
                   ))}
@@ -296,11 +377,10 @@ const CompanySchedule = () => {
                 (_, i) => (
                   <button
                     key={i}
-                    className={`px-3 py-2 mx-1 rounded-md ${
-                      currentPage === i + 1
-                        ? "bg-[#7191E6] text-white"
-                        : "bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300"
-                    }`}
+                    className={`px-3 py-2 mx-1 rounded-md ${currentPage === i + 1
+                      ? "bg-[#7191E6] text-white"
+                      : "bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300"
+                      }`}
                     onClick={() => handlePageClick(i + 1)}
                   >
                     {i + 1}

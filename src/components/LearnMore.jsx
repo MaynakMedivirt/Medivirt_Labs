@@ -148,13 +148,13 @@ const LearnMore = () => {
         <div className="container my-5 m-auto">
             <div className="flex items-center justify-center">
                 <h1
-                    className={`text-xl px-2 py-1 font-semibold cursor-pointer ${activeTab === "doctor" ? "bg-[#11A798] text-white" : "bg-gray-500 text-white"} rounded-lg`}
+                    className={`text-xl px-2 py-1 font-semibold cursor-pointer ${activeTab === "doctor" ? "bg-[#3D52A1] text-white" : "bg-gray-500 text-white"}`}
                     onClick={() => setActiveTab("doctor")}
                 >
                     Doctor
                 </h1>
                 <h1
-                    className={`text-xl px-2 py-1 ml-5 font-semibold cursor-pointer ${activeTab === "company" ? "bg-[#11A798] text-white" : "bg-gray-500 text-white"} rounded-lg`}
+                    className={`text-xl px-2 py-1 ml-2 font-semibold cursor-pointer ${activeTab === "company" ? "bg-[#3D52A1] text-white" : "bg-gray-500 text-white"}`}
                     onClick={() => setActiveTab("company")}
                 >
                     Company
@@ -166,7 +166,7 @@ const LearnMore = () => {
                     <h1 className="text-center">OPERATIONAL PROCESS TAILORED SPECIFICALLY FOR DOCTORS:</h1>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 my-5 gap-8">
                         {doctorMenu.map((doctorMenu, index) => (
-                            <div key={index} className=" bg-white border border-gray-200 rounded-lg shadow flex flex-col items-center text-center hover:border-[#11A798] transition-all duration-300">
+                            <div key={index} className=" bg-white border border-gray-200 rounded-lg shadow flex flex-col items-center text-center hover:border-[#3D52A1] transition-all duration-300">
                                 <div class="p-4">
                                     <h2 class=" font-semibold mb-4">{doctorMenu.title}</h2>
                                     <img src={doctorMenu.image} alt="Placeholder Image" class="w-full h-48 object-cover mb-4" />
@@ -177,14 +177,6 @@ const LearnMore = () => {
                                 </div>
                             </div>
                         ))}
-                    </div>
-                    <div className="text-center mt-10">
-                        <h1 className="text-center text-lg font-bold">To Book Appointment!</h1>
-                        <button class="p-4 mb-5 bg-[#11A798] text-white font-semibold rounded-full shadow-md hover:bg-[#288178] transform hover:scale-105 transition-transform duration-200 ease-in-out">
-                            <FaPlus />
-                        </button>
-
-
                     </div>
                 </div>
             )}

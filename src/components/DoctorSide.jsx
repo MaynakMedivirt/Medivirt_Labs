@@ -5,6 +5,7 @@ import { AiFillMessage } from "react-icons/ai";
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import { FaChartLine } from "react-icons/fa6";
 import { PiChartPieSliceFill } from "react-icons/pi";
+import { MdMissedVideoCall } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -20,6 +21,7 @@ const DoctorSide = ({ open, toggleSidebar }) => {
         { title: "Schedule", path: `/doctor/schedule/${id}`, icon: <RiCalendarScheduleLine className="text-[#7191E6]" /> },
         { title: "Earning", path: `/doctor/earning/${id}`, icon: <FaChartLine className="text-[#7191E6]" /> },
         { title: "Profile", path: `/doctor/profile/${id}`, icon: <FaUser className="text-[#7191E6]" /> },
+        { title: "Missed Meetings", path: `/doctor/missedMeeting/${id}`, icon: <MdMissedVideoCall className="text-[#7191E6]" /> },
         { title: "Analytics", path: `/doctor/analytics/${id}`, icon: <PiChartPieSliceFill className="text-[#7191E6]" /> },
         { title: "Setting", path: `/doctor/setting/${id}`, icon: <IoSettings className="text-[#7191E6]" /> },
     ];

@@ -39,6 +39,7 @@ import AdminMessage from './components/AdminMessage';
 import Company from './components/Company';
 import AddCompany from './components/AddCompany';
 import EditCompany from './components/EditCompany';
+import AdminMissedMeeting from './components/AdminMissedMeeting';
 
 import ManagerDashboard from './components/ManagerDashboard';
 import ManagerSchedule from './components/ManagerSchedule';
@@ -62,10 +63,15 @@ import EditCompanyName from './components/EditCompanyName';
 import EditCompanyAbout from './components/EditCompanyAbout';
 import EditCompanyDetails from './components/EditCompanyDetails';
 import EditCompanyUser from './components/EditCompanyUser';
+import CompanyMissedMeetings from './components/CompanyMissedMeetings';
 
 import DoctorEarning from './components/DoctorEarning';
 import LearnMore from './components/LearnMore';
+import DoctorMissedMeetings from './components/DoctorMissedMeetings';
 
+import SalesDashboard from './components/SalesDashboard';
+
+import MrDashboard from './components/MrDashboard';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -121,6 +127,7 @@ const App = () => {
           <Route path='/admin/companies' element={<Company />} /> 
           <Route path='/admin/add-company' element={<AddCompany />} /> 
           <Route path='/admin/edit-company/:id' element={<EditCompany />} /> 
+          <Route path='/admin/missedMeeting' element={<AdminMissedMeeting />} /> 
 
           {/* growth manager  */}
           <Route path='/manager/dash/:id' element={<ManagerDashboard />} />  
@@ -146,10 +153,16 @@ const App = () => {
           <Route path='/company/profile/edit-about/:id' element={<EditCompanyAbout/>}/>
           <Route path='/company/profile/edit-details/:id' element={<EditCompanyDetails/>}/>
           <Route path='/company/edit-user/:id' element={<EditCompanyUser/>}/>
+          <Route path='/company/missedMeeting/:id' element={<CompanyMissedMeetings/>}/>
 
           <Route path='/doctor/earning/:id' element={<DoctorEarning/>}/>
+          <Route path='/doctor/missedMeeting/:id' element={<DoctorMissedMeetings/>}/>
 
           <Route path='/learnMore' element={<LearnMore />}/>
+
+          <Route path='/salesDashboard/:id' element={<SalesDashboard />} />
+          
+          <Route path='/mrDashboard/:id' element={<MrDashboard />} />
 
 
           {/* Route for the home page */}

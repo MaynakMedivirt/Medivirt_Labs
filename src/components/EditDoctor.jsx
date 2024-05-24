@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate, Navigate } from "react-router-dom";
 import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, ref, getStorage, deleteObject, uploadBytes  } from "firebase/storage";
-import "firebase/storage"; 
+import { getDownloadURL, ref, getStorage, deleteObject, uploadBytes } from "firebase/storage";
+import "firebase/storage";
 import AdminSide from "./AdminSide";
 import AdminNavbar from "./AdminNavbar";
 import { useAuth } from './AuthContext';
@@ -14,7 +14,7 @@ const EditDoctor = () => {
     const [doctor, setDoctor] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
     const [imageFile, setImageFile] = useState(null);
-    const storage = getStorage(); 
+    const storage = getStorage();
     const navigate = useNavigate();
     const { isAdminLoggedIn } = useAuth()
 
@@ -28,7 +28,7 @@ const EditDoctor = () => {
                 setDoctor({ id: docSnap.id, ...docSnap.data() });
                 if (docSnap.data().image) {
                     const imageUrl = await getDownloadURL(ref(storage, docSnap.data().image));
-                    setImageUrl(imageUrl); 
+                    setImageUrl(imageUrl);
                 }
             } else {
                 console.log("No such document!");
@@ -39,7 +39,7 @@ const EditDoctor = () => {
     };
 
 
-    useEffect(() => {       
+    useEffect(() => {
         fetchDoctor();
     }, [id, storage]);
 
@@ -73,27 +73,27 @@ const EditDoctor = () => {
             const newData = {
                 ...doctor,
             };
-            
+
             if (imageFile) {
                 const imageRef = ref(storage, `images/${imageFile.name}`);
                 await uploadBytes(imageRef, imageFile);
-                const downloadURL = await getDownloadURL(imageRef); 
-                newData.image = downloadURL; 
-            }else if (!imageUrl) {
-                
-                newData.image = ""; 
+                const downloadURL = await getDownloadURL(imageRef);
+                newData.image = downloadURL;
+            } else if (!imageUrl) {
+
+                newData.image = "";
             }
 
             await updateDoc(doctorRef, newData);
 
             console.log("Document successfully updated!");
             alert("Data successfully updated!");
-           
+
             // setTimeout(() => {
             //     window.location.reload();
             // }, 1000);
             navigate('/admin/doctors');
-            
+
             // fetchDoctor();
         } catch (error) {
             console.error("Error updating document:", error);
@@ -101,7 +101,7 @@ const EditDoctor = () => {
     };
     if (!isAdminLoggedIn) {
         return <Navigate to="/admin" />;
-      }
+    }
 
     if (!doctor) {
         return <div>Loading...</div>;
@@ -179,15 +179,25 @@ const EditDoctor = () => {
                                     </label>
                                 </div>
                                 <div className="relative z-0 w-full mb-6 group">
-                                    <input
-                                        type="text"
+                                    <select
                                         name="specialist"
                                         id="specialist"
-                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                                         value={doctor.specialist}
                                         onChange={(e) => setDoctor({ ...doctor, specialist: e.target.value })}
-                                        placeholder=" "
-                                    />
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                                    >
+                                        <option value="">Select Specialist</option>
+                                        <option value="Orthopaedic">Orthopaedic</option>
+                                        <option value="Cardiologist">Cardiologist</option>
+                                        <option value="Gynaecologist">Gynaecologist</option>
+                                        <option value="Radiologist">Radiologist</option>
+                                        <option value="Dermatologist">Dermatologist</option>
+                                        <option value="Oncology">Oncology</option>
+                                        <option value="Neurology">Neurology</option>
+                                        <option value="Urology">Urology</option>
+                                        <option value="Ophthalmology">Ophthalmology</option>
+                                        <option value="Paediatric">Paediatric</option>
+                                    </select>
                                     <label
                                         htmlFor="name"
                                         className="peer-focus:font-medium absolute text-sm text-black-800 dark:text-black-800 font-bold duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -196,15 +206,21 @@ const EditDoctor = () => {
                                     </label>
                                 </div>
                                 <div className="relative z-0 w-full mb-6 group">
-                                    <input
-                                        type="text"
+                                    <select
                                         name="location"
                                         id="location"
-                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
                                         value={doctor.location}
                                         onChange={(e) => setDoctor({ ...doctor, location: e.target.value })}
-                                        placeholder=" "
-                                    />
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  dark:border-gray-600 dark:focus:border-purple-500 focus:outline-none focus:ring-0 focus:border-purple-600 peer"
+                                    >
+                                        <option value="">Select Location</option>
+                                        <option value="Bangalore">Bangalore</option>
+                                        <option value="Delhi">Delhi</option>
+                                        <option value="Mumbai">Mumbai</option>
+                                        <option value="Kolkata">Kolkata</option>
+                                        <option value="Hyderabad">Hyderabad</option>
+                                        <option value="Chennai">Chennai</option>
+                                    </select>
                                     <label
                                         htmlFor="location"
                                         className="peer-focus:font-medium absolute text-sm text-black-800 dark:text-black-800 font-bold duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-purple-600 peer-focus:dark:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"

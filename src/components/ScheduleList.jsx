@@ -30,8 +30,8 @@ const ScheduleList = () => {
 
   const toggleCalendar = (meetingId = null) => {
     setShowCalendar(!showCalendar);
-    setSelectedMeetingId(meetingId); 
-};
+    setSelectedMeetingId(meetingId);
+  };
 
   useEffect(() => {
     const fetchMeetings = async () => {
@@ -96,10 +96,11 @@ const ScheduleList = () => {
           };
         });
 
-        // console.log(companyDoc.data().name);
-
         const resolvedData = await Promise.all(promises);
-        setScheduleMeeting(resolvedData);
+        const today = new Date().toISOString().split('T')[0];
+        const upcomingMeetings = resolvedData.filter(meeting => meeting.date >= today);
+        setScheduleMeeting(upcomingMeetings);
+
       } catch (error) {
         setError("Error fetching meetings: " + error.message);
       } finally {
@@ -111,7 +112,7 @@ const ScheduleList = () => {
   }, [searchDate]);
 
   const handleModify = async () => {
-    if (!selectedMeetingId) return; 
+    if (!selectedMeetingId) return;
 
     Swal.fire({
       title: "Are you sure?",
@@ -127,8 +128,6 @@ const ScheduleList = () => {
           const db = getFirestore();
           const meetingDocRef = doc(db, "scheduleMeeting", selectedMeetingId);
 
-          console.log(selectedMeetingId)
-
           const meetingDocSnapshot = await getDoc(meetingDocRef);
           if (!meetingDocSnapshot.exists()) {
             throw new Error(`Document with ID ${selectedMeetingId} does not exist`);
@@ -142,18 +141,18 @@ const ScheduleList = () => {
           await updateDoc(meetingDocRef, {
             date: formattedDate,
             time: selectedTime,
+            status: "Rescheduled",
           });
 
           setScheduleMeeting((prevMeetings) =>
             prevMeetings.map((meeting) =>
               meeting.id === selectedMeetingId
-                ? { ...meeting, date: formattedDate, time: selectedTime }
+                ? { ...meeting, date: formattedDate, time: selectedTime, status: "Rescheduled" }
                 : meeting
             )
           );
 
           toggleCalendar();
-
         } catch (error) {
           console.error("Error updating schedule meeting:", error);
           Swal.fire({
@@ -165,6 +164,40 @@ const ScheduleList = () => {
       }
     });
   };
+
+  const handleAccept = async (meetingId) => {
+    try {
+      const db = getFirestore();
+      const meetingDocRef = doc(db, "scheduleMeeting", meetingId);
+
+      await updateDoc(meetingDocRef, {
+        status: "Accepted"
+      });
+
+      Swal.fire({
+        title: "Accepted",
+        text: "Meeting has been accepted.",
+        icon: "success",
+        timer: 2000,
+      });
+
+      setScheduleMeeting((prevMeetings) =>
+        prevMeetings.map((meeting) =>
+          meeting.id === meetingId
+            ? { ...meeting, status: "Accepted" }
+            : meeting
+        )
+      );
+    } catch (error) {
+      console.error("Error accepting meeting:", error);
+      Swal.fire({
+        title: "Error",
+        text: "An error occurred while accepting the meeting. Please try again later.",
+        icon: "error",
+      });
+    }
+  };
+
 
   if (!isAdminLoggedIn) {
     return <Navigate to="/admin" />;
@@ -224,9 +257,9 @@ const ScheduleList = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex ">
       <AdminSide />
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden sticky">
         <AdminNavbar />
         <div className="container mx-auto px-5 md:px-3 h-full overflow-y-scroll overflow-x-scroll">
           <div className="border mt-4 p-2">
@@ -307,6 +340,12 @@ const ScheduleList = () => {
                       scope="col"
                       className="px-2 py-2 text-sm uppercase tracking-wider"
                     >
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-2 py-2 bg-gray-50 text-sm uppercase tracking-wider"
+                    >
                       Actions
                     </th>
                   </tr>
@@ -331,15 +370,17 @@ const ScheduleList = () => {
                       </td>
                       <td className="px-2 py-2">{meeting.date}</td>
                       <td className="px-2 py-2 bg-gray-50">{meeting.time}</td>
-                      <td className="px-2 py-2">
+                      <td className="px-2 py-2 capitalize">{meeting.status}</td>
+                      <td className="px-2 py-2 bg-gray-50">
                         <button
-                          onClick={() => toggleCalendar(meeting.id)} 
+                          onClick={() => toggleCalendar(meeting.id)}
                           type="button"
                           className="text-white bg-[#11A798] rounded-lg p-2 text-center me-2 mb-2"
                         >
                           <FaEdit /> {/* Modify */}
                         </button>
                         <button
+                          onClick={() => handleAccept(meeting.id)}
                           type="button"
                           className="text-white bg-[#11A798] rounded-lg p-2 text-center me-2 mb-2"
                         >
@@ -348,9 +389,9 @@ const ScheduleList = () => {
                         <Link
                           to={meeting.meetingLink}
                           type="button"
-                          className="text-white bg-[#7091E6] rounded-lg px-3 py-[.4rem] text-center me-2 mb-2"
+                          className="text-white bg-[#11A798] rounded-lg px-3 py-[6px] text-center me-2 mb-2"
                         >
-                          <SiGooglemeet className="inline-block" />
+                          <SiGooglemeet className="inline-block mb-[5px]" />
                         </Link>
                         <button
                           onClick={() => handleDeleteMeeting(meeting.id)}
@@ -360,6 +401,7 @@ const ScheduleList = () => {
                           <MdAutoDelete /> {/* Delete */}
                         </button>
                       </td>
+
                     </tr>
                   ))}
                 </tbody>

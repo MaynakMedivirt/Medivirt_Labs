@@ -25,6 +25,7 @@ const DoctorProfiles = () => {
   const [showMessaging, setShowMessaging] = useState(false);
   const [message, setMessage] = useState("");
   const [meetingLink, setMeetingLink] = useState("");
+  const [scheduleMeetings, setScheduleMeetings] = useState([]);
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -58,12 +59,20 @@ const DoctorProfiles = () => {
 
   const handleBookSchedule = async () => {
     const formattedDate = selectedDate.toISOString().split("T")[0];
+    const selectedDateTime = new Date(`${formattedDate} ${selectedTime}`);
 
+    if (selectedDateTime < new Date()) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "You cannot schedule a meeting for a past date and time!",
+      });
+      return;
+    }
+  
+    
     try {
-      const meetingLink = `https://meet.jit.si/${doctor.name.replace(
-        /\s+/g,
-        ""
-      )}-${currentUser.id}-${Date.now()}`;
+      const meetingLink = `https://meet.jit.si/${doctor.name.replace(/\s+/g,"")}-${currentUser.id}-${Date.now()}`;
 
       const scheduleData = {
         companyID: currentUser.id,
@@ -71,6 +80,7 @@ const DoctorProfiles = () => {
         date: formattedDate,
         time: selectedTime,
         meetingLink: meetingLink,
+        status: "scheduled",
       };
 
       const customId = `${doctor.id}_${currentUser.id}`;

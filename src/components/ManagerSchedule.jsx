@@ -132,6 +132,7 @@ const ManagerSchedule = () => {
           await updateDoc(meetingDocRef, {
             date: formattedDate,
             time: selectedTime,
+            status: "Rescheduled",
           });
 
           setScheduleMeeting((prevMeetings) =>
@@ -268,7 +269,13 @@ const ManagerSchedule = () => {
                       scope="col"
                       className="px-2 py-2 text-sm uppercase tracking-wider"
                     >
-                      Actions
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-2 py-2 bg-gray-50 text-sm uppercase tracking-wider"
+                    >
+                      Action
                     </th>
                   </tr>
                 </thead>
@@ -292,7 +299,8 @@ const ManagerSchedule = () => {
                       </td>
                       <td className="px-2 py-2">{meeting.date}</td>
                       <td className="px-2 py-2 bg-gray-50">{meeting.time}</td>
-                      <td className="px-2 py-2">
+                      <td className="px-2 py-2 capitalize">{meeting.status}</td>
+                      <td className="px-2 py-2 bg-gray-50">
                         <button
                           onClick={() => toggleCalendar(meeting.id)}
                           type="button"
@@ -303,9 +311,9 @@ const ManagerSchedule = () => {
                         <Link
                           to={meeting.meetingLink}
                           type="button"
-                          className="text-white bg-[#7091E6] rounded-lg px-3 py-[.4rem] text-center me-2 mb-2"
+                          className="text-white bg-[#11A798] rounded-lg px-3 py-[6px] text-center me-2 mb-2"
                         >
-                          <SiGooglemeet className="inline-block" />
+                          <SiGooglemeet className="inline-block mb-[5px]" />
                         </Link>
                         <button
                           onClick={() => handleDeleteMeeting(meeting.id)}

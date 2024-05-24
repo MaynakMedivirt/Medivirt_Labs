@@ -65,32 +65,53 @@ const Header = () => {
 
   const renderUserDetails = () => {
     if (currentUser) {
-      if (currentUser.role === 'Company') {
-        if (currentUser.profileComplete) {
+      const { role, role_company, id, name, firstName, lastName } = currentUser;
+      if (role === 'Company') {
+        if (role_company === 'Sales Head') {
           return (
             <div className="mr-2">
-              <Link to={`/companydashboard/${currentUser.id}`} className='text-sm font-bold'>
-                {currentUser.name}
+              <Link to={`/salesDashboard/${id}`} className='text-sm font-bold'>
+                {firstName} {lastName}
               </Link>
-              <p className='text-sm'>{currentUser.companyName}</p>
+              <p className='text-sm'>{role_company}</p>
+            </div>
+          );
+        } else if (role_company === 'Medical Representative') {
+          return (
+            <div className="mr-2">
+              <Link to={`/mrDashboard/${id}`} className='text-sm font-bold'>
+                {firstName} {lastName}
+              </Link>
+              <p className='text-sm'>{role_company}</p>
             </div>
           );
         } else {
-          return (
-            <div className="mr-2">
-              <Link to={`/profilecomplete/${currentUser.id}`} className='text-sm font-bold'>
-                {currentUser.name}
-              </Link>
-            </div>
-          );
+          if (currentUser.profileComplete) {
+            return (
+              <div className="mr-2">
+                <Link to={`/companydashboard/${id}`} className='text-sm font-bold'>
+                  {name}
+                </Link>
+                <p className='text-sm'>{currentUser.companyName}</p>
+              </div>
+            );
+          } else {
+            return (
+              <div className="mr-2">
+                <Link to={`/profilecomplete/${id}`} className='text-sm font-bold'>
+                  {name}
+                </Link>
+              </div>
+            );
+          }
         }
-      } else if (currentUser.role === 'Doctor') {
+      } else if (role === 'Doctor') {
         return (
           <div className="mr-2">
-            <Link to={`/doctorDashboard/${currentUser.id}`} className='text-sm font-bold'>
-              {currentUser.name}
+            <Link to={`/doctorDashboard/${id}`} className='text-sm font-bold'>
+              {name}
             </Link>
-            <p className='text-sm'>{currentUser.role}</p>
+            <p className='text-sm'>{role}</p>
           </div>
         );
       }
