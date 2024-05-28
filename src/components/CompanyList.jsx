@@ -1,3 +1,4 @@
+// CompanyList.js
 import React, { useState, useEffect } from "react";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
@@ -5,7 +6,8 @@ import { useAuth } from "../components/AuthContext";
 import Header from "./Header";
 import Footer from "./Footer";
 import { FaSearch } from "react-icons/fa";
-import defaultAvatar from "../assets/img/defaultAvatar.png";
+import FilterMenu from "../pages/CompanyFM";
+import CompanyCard from "../pages/CompanyCards";
 
 const CompanyList = () => {
   const [companies, setCompanies] = useState([]);
@@ -14,7 +16,6 @@ const CompanyList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndustries, setSelectedIndustries] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [showSignInMessage, setShowSignInMessage] = useState(false);
   const navigate = useNavigate();
   const { currentUser } = useAuth();
 
@@ -82,6 +83,10 @@ const CompanyList = () => {
     }
   };
 
+  const handleViewProfile = (company) => {
+    navigate(`/company/${company.id}`);
+  };
+
   return (
     <>
       <Header />
@@ -121,89 +126,21 @@ const CompanyList = () => {
         </div>
       </div>
       <div className="container mt-10 flex flex-col lg:flex-row items-start">
-        <div className="w-full lg:w-1/4 px-4 bg-gray-100 py-4 ml-2 hidden md:block">
-          <div className="text-2xl font-bold font-sans leading-8 mb-4">
-            Filter By Industry
-          </div>
-          <div className="flex flex-col gap-2.5">
-            <div className="flex items-center gap-2.5">
-              <input
-                type="checkbox"
-                checked={selectedIndustries.length === 0}
-                onChange={() => setSelectedIndustries([])}
-                className="cursor-pointer"
-              />
-              <span
-                onClick={() => setSelectedIndustries([])}
-                className="cursor-pointer"
-              >
-                All
-              </span>
-            </div>
-            {allIndustries.map((industry, index) => (
-              <div key={index} className="flex items-center gap-2.5">
-                <input
-                  type="checkbox"
-                  checked={selectedIndustries.includes(industry)}
-                  onChange={() =>
-                    setSelectedIndustries((prev) =>
-                      prev.includes(industry)
-                        ? prev.filter((item) => item !== industry)
-                        : [...prev, industry]
-                    )
-                  }
-                  className="cursor-pointer"
-                />
-                <span
-                  onClick={() =>
-                    setSelectedIndustries((prev) =>
-                      prev.includes(industry)
-                        ? prev.filter((item) => item !== industry)
-                        : [...prev, industry]
-                    )
-                  }
-                  className="cursor-pointer"
-                >
-                  {industry}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Filter menu component */}
+        <FilterMenu
+        allIndustries={allIndustries}
+        selectedIndustries={selectedIndustries}
+        setSelectedIndustries={setSelectedIndustries}
+      />
         <div className="w-full lg:w-3/4 px-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {/* Company cards */}
             {currentCompanies.map((company, index) => (
-              <div
+              <CompanyCard
                 key={index}
-                className="bg-white border border-gray-200 rounded-lg shadow flex flex-col items-center text-center"
-              >
-                <img
-                  loading="lazy"
-                  src={company.logo || defaultAvatar}
-                  alt={`Logo of ${company.name}`}
-                  className="w-[90px] mt-3"
-                />
-                <div className="p-5">
-                  <div className="text-sm font-bold leading-7 underline">
-                    {company.name}
-                  </div>
-                  <div className="mt-3">
-                    <div className="py-1 text-sm leading-9 bg-violet-100 max-md:px-5">
-                      {company.industry}
-                    </div>
-                  </div>
-                  <div className="mt-2 border-t border-gray-200 max-md:pr-5 max-md:pl-7">
-                    <span className="text-sm">Location:</span>
-                    <span className="text-sm">{company.location}</span>
-                  </div>
-                  <button
-                    onClick={() => console.log("View company profile")}
-                    className="px-2 py-1 mt-3 font-semibold text-white capitalize bg-indigo-800 tracking-[2px] max-md:px-5 hover:bg-indigo-600"
-                  >
-                    View Profile
-                  </button>
-                </div>
-              </div>
+                company={company}
+                handleViewProfile={handleViewProfile}
+              />
             ))}
           </div>
           <div className="flex justify-start pl-5 mt-4 mb-4 overflow-x-auto">

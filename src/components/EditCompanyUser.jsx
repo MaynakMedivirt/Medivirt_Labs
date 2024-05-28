@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 import CompanyNavbar from "./CompanyNavbar";
 import CompanySide from "./CompanySide";
@@ -12,8 +12,10 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const EditCompanyUser = () => {
-    const { id } = useParams();
+    const location = useLocation();
     const navigate = useNavigate();
+    const { userId } = location.state;
+
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
     const [companyName, setCompanyName] = useState("");
@@ -34,7 +36,7 @@ const EditCompanyUser = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const userDoc = await getDoc(doc(db, "users", id));
+                const userDoc = await getDoc(doc(db, "users", userId));
                 if (userDoc.exists()) {
                     setUser(userDoc.data());
                 } else {
@@ -47,7 +49,7 @@ const EditCompanyUser = () => {
 
         const fetchCompanyName = async () => {
             try {
-                const userDoc = await getDoc(doc(db, "users", id));
+                const userDoc = await getDoc(doc(db, "users", userId));
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
                     const companyDoc = await getDoc(doc(db, "companies", userData.companyId));
@@ -62,7 +64,7 @@ const EditCompanyUser = () => {
 
         fetchUser();
         fetchCompanyName();
-    }, [id]);
+    }, [userId]);
 
     const cleanedCompanyName = companyName.replace(/\s+/g, '');
     const predefinedUsernames = [`${user.firstName}_${user.lastName}@${cleanedCompanyName}`, `${user.firstName}@${cleanedCompanyName}`, `${user.lastName}@${cleanedCompanyName}`];
@@ -71,7 +73,7 @@ const EditCompanyUser = () => {
         e.preventDefault();
         try {
             const hashedPassword = await bcrypt.hash(user.password, 10);
-            await updateDoc(doc(db, "users", id), {
+            await updateDoc(doc(db, "users", userId), {
                 ...user,
                 password: hashedPassword
             });
@@ -106,6 +108,7 @@ const EditCompanyUser = () => {
                                         value={user.firstName}
                                         onChange={(e) => setUser({ ...user, firstName: e.target.value })}
                                         placeholder="Enter First Name"
+                                        required
                                     />
                                 </div>
                                 <div className="mb-3">
@@ -117,6 +120,7 @@ const EditCompanyUser = () => {
                                         value={user.lastName}
                                         onChange={(e) => setUser({ ...user, lastName: e.target.value })}
                                         placeholder="Enter Last Name"
+                                        required
                                     />
                                 </div>
                                 <div className="mb-3">
@@ -128,6 +132,7 @@ const EditCompanyUser = () => {
                                         value={user.email}
                                         onChange={(e) => setUser({ ...user, email: e.target.value })}
                                         placeholder="Enter Email"
+                                        required
                                     />
                                 </div>
                                 <div className="mb-3">
@@ -140,6 +145,7 @@ const EditCompanyUser = () => {
                                             value={user.password}
                                             onChange={(e) => setUser({ ...user, password: e.target.value })}
                                             placeholder="Enter Password"
+                                            required
                                         />
                                         <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3" onClick={() => setShowPassword(!showPassword)}>
                                             {showPassword ? <TbEye /> : <TbEyeClosed />}
@@ -148,22 +154,30 @@ const EditCompanyUser = () => {
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="location" className="block mb-2 px-2 text-lg font-bold text-gray-900">Location :</label>
-                                    <input
-                                        type="text"
+                                    <select
                                         name="location"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2"
+                                        className="bg-gray-50 border border-gray-300  text-gray-900 rounded-lg block w-full p-2"
                                         value={user.location}
                                         onChange={(e) => setUser({ ...user, location: e.target.value })}
-                                        placeholder="Enter Location"
-                                    />
+                                        required
+                                    >
+                                        <option value="">Select Location</option>
+                                        <option value="Bangalore">Bangalore</option>
+                                        <option value="Delhi">Delhi</option>
+                                        <option value="Mumbai">Mumbai</option>
+                                        <option value="Kolkata">Kolkata</option>
+                                        <option value="Hyderabad">Hyderabad</option>
+                                        <option value="Chennai">Chennai</option>
+                                    </select>
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="role" className="block mb-2 px-2 text-lg font-bold text-gray-900">Role :</label>
                                     <select
                                         name="role"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2"
+                                        className="bg-gray-50 border border-gray-300  text-gray-900 rounded-lg block w-full p-2"
                                         value={user.role}
                                         onChange={(e) => setUser({ ...user, role: e.target.value })}
+                                        required
                                     >
                                         <option value="">Select Role</option>
                                         <option value="Sales Head">Sales Head</option>
@@ -177,6 +191,7 @@ const EditCompanyUser = () => {
                                         className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2"
                                         value={user.username}
                                         onChange={(e) => setUser({ ...user, username: e.target.value })}
+                                        required
                                     >
                                         <option value="">Select Username</option>
                                         {predefinedUsernames.map((username, index) => (
@@ -202,3 +217,4 @@ const EditCompanyUser = () => {
 };
 
 export default EditCompanyUser;
+

@@ -65,56 +65,26 @@ const Header = () => {
 
   const renderUserDetails = () => {
     if (currentUser) {
-      const { role, role_company, id, name, firstName, lastName } = currentUser;
+      const { role, role_company, id, name, firstName, lastName, companyName, profileComplete } = currentUser;
+      const userName = `${firstName || ''} ${lastName || ''}`.trim() || name;
+      const roleDisplay = role === 'Company' ? role_company : role;
+
+      let dashboardPath;
       if (role === 'Company') {
-        if (role_company === 'Sales Head') {
-          return (
-            <div className="mr-2">
-              <Link to={`/salesDashboard/${id}`} className='text-sm font-bold'>
-                {firstName} {lastName}
-              </Link>
-              <p className='text-sm'>{role_company}</p>
-            </div>
-          );
-        } else if (role_company === 'Medical Representative') {
-          return (
-            <div className="mr-2">
-              <Link to={`/mrDashboard/${id}`} className='text-sm font-bold'>
-                {firstName} {lastName}
-              </Link>
-              <p className='text-sm'>{role_company}</p>
-            </div>
-          );
-        } else {
-          if (currentUser.profileComplete) {
-            return (
-              <div className="mr-2">
-                <Link to={`/companydashboard/${id}`} className='text-sm font-bold'>
-                  {name}
-                </Link>
-                <p className='text-sm'>{currentUser.companyName}</p>
-              </div>
-            );
-          } else {
-            return (
-              <div className="mr-2">
-                <Link to={`/profilecomplete/${id}`} className='text-sm font-bold'>
-                  {name}
-                </Link>
-              </div>
-            );
-          }
-        }
+        dashboardPath = profileComplete ? `/companydashboard/${id}` : `/profilecomplete/${id}`;
+        if (role_company === 'Sales Head') dashboardPath = `/salesDashboard/${id}`;
+        if (role_company === 'Medical Representative') dashboardPath = `/mrDashboard/${id}`;
       } else if (role === 'Doctor') {
-        return (
-          <div className="mr-2">
-            <Link to={`/doctorDashboard/${id}`} className='text-sm font-bold'>
-              {name}
-            </Link>
-            <p className='text-sm'>{role}</p>
-          </div>
-        );
+        dashboardPath = `/doctorDashboard/${id}`;
       }
+      return (
+        <div className="mr-2">
+          <Link to={dashboardPath} className="text-sm font-bold">
+            {userName}
+          </Link>
+          <p className="text-sm">{roleDisplay || companyName}</p>
+        </div>
+      );
     }
     return null;
   };

@@ -274,7 +274,7 @@ const DoctorMessage = () => {
                                                         className="text-white bg-[#4BCB5D] rounded-lg px-3 py-2 text-center me-2 mb-2"
                                                         onClick={() => handleReply(conversation)}
                                                     >
-                                                        Open ChatBox
+                                                        View Messages
                                                     </button>
                                                 </td>
                                             </tr>

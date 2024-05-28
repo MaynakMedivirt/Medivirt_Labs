@@ -51,7 +51,7 @@ const SalesSide = ({ open, toggleSidebar }) => {
                     style={{ maxHeight: 'calc(100vh - 4.2rem)' }}
                 >
                     <h2 className="text-center text-xl mt-2 font-semibold">
-                        {open ? "Sales Head" : "SH"}
+                        {open ? "Role : Sales Head" : "SH"} 
                     </h2>                    
                     <div
                         className={`absolute cursor-pointer right-0 top-0 mt-2 mr-2 w-8 h-8 border-[#7191E6] border-2 rounded-full flex items-center justify-center ${!open && "rotate-180"}`}

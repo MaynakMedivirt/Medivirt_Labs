@@ -42,37 +42,45 @@ const LoginPage = () => {
     navigate("/home");
   };
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
-    try {
-      if (email && password) {
-        await signInWithEmailAndPassword(auth, email, password);
-        if (currentUser.emailVerified) {
-          setShowPopup(true);
-          setTimeout(() => {
-            redirectToDashboard();
-          }, 3000);
-        } else {
-          alert("Email not verified!");
-        }
-      } else if (name) {
-        const userDoc = await getUserDocumentByRole(name, role);
-        if (userDoc) {
-          setCurrentUser({ ...userDoc, role, id: userDoc.id });
-          console.log({ ...userDoc, role, id: userDoc.id });
-          alert("Login successful!");
-          redirectToDashboard();
-        } else {
-          throw new Error("User not found.");
-        }
-      } else {
-        throw new Error("Please provide email/password or name.");
-      }
-    } catch (error) {
-      console.error("Error signing in:", error.message);
-      alert("Failed to sign in. Please check your credentials and try again.");
-    }
-  };
+  // const handleLogin = async (event) => {
+  //   event.preventDefault();
+  //   try {
+  //     if (email && password) {
+  //       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  //       const user = userCredential.user;
+  //       if (user.emailVerified) {
+  //         const userData = await getUserDocumentByEmail(email);
+  //         if (userData) {
+  //           setCurrentUser(userData); 
+  //           console.log(userData);
+  //           setShowPopup(true);
+  //           setTimeout(() => {
+  //             redirectToDashboard();
+  //           }, 3000);
+  //         } else {
+  //           throw new Error("User data not found.");
+  //         }
+  //       } else {
+  //         alert("Email not verified!");
+  //       }
+  //     } else if (name) {
+  //       const userDoc = await getUserDocumentByRole(name, role);
+  //       if (userDoc) {
+  //         setCurrentUser({ ...userDoc, role, id: userDoc.id });
+  //         console.log({ ...userDoc, role, id: userDoc.id });
+  //         alert("Login successful!");
+  //         redirectToDashboard();
+  //       } else {
+  //         throw new Error("User not found.");
+  //       }
+  //     } else {
+  //       throw new Error("Please provide email/password or name.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error signing in:", error.message);
+  //     alert("Failed to sign in. Please check your credentials and try again.");
+  //   }
+  // };
 
   // const getUserDocumentByRole = async (name, role) => {
   //   const usersRef = collection(db, role === 'Doctor' ? 'doctors' : 'companies');
@@ -81,44 +89,129 @@ const LoginPage = () => {
   //   return querySnapshot.docs[0];
   // };
 
-  const getUserDocumentByRole = async (name, role) => {
-    if (role === "Company") {
-      const companiesRef = collection(db, "companies");
-      const companyQuery = query(companiesRef, where("name", "==", name));
-      const companySnapshot = await getDocs(companyQuery);
-      if (!companySnapshot.empty) {
-        return {
-          ...companySnapshot.docs[0].data(),
-          role: "Company",
-          id: companySnapshot.docs[0].id,
-        };
+  // const getUserDocumentByRole = async (name, role) => {
+  //   if (role === "Company") {
+  //     const companiesRef = collection(db, "companies");
+  //     const companyQuery = query(companiesRef, where("name", "==", name));
+  //     const companySnapshot = await getDocs(companyQuery);
+  //     if (!companySnapshot.empty) {
+  //       return {
+  //         ...companySnapshot.docs[0].data(),
+  //         role: "Company",
+  //         id: companySnapshot.docs[0].id,
+  //       };
+  //     }
+
+  //     // If not found in companies collection, check 'users' collection for a match based on username
+  //     const usersRef = collection(db, "users");
+  //     const userQuery = query(usersRef, where("username", "==", name));
+  //     const userSnapshot = await getDocs(userQuery);
+  //     if (!userSnapshot.empty) {
+  //       return {
+  //         ...userSnapshot.docs[0].data(),
+  //         role_company: userSnapshot.docs[0].data().role,
+  //         role: "Company",
+  //         id: userSnapshot.docs[0].id,
+  //       };
+  //     }
+  //   } else if (role === "Doctor") {
+  //     const doctorsRef = collection(db, "doctors");
+  //     const doctorQuery = query(doctorsRef, where("name", "==", name));
+  //     const doctorSnapshot = await getDocs(doctorQuery);
+  //     if (!doctorSnapshot.empty) {
+  //       return {
+  //         ...doctorSnapshot.docs[0].data(),
+  //         role: "Doctor",
+  //         id: doctorSnapshot.docs[0].id,
+  //       };
+  //     }
+  //   }
+
+  //   return null;
+  // };
+
+  // const getUserDocumentByEmail = async (email) => {
+  //   if (role === "Company") {
+  //     const companiesRef = collection(db, "companies");
+  //     const companyQuery = query(companiesRef, where("email", "==", email));
+  //     const companySnapshot = await getDocs(companyQuery);
+  //     if (!companySnapshot.empty) {
+  //       return {
+  //         ...companySnapshot.docs[0].data(),
+  //         role: "Company",
+  //         id: companySnapshot.docs[0].id,
+  //       };
+  //     }
+
+  //     // If not found in companies collection, check 'users' collection for a match based on username
+  //     const usersRef = collection(db, "users");
+  //     const userQuery = query(usersRef, where("email", "==", email));
+  //     const userSnapshot = await getDocs(userQuery);
+  //     if (!userSnapshot.empty) {
+  //       return {
+  //         ...userSnapshot.docs[0].data(),
+  //         role_company: userSnapshot.docs[0].data().role,
+  //         role: "Company",
+  //         id: userSnapshot.docs[0].id,
+  //       };
+  //     }
+  //   } else if (role === "Doctor") {
+  //     const doctorsRef = collection(db, "doctors");
+  //     const doctorQuery = query(doctorsRef, where("email", "==", email));
+  //     const doctorSnapshot = await getDocs(doctorQuery);
+  //     if (!doctorSnapshot.empty) {
+  //       return {
+  //         ...doctorSnapshot.docs[0].data(),
+  //         role: "Doctor",
+  //         id: doctorSnapshot.docs[0].id,
+  //       };
+  //     }
+  //   }
+
+  //   return null;
+  // };
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      let userData = null;
+      if (email && password) {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        userData = await getUserDocument("email", email);
+      } else if (name) {
+        userData = await getUserDocument("name", name);
+      } else {
+        throw new Error("Please provide email/password or name.");
       }
 
-      // If not found in companies collection, check 'users' collection for a match based on username
-      const usersRef = collection(db, "users");
-      const userQuery = query(usersRef, where("username", "==", name));
-      const userSnapshot = await getDocs(userQuery);
-      if (!userSnapshot.empty) {
-        return {
-          ...userSnapshot.docs[0].data(),
-          role_company: userSnapshot.docs[0].data().role,
-          role: "Company",
-          id: userSnapshot.docs[0].id,
-        };
+      if (userData) {
+        setCurrentUser(userData);
+        console.log(userData);
+        setShowPopup(true);
+        setTimeout(redirectToDashboard, 3000);
+      } else {
+        throw new Error("User data not found.");
       }
-    } else if (role === "Doctor") {
-      const doctorsRef = collection(db, "doctors");
-      const doctorQuery = query(doctorsRef, where("name", "==", name));
-      const doctorSnapshot = await getDocs(doctorQuery);
-      if (!doctorSnapshot.empty) {
-        return {
-          ...doctorSnapshot.docs[0].data(),
-          role: "Doctor",
-          id: doctorSnapshot.docs[0].id,
-        };
+    } catch (error) {
+      console.error("Error signing in:", error.message);
+      alert("Failed to sign in. Please check your credentials and try again.");
+    }
+  };
+
+  const getUserDocument = async (field, value) => {
+    const collectionName = role === "Company" ? "companies" : "doctors";
+    const fieldToQuery = field === "email" ? "email" : "name";
+    const q = query(collection(db, collectionName), where(fieldToQuery, "==", value));
+    const snapshot = await getDocs(q);
+    if (snapshot.docs.length) {
+      return { ...snapshot.docs[0].data(), role, id: snapshot.docs[0].id };
+    } else if (field === "name") {
+      // If not found by name, check the 'users' collection for a match based on username
+      const userSnapshot = await getDocs(query(collection(db, "users"), where("username", "==", value)));
+      if (userSnapshot.docs.length) {
+        return { ...userSnapshot.docs[0].data(), role_company: userSnapshot.docs[0].data().role, role, id: userSnapshot.docs[0].id };
       }
     }
-
     return null;
   };
 
@@ -173,11 +266,10 @@ const LoginPage = () => {
             <div className="flex gap-4 max-w-xl mx-auto mt-20 text-base font-bold text-center uppercase mb-10 whitespace-nowrap tracking-[2px] max-md:flex-wrap">
               {/* Role Selection Buttons */}
               <button
-                className={`flex justify-center items-center py-6 pr-10 pl-5 rounded-lg w-full ${
-                  role === "Company"
-                    ? "bg-[#3d52a1] text-white"
-                    : "bg-gray-200 text-zinc-500"
-                }`}
+                className={`flex justify-center items-center py-6 pr-10 pl-5 rounded-lg w-full ${role === "Company"
+                  ? "bg-[#3d52a1] text-white"
+                  : "bg-gray-200 text-zinc-500"
+                  }`}
                 onClick={() => setRole("Company")}
               >
                 <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />
@@ -185,11 +277,10 @@ const LoginPage = () => {
                 <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />
               </button>
               <button
-                className={`flex justify-center items-center py-6 pr-10 pl-5 rounded-lg w-full ${
-                  role === "Doctor"
-                    ? "bg-[#3d52a1] text-white"
-                    : "bg-gray-200 text-zinc-500"
-                }`}
+                className={`flex justify-center items-center py-6 pr-10 pl-5 rounded-lg w-full ${role === "Doctor"
+                  ? "bg-[#3d52a1] text-white"
+                  : "bg-gray-200 text-zinc-500"
+                  }`}
                 onClick={() => setRole("Doctor")}
               >
                 <div className="shrink-0 self-stretch my-auto h-px border-t border-white border-solid w-[18px]" />

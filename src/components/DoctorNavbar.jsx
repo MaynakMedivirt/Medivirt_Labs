@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { NavLink } from "react-router-dom";
 import MedivirtLogo from '../assets/img/Medivirt.png';
 import Image from "../assets/img/defaultAvatar.png";
 import { signOut } from 'firebase/auth'; 
 import { auth } from '../components/firebase';
 
 const DoctorNavbar = () => {
-
     const [doctor, setDoctor] = useState(null);
     const { id } = useParams();
-    const [dropdownOpen, setDropdownOpen] = useState(false); // Define dropdownOpen state
+    const [dropdownOpen, setDropdownOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -35,19 +33,14 @@ const DoctorNavbar = () => {
 
     const handleLogout = () => {
         signOut(auth)
-          .then(() => {
-            console.log('User logged out successfully.');
-            navigate('/login');
-          })
-          .catch(error => {
-            console.error('Error logging out:', error);
-          });
-      };
-
-
-    if (!doctor) {
-        return <div className="text-center">Loading...</div>;
-    }
+            .then(() => {
+                console.log('User logged out successfully.');
+                navigate('/login');
+            })
+            .catch(error => {
+                console.error('Error logging out:', error);
+            });
+    };
 
     return (
         <nav className="bg-[#3D52A1] border-b w-full sticky top-0 left-0">
@@ -57,7 +50,7 @@ const DoctorNavbar = () => {
                 </NavLink>
                 <div className="flex items-center space-x-4">
                     <button className="w-10 h-10 outline-none rounded-full">
-                        {doctor.image ? (
+                        {doctor?.image ? (
                             <img
                                 src={doctor.image}
                                 alt={`Profile of ${doctor.name}`}
@@ -71,7 +64,7 @@ const DoctorNavbar = () => {
                         )}
                     </button>
                     <div className="text-white">
-                        <p className="font-bold">{doctor.name}</p>
+                        <p className="font-bold">{doctor?.name || "Loading..."}</p>
                         <p className="text-sm">Admin</p>
                     </div>
                     <button className="w-7 h-7 text-white border rounded-full" onClick={() => setDropdownOpen(!dropdownOpen)}>

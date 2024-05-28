@@ -326,7 +326,7 @@ const DoctorSchedule = () => {
                           {/* Modify */}
                         </button>
 
-                        {meeting.status !== "Rescheduled" && (
+                        {meeting.status !== "Rescheduled"(
                           <button
                             type="button"
                             className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"

@@ -1,99 +1,221 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { MdOutlineLocationOn } from 'react-icons/md';
-import Header from './Header';
-import Footer from './Footer';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import Header from "./Header";
+import Footer from "./Footer";
+import defaultAvatar from "../assets/img/defaultAvatar.png";
+import Banner from "../assets/img/Banner.png"; // Placeholder for the banner image
 
 const CompanyProfile = () => {
   const { id } = useParams();
   const [company, setCompany] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState("about");
 
   useEffect(() => {
     const fetchCompany = async () => {
       try {
         const db = getFirestore();
-        const companyRef = doc(db, 'companies', id); // Assuming 'companies' is your collection name
-        const companySnapshot = await getDoc(companyRef);
+        const companyDoc = doc(db, "companies", id);
+        const companySnapshot = await getDoc(companyDoc);
         if (companySnapshot.exists()) {
           setCompany({ id: companySnapshot.id, ...companySnapshot.data() });
         } else {
-          console.log('No such company!');
+          setError("Company not found");
         }
       } catch (error) {
-        console.error('Error fetching company:', error);
+        console.error("Error fetching company:", error);
+        setError("Error fetching company: " + error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchCompany();
+    const fetchProducts = async () => {
+      try {
+        const db = getFirestore();
+        const productsCollection = db.collection("products").where("companyId", "==", id);
+        const productsSnapshot = await productsCollection.get();
+        const fetchedProducts = [];
+        productsSnapshot.forEach((doc) => {
+          fetchedProducts.push({ id: doc.id, ...doc.data() });
+        });
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    if (id) {
+      fetchCompany();
+      fetchProducts();
+    } else {
+      setError("Invalid company ID");
+      setLoading(false);
+    }
   }, [id]);
 
-  const handleContactUs = () => {
-    if (company && company.email) {
-      window.location.href = `mailto:${company.email}`;
-    }
-  };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  if (!company) {
-    return <div className="text-center">Loading...</div>;
+  if (error) {
+    return <div>{error}</div>;
   }
 
   return (
     <>
       <Header />
-      <div className="container mx-auto mt-8 px-4 md:px-0 xl:max-w-[200rem]">
-        <div className="bg-[#ffede9] rounded-lg overflow-hidden shadow-lg">
-          <div className="flex flex-col md:flex-row p-6 items-center">
-            <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6 rounded-full">
-            {company.image ? (
-                <img
-                  src={company.image}
-                  alt={`Profile of ${company.name}`}
-                  className="w-32 h-32 md:w-48 md:h-48 rounded-full"
-                />
-              ) : (
-                <div className="w-32 h-32 md:w-48 md:h-48 bg-gray-200 rounded-full flex items-center justify-center">
-                  {/* Placeholder image */}
-                  <img src="../src/assets/img/defaultAvatar.png" alt="Placeholder" />
+      <div className={`overflow-y-auto flex-1 transition-all duration-300`}>
+        <div className="container max-w-6xl px-5 mx-auto my-10">
+          <div className="overflow-hidden mt-[20px]">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 md:px-10">
+              <div className="col-span-1 md:col-span-2 mt-5">
+                <div
+                  className="overflow-hidden"
+                  style={{
+                    backgroundImage: `url(${Banner})`,
+                    height: "250px",
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
+                  }}
+                >
+                  <div className="flex items-center">
+                    <div className="p-8">
+                      <div className="mb-4">
+                        <img
+                          src={company.image || defaultAvatar}
+                          alt={`Profile of ${company.name}`}
+                          className="w-24 h-24 md:w-32 md:h-32 rounded-full"
+                        />
+                      </div>
+                      <div>
+                        <div className="flex space-x-4">
+                          <h1 className="text-xl text-gray-800 font-bold">
+                            {company.name}
+                          </h1>
+                        </div>
+                        <p className="text-lg text-gray-600">
+                          {company.location}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-span-1 md:col-span-1">
+                <div className="bg-white border overflow-hidden mt-5 shadow-lg">
+                  <div className="mt-5">
+                    <div className="p-6 md:p-5 md:h-auto">
+                      <div className="flex items-center justify-between mb-5">
+                        <p className="text-sm ">Categories:</p>
+                        <p className="text-sm font-semibold">
+                          {company.category}
+                        </p>
+                      </div>
+                      <hr className="mb-3 border-gray-300"></hr>
+                      <div className="flex items-center justify-between mb-5">
+                        <span className="text-sm">Email:</span>
+                        <span className="text-sm font-semibold">
+                          {company.email}
+                        </span>
+                      </div>
+                      <hr className="mb-3 border-gray-300"></hr>
+                      <div className="flex items-center justify-between mb-5">
+                        <p className="text-sm">Phone: </p>
+                        <p className="text-sm font-semibold capitalize">
+                          {company.phone}
+                        </p>
+                      </div>
+                      <hr className="mb-3 border-gray-300"></hr>
+                      <div className="flex items-center justify-between mb-5">
+                        <p className="text-sm">Location: </p>
+                        <p className="text-sm font-semibold capitalize">
+                          {company.headquarter}
+                        </p>
+                      </div>
+                      <hr className="mb-3 border-gray-300"></hr>
+                      <div className="flex items-center justify-center">
+                        <button className="flex gap-1.5 justify-center items-center px-6 py-2 mt-5 text-base font-bold text-center text-white uppercase bg-indigo-800 tracking-[2px] max-md:mt-5">
+                          Contact
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="mt-10">
+              <div className="flex">
+                <h1
+                  className={`text-xl px-1 font-semibold cursor-pointer ${
+                    activeTab === "about"
+                      ? "bg-[#EEE7F6] text-black"
+                      : "text-gray-800"
+                  }`}
+                  onClick={() => setActiveTab("about")}
+                >
+                  About Company
+                </h1>
+                <h1
+                  className={`text-xl px-1 ml-5 font-semibold cursor-pointer ${
+                    activeTab === "product"
+                      ? "bg-[#EEE7F6] text-black"
+                      : "text-gray-800"
+                  }`}
+                  onClick={() => setActiveTab("product")}
+                >
+                  Product
+                </h1>
+              </div>
+              <div className="mt-5">
+                {activeTab === "about" && (
+                  <div className="flex flex-col md:flex-row justify-between px-4 bg-white shadow-lg border p-3">
+                    <p className="p-4 mb-5">{company.about}</p>
+                  </div>
+                )}
+                {activeTab === "product" && (
+                  <div className="mt-10">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-5 gap-6 mt-3">
+                    {products.length > 0 ? (
+                      products.map((product, index) => (
+                        <div key={index} className="bg-white border border-gray-200 rounded-lg shadow p-4">
+                          <img
+                            src={product.image || defaultAvatar}
+                            alt={product.name}
+                            className="w-full h-32 object-cover mb-4 rounded"
+                          />
+                          <h2 className="text-lg font-semibold mb-2">{product.name}</h2>
+                          <p className="text-gray-600">{product.description}</p>
+                          <button
+                            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                          >
+                            Enquiry About The Product
+                          </button>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No products available.</p>
+                    )}
+                    {/* Add empty grid items to fill remaining spaces for a 5x5 grid */}
+                    {Array.from({ length: 25 - (products.length % 25) }).map((_, index) => (
+                      <div key={index} className="bg-transparent"></div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
-            <div className="px-6 md:flex-grow">
-              <h1 className="text-xl font-semibold text-gray-800 mb-2">{company.name}</h1>
-              <p className="text-lg text-gray-600 mb-4">{company.industry}</p>
-              <div className="flex items-center mb-2">
-                <MdOutlineLocationOn className="text-gray-600 mr-2 w-5 h-5" />
-                <p className="text-gray-600 mr-8">{company.location}</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
-      {/* Additional content */}
-      <div className="flex flex-col md:flex-row mb-6">
-        <div className="md:flex-1 md:order-2 mt-6">
-          <div className="p-6 md:p-5 md:h-auto bg-gray-100 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold mb-2">Company Details:</h2>
-            <p className="text-md">Location: {company.location}</p>
-            <p className="text-md">Industry: {company.industry}</p>
-            <p className="text-md">Founded: {company.founded}</p>
-            {/* Add more relevant company details */}
-          </div>
-        </div>
-        <div className="md:flex-1 md:order-1 mt-6 md:mt-0">
-          <div className="p-3 md:p-10 text-gray-700 md:w-[70rem]">
-            <h2 className="text-xl font-semibold mb-2">About:</h2>
-            <p className="text-lg">{company.about}</p>
-          </div>
-          <div className="p-3 md:p-10 text-gray-700">
-            <h2 className="text-xl font-semibold mb-2">Mission & Vision:</h2>
-            <p className="text-lg">{company.mission}</p>
-          </div>
-        </div>
-      </div>
-      <Footer />
-    </>
-  );
+    </div>
+    <Footer />
+  </>
+);
 };
 
 export default CompanyProfile;
+

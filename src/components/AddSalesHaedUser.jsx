@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import CompanySide from './CompanySide';
-import CompanyNavbar from './CompanyNavbar';
+import SalesNavbar from "./SalesNavbar";
+import SalesSide from "./SalesSide";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import bcrypt from "bcryptjs";
@@ -10,7 +10,7 @@ import { firebaseConfig } from "../components/firebase";
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const AddUsers = () => {
+const AddSalesHeadUser = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -19,6 +19,7 @@ const AddUsers = () => {
     const [location, setLocation] = useState("");
     const [role, setRole] = useState("");
     const [companyName, setCompanyName] = useState("");
+    const [companyId, setCompanyId] = useState("");
     const [selectedUsername, setSelectedUsername] = useState("");
     const { id } = useParams();
     const navigate = useNavigate();
@@ -28,15 +29,23 @@ const AddUsers = () => {
     };
 
     useEffect(() => {
-        // Fetch company name based on id
         const fetchCompanyName = async () => {
             try {
-                const companyDoc = await getDoc(doc(db, "companies", id));
-                if (companyDoc.exists()) {
-                    const companyData = companyDoc.data();
-                    setCompanyName(companyData.companyName);
+                const userDoc = await getDoc(doc(db, "users", id));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    const fetchedCompanyId = userData.companyId;
+                    setCompanyId(fetchedCompanyId);
+
+                    const companyDoc = await getDoc(doc(db, "companies", fetchedCompanyId));
+                    if (companyDoc.exists()) {
+                        const companyData = companyDoc.data();
+                        setCompanyName(companyData.companyName);
+                    } else {
+                        console.log("Company not found");
+                    }
                 } else {
-                    console.log("Company not found");
+                    console.log("Sales head not found");
                 }
             } catch (error) {
                 console.log("Error fetching company:", error);
@@ -48,12 +57,14 @@ const AddUsers = () => {
 
     const cleanedCompanyName = companyName.replace(/\s+/g, '');
 
-    const predefinedUsernames = [`${firstName}_${lastName}@${cleanedCompanyName}`, `${firstName}@${cleanedCompanyName}`, `${lastName}@${cleanedCompanyName}`];
+    const predefinedUsernames = [
+        `${firstName}_${lastName}@${cleanedCompanyName}`,
+        `${firstName}@${cleanedCompanyName}`,
+        `${lastName}@${cleanedCompanyName}`
+    ];
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        let companyId = id;
-
         const username = selectedUsername;
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -68,11 +79,12 @@ const AddUsers = () => {
                 password: hashedPassword,
                 role,
                 location,
-                companyId,
+                companyId: companyId,
+                fetchId: id,
                 username
             });
 
-            console.log("Document Written with ID : ", username);
+            console.log("Document written with ID: ", username);
             alert("User added successfully!");
 
             // Reset form fields
@@ -83,18 +95,17 @@ const AddUsers = () => {
             setRole("");
             setLocation("");
 
-            navigate(`/company/users/${id}`);
-
+            navigate(`/sales/users/${id}`);
         } catch (error) {
-            console.log("Error adding document :", error);
+            console.log("Error adding document:", error);
         }
     };
 
     return (
         <div className="flex flex-col h-screen">
-            <CompanyNavbar />
+            <SalesNavbar />
             <div className="flex flex-1">
-                <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
+                <SalesSide open={sidebarOpen} toggleSidebar={toggleSidebar} />
                 <div className={`overflow-y-auto flex-1 transition-margin duration-300 ${sidebarOpen ? 'ml-72' : 'ml-20'}`}>
                     <div className="container max-w-6xl px-5 mx-auto my-10">
                         <form
@@ -154,7 +165,7 @@ const AddUsers = () => {
                                 <div className="mb-3">
                                     <label htmlFor="location" className="block mb-2 px-2 text-lg font-bold text-gray-900">Location :</label>
                                     <select
-                                        name="role"
+                                        name="location"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2"
                                         value={location}
                                         onChange={(e) => setLocation(e.target.value)}
@@ -179,7 +190,6 @@ const AddUsers = () => {
                                         required
                                     >
                                         <option value="">Select Role</option>
-                                        <option value="Sales Head">Sales Head</option>
                                         <option value="Medical Representative">Medical Representative</option>
                                     </select>
                                 </div>
@@ -215,4 +225,4 @@ const AddUsers = () => {
     );
 };
 
-export default AddUsers;
+export default AddSalesHeadUser;

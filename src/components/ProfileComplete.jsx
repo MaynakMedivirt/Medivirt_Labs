@@ -187,15 +187,21 @@ const ProfileComplete = () => {
                     <div className="grid md:grid-cols-2 md:gap-6">
                         <div className="mb-3">
                             <label htmlFor="location" className="block mb-2 px-2 text-lg font-bold text-gray-900 dark:text-white">Location :</label>
-                            <input
-                                type="text"
-                                name="location"
+                            <select
+                                name="role"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 value={company.location || ''}
                                 onChange={(e) => setCompany({ ...company, location: e.target.value })}
-                                placeholder="Enter location"
                                 required
-                            />
+                            >
+                                <option value="">Select Location</option>
+                                <option value="Bangalore">Bangalore</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Kolkata">Kolkata</option>
+                                <option value="Hyderabad">Hyderabad</option>
+                                <option value="Chennai">Chennai</option>
+                            </select>
                         </div>
                         <div className="mb-3">
                             <label htmlFor="headquarter" className="block mb-2 px-2 text-lg font-bold text-gray-900 dark:text-white">Headquarter :</label>

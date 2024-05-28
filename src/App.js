@@ -7,9 +7,9 @@ import DoctorDash from './components/DoctorDash';
 /*import CompanyDash from './components/CompanyDash';*/
 import { AuthProvider, useAuth } from './components/AuthContext';
 import DoctorList from './components/DoctorList';
-/*import CompanyList from './components/CompanyList';*/
+import CompanyList from './components/CompanyList';
 import DoctorProfile from './components/DoctorProfile';
-// import CompanyProfile from './components/CompanyProfile';
+import CompanyProfile from './components/CompanyProfile';
 import WarningPage from './pages/WarningPage';
 import Navbar from './components/Navbar';
 import Sidebar from "./components/Side";
@@ -70,6 +70,10 @@ import LearnMore from './components/LearnMore';
 import DoctorMissedMeetings from './components/DoctorMissedMeetings';
 
 import SalesDashboard from './components/SalesDashboard';
+import SalesHeadSchedule from './components/SalesHeadSchedule';
+import SalesHeadUsers from './components/SalesHeadUsers';
+import AddSalesHeadUser from './components/AddSalesHaedUser';
+import EditSalesHeadUser from './components/EditSalesHeadUser';
 
 import MrDashboard from './components/MrDashboard';
 
@@ -96,10 +100,10 @@ const App = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/doctordash" element={<DoctorDash />} />
           {/*<Route path="/companydash" element={<CompanyDash />} /> */}
-          {/* <Route path="/companylist" element={<CompanyList />} /> */}
+          <Route path="/companylist" element={<CompanyList />} />
           <Route path="/doctorlist" element={<DoctorList />} />
           <Route path="/doctor/:id" element={<DoctorProfile />} />
-          {/*<Route path="/company/:id" element={<CompanyProfile />} /> */}
+          <Route path="/company/:id" element={<CompanyProfile />} /> 
           <Route path="/warning" element={<WarningPage />} />
           <Route path='/price' element={<Pricing/>}/>
           <Route path='/footer' element={<Footer/>}/>
@@ -161,6 +165,10 @@ const App = () => {
           <Route path='/learnMore' element={<LearnMore />}/>
 
           <Route path='/salesDashboard/:id' element={<SalesDashboard />} />
+          <Route path='/sales/schedule/:id' element={<SalesHeadSchedule />} />
+          <Route path='/sales/users/:id' element={<SalesHeadUsers />} />
+          <Route path='/sales/add-user/:id' element={<AddSalesHeadUser />} />
+          <Route path='/sales/edit-user/:id' element={<EditSalesHeadUser />} />
           
           <Route path='/mrDashboard/:id' element={<MrDashboard />} />
 

@@ -1,9 +1,9 @@
 import React from "react";
 
 const Adminbox = ({ conversation, replyMessage, handleReplyMessageChange, handleSendReply, handleCloseChat }) => {
-    
+
     const getSenderName = (sentBy) => {
-        switch(sentBy) {
+        switch (sentBy) {
             case 'doctor':
                 return conversation.doctorName;
             case 'company':
@@ -16,14 +16,14 @@ const Adminbox = ({ conversation, replyMessage, handleReplyMessageChange, handle
     };
 
     const compareTimeStamps = (msg1, msg2) => {
-        
+
         const date1 = new Date(msg1.date);
         const date2 = new Date(msg2.date);
 
         if (date1.getTime() !== date2.getTime()) {
             return date1.getTime() - date2.getTime();
         } else {
-           
+
             const time1 = new Date("2000-01-01 " + msg1.time);
             const time2 = new Date("2000-01-01 " + msg2.time);
             return time1.getTime() - time2.getTime();
@@ -41,11 +41,14 @@ const Adminbox = ({ conversation, replyMessage, handleReplyMessageChange, handle
         } else if (date.toDateString() === yesterday.toDateString()) {
             return "Yesterday";
         } else {
-            return date.toLocaleDateString();
+            return date.toLocaleDateString('en-GB');
         }
     };
 
     let currentDate = null;
+
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 2);
 
     return (
         <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
@@ -54,10 +57,16 @@ const Adminbox = ({ conversation, replyMessage, handleReplyMessageChange, handle
                     <h3 className="text-lg font-semibold">Chat with {conversation.representativeName} and {conversation.doctorName}</h3>
                 </div>
                 <div className="overflow-auto max-h-60">
-                    {/* Sort messages by timestamp before rendering */}
-                    {conversation.messages.filter(msg => msg.time).sort(compareTimeStamps).map((msg, idx) => {
+                    {/* {conversation.messages.filter(msg => msg.time).sort(compareTimeStamps).map((msg, idx) => {
                         const showDate = msg.date !== currentDate;
-                        currentDate = msg.date;
+                        currentDate = msg.date; */}
+
+                         {conversation.messages
+                            .filter(msg => new Date(msg.date) >= thirtyDaysAgo && msg.time) // Filter messages from last 30 days
+                            .sort(compareTimeStamps)
+                            .map((msg, idx) => {
+                                const showDate = msg.date !== currentDate;
+                                currentDate = msg.date; 
                         return (
                             <div key={idx}>
                                 {showDate && (

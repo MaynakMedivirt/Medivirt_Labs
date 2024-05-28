@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import CompanySide from './CompanySide';
-import CompanyNavbar from './CompanyNavbar';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import SalesNavbar from "./SalesNavbar";
+import SalesSide from "./SalesSide";
+import { getFirestore, collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { FaEdit } from "react-icons/fa";
 import { MdAutoDelete } from "react-icons/md";
 
-const Users = () => {
+const SalesHeadUsers = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [users, setUsers] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
@@ -22,16 +22,29 @@ const Users = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             const db = getFirestore();
-            const usersCollection = collection(db, "users");
-            const q = query(usersCollection, where("companyId", "==", id));
-            const querySnapshot = await getDocs(q);
+            const salesHeadDoc = doc(db, "users", id);
+            const salesHeadSnap = await getDoc(salesHeadDoc);
 
-            const usersList = querySnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-            setUsers(usersList);
-        };
+            if (salesHeadSnap.exists()) {
+                const companyId = salesHeadSnap.data().companyId;
+                console.log(companyId);
+
+                const usersCollection = collection(db, "users");
+                const q = query(
+                    usersCollection,
+                    where("companyId", "==", companyId),
+                    where("role", "==", "Medical Representative")
+                );
+                const querySnapshot = await getDocs(q);
+
+                const usersList = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                setUsers(usersList);
+                console.log(usersList);
+            };
+        }
 
         fetchUsers();
     }, [id]);
@@ -59,22 +72,21 @@ const Users = () => {
         pageNumbers.push(i);
     }
 
-
-    const handleEditProfile = (userId, companyId) => {
-        navigate(`/company/edit-user/${companyId}`, { state: { userId } });
+    const handleEditProfile = (userId) => {
+        navigate(`/sales/edit-user/${id}`, { state: { userId } });
     };
 
     return (
         <div className="flex flex-col h-screen">
-            <CompanyNavbar />
+            <SalesNavbar />
             <div className="flex flex-1">
-                <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
+                <SalesSide open={sidebarOpen} toggleSidebar={toggleSidebar} />
                 <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-20'}`}>
                     <div className="container max-w-6xl px-5 mx-auto my-10">
                         <div className="flex justify-between items-center">
                             <h2 className="text-[1.5rem] font-bold text-center uppercase">Users</h2>
                             <Link
-                                to={`/company/add-user/${id}`}
+                                to={`/sales/add-user/${id}`}
                                 className="bg-[#7191E6] hover:bg-[#3a60c6] text-white font-bold py-2 px-4 rounded"
                             >
                                 Add Users
@@ -174,4 +186,4 @@ const Users = () => {
     );
 };
 
-export default Users;
+export default SalesHeadUsers;

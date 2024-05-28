@@ -39,14 +39,6 @@ const CompanySchedule = () => {
         const scheduleMeetingsRef = collection(db, "scheduleMeeting");
         let q = query(scheduleMeetingsRef, where("companyID", "==", id));
 
-        // if (searchDate !== "") {
-        //   q = query(q, where("date", "==", searchDate));
-        // }
-
-        // if (searchLocation !== "") {
-        //   q = query(q, where("location", "==", searchLocation));
-        // }
-
         const querySnapshot = await getDocs(q);
 
         const fetchDoctorData = async (doctorId) => {
@@ -328,7 +320,7 @@ const CompanySchedule = () => {
                       <td className="px-3 py-3 bg-gray-50">{meeting.date}</td>
                       <td className="px-3 py-3">{meeting.time}</td>
                       <td className="px-3 py-3 capitalize bg-gray-50">{meeting.location}</td>
-                      <td className="px-3 py-3">{meeting.status}</td>
+                      <td className="px-3 py-3 capitalize">{meeting.status}</td>
                       <td className="px-3 py-3 bg-gray-50">
                         <button
                           onClick={() => toggleCalendar(meeting.id)}

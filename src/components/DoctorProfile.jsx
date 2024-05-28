@@ -58,7 +58,10 @@ const DoctorProfiles = () => {
   };
 
   const handleBookSchedule = async () => {
-    const formattedDate = selectedDate.toISOString().split("T")[0];
+    const adjustedDate = new Date(selectedDate);
+    const ISTOffset = 330;
+    adjustedDate.setMinutes(adjustedDate.getMinutes() + ISTOffset);
+    const formattedDate = adjustedDate.toISOString().split("T")[0];
     const selectedDateTime = new Date(`${formattedDate} ${selectedTime}`);
 
     if (selectedDateTime < new Date()) {
@@ -69,18 +72,19 @@ const DoctorProfiles = () => {
       });
       return;
     }
-  
-    
+
+
     try {
-      const meetingLink = `https://meet.jit.si/${doctor.name.replace(/\s+/g,"")}-${currentUser.id}-${Date.now()}`;
+      const meetingLink = `https://meet.jit.si/${doctor.name.replace(/\s+/g, "")}-${currentUser.id}-${Date.now()}`;
 
       const scheduleData = {
-        companyID: currentUser.id,
+        companyID: currentUser.companyId || currentUser.id,
         doctorID: doctor.id,
         date: formattedDate,
         time: selectedTime,
         meetingLink: meetingLink,
         status: "scheduled",
+        assigned: currentUser.id,
       };
 
       const customId = `${doctor.id}_${currentUser.id}`;
@@ -112,11 +116,12 @@ const DoctorProfiles = () => {
 
     try {
       const messageData = {
-        companyID: currentUser.id,
+        companyID: currentUser.companyId || currentUser.id,
         doctorID: doctor.id,
         messages: message,
         sentBy: "company",
         timestamp: new Date(),
+        messageId: currentUser.id,
       };
 
       const customId = `${doctor.id}_${currentUser.id}_${Date.now()}`;
@@ -300,20 +305,22 @@ const DoctorProfiles = () => {
                         </p>
                       </div>
                       <hr className="mb-3 border-gray-300"></hr>
-                      <div className="flex items-center justify-center">
-                        <button
-                          onClick={toggleCalendar}
-                          className="flex gap-1.5 justify-center items-center px-6 py-2 mt-5 text-base font-bold text-center text-white uppercase bg-indigo-800 tracking-[2px] max-md:mt-5"
-                        >
-                          {showCalendar ? "Hide Calendar" : "Schedule Meeting"}
-                        </button>
-                        <button
-                          onClick={toggleMessaging}
-                          className="flex gap-1.5 justify-center items-center px-6 py-2 mt-5 ml-3 text-base font-bold text-center text-white uppercase bg-green-600 tracking-[2px] max-md:mt-5"
-                        >
-                          {showMessaging ? "Hide Message" : "Send Message"}
-                        </button>
-                      </div>
+                      {currentUser && currentUser.role !== "Doctor" && (
+                        <div className="flex items-center justify-center">
+                          <button
+                            onClick={toggleCalendar}
+                            className="flex gap-1.5 justify-center items-center px-6 py-2 mt-5 text-base font-bold text-center text-white uppercase bg-indigo-800 tracking-[2px] max-md:mt-5"
+                          >
+                            {showCalendar ? "Hide Calendar" : "Schedule Meeting"}
+                          </button>
+                          <button
+                            onClick={toggleMessaging}
+                            className="flex gap-1.5 justify-center items-center px-6 py-2 mt-5 ml-3 text-base font-bold text-center text-white uppercase bg-green-600 tracking-[2px] max-md:mt-5"
+                          >
+                            {showMessaging ? "Hide Message" : "Send Message"}
+                          </button>
+                        </div>
+                      )}
                       {showCalendar && (
                         <div className="mt-5">
                           <Calendar
@@ -359,11 +366,10 @@ const DoctorProfiles = () => {
                             <button
                               onClick={handleBookSchedule}
                               disabled={!selectedTime}
-                              className={`px-6 py-2 text-base font-bold text-center text-white uppercase ${
-                                selectedTime
-                                  ? "bg-blue-800 hover:bg-blue-600 cursor-pointer"
-                                  : "bg-gray-400 cursor-not-allowed"
-                              }`}
+                              className={`px-6 py-2 text-base font-bold text-center text-white uppercase ${selectedTime
+                                ? "bg-blue-800 hover:bg-blue-600 cursor-pointer"
+                                : "bg-gray-400 cursor-not-allowed"
+                                }`}
                             >
                               Book Schedule Meeting
                             </button>

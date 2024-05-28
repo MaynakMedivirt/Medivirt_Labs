@@ -28,7 +28,7 @@ const Doctorbox = ({ conversation, replyMessage, handleReplyMessageChange, handl
         } else if (date.toDateString() === yesterday.toDateString()) {
             return "Yesterday";
         } else {
-            return date.toLocaleDateString();
+            return date.toLocaleDateString('en-GB');
         }
     };
 
