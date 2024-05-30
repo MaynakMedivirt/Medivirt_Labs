@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, getDocs, updateDoc, collection, query, where } from "firebase/firestore";
 import Image from "../assets/img/defaultAvatar.png";
 import Banner from "../assets/img/Banner.png";
 import { FaPen } from "react-icons/fa";
@@ -11,6 +11,7 @@ const ComdashProfile = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [activeTab, setActiveTab] = useState("about");
     const [company, setCompany] = useState(null);
+    const [products, setProducts] = useState([]);
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -29,7 +30,24 @@ const ComdashProfile = () => {
                 console.log("Error fetching company :", error);
             }
         };
+
+        const fetchProducts = async () => {
+            const db = getFirestore();
+            const productsCollection = collection(db, "products");
+            const q = query(productsCollection, where("companyId", "==", id));
+            const querySnapshot = await getDocs(q);
+
+            const productsList = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setProducts(productsList);
+        };
+
+
         fetchCompany();
+        fetchProducts();
+
     }, [id]);
 
     const saveProfile = async () => {
@@ -204,22 +222,24 @@ const ComdashProfile = () => {
                                                     </thead>
                                                     <tbody className="bg-white divide-y divide-gray-200">
 
-                                                        <tr className="border-b border-gray-200">
-                                                            <td scope="row" className="px-6 py-4">
-                                                                1
-                                                            </td>
-                                                            <td className="px-6 py-4 font-medium text-gray-900 bg-gray-50">
-                                                                product
-                                                            </td>
-                                                            <td scope="row" className="px-6 py-4">
-                                                                <button
-                                                                    className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
-                                                                >
-                                                                    Enquiry About The Product
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-
+                                                        {products.map((product, index) => (
+                                                            <tr key={product.id} className="border-b border-gray-200">
+                                                                <td scope="row" className="px-4 py-2">
+                                                                    {index + 1}
+                                                                </td>
+                                                                <td className="px-4 py-2 font-medium text-gray-900 bg-gray-50">
+                                                                    {product.productName}
+                                                                </td>
+                                                                <td className="px-4 py-2">
+                                                                    <button
+                                                                        type="button"
+                                                                        className="text-white bg-[#7191E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                                                                    >
+                                                                        About Product
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
                                                     </tbody>
                                                 </table>
                                             </div>

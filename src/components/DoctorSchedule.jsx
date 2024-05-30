@@ -52,9 +52,37 @@ const DoctorSchedule = () => {
           }
         };
 
+        const fetchAssignedData = async (assigned) => {
+          let assignedName;
+          
+          try {
+            const companyDocRef = doc(db, "companies", assigned);
+            const companyDocSnapshot = await getDoc(companyDocRef);
+        
+            if (companyDocSnapshot.exists()) {
+              assignedName = companyDocSnapshot.data().name;
+            } else {
+              const userDocRef = doc(db, "users", assigned);
+              const userDocSnapshot = await getDoc(userDocRef);
+        
+              if (userDocSnapshot.exists()) {
+                const userData = userDocSnapshot.data();
+                assignedName = `${userData.firstName} ${userData.lastName}`;
+              } else {
+                console.error(`No document found with ID ${assigned}`);
+              }
+            }
+          } catch (error) {
+            console.error("Error fetching assigned data:", error);
+          }
+        
+          return assignedName;
+        };
+
         const promises = querySnapshot.docs.map(async (doc) => {
           const meetingData = doc.data();
           const companyData = await fetchCompanyData(meetingData.companyID);
+          const assignedName = await fetchAssignedData(meetingData.assigned);
           const companyName = companyData
             ? companyData.companyName
             : "Unknown Company";
@@ -74,6 +102,7 @@ const DoctorSchedule = () => {
               id: doc.id,
               companyName,
               representativeName,
+              assignedName,
               ...meetingData,
             };
           } else {
@@ -284,7 +313,7 @@ const DoctorSchedule = () => {
                         {meeting.companyName}
                       </td>
                       <td className="px-3 py-4">
-                        {meeting.representativeName}
+                        {meeting.assignedName}
                       </td>
                       <td className="px-3 py-4 bg-gray-50">{meeting.date}</td>
                       <td className="px-3 py-4">{meeting.time}</td>

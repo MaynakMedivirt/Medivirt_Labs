@@ -14,7 +14,7 @@ const DoctorMessage = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
-    const [searchDate, setSearchDate] = useState(''); 
+    const [searchDate, setSearchDate] = useState('');
     const { id } = useParams();
 
     const toggleSidebar = () => {
@@ -43,11 +43,11 @@ const DoctorMessage = () => {
             const replyData = {
                 companyID: currentConversation.companyID,
                 doctorID: id,
-                messageId: currentConversation.messages[0].messageId, 
+                messageId: currentConversation.messages[0].messageId,
                 messages: replyMessage,
                 sentBy: "doctor",
                 timestamp: new Date(),
-            };  
+            };
 
             const customId = `${id}_${currentConversation.companyID}_${Date.now()}`;
             const customDocRef = doc(db, "messages", customId);
@@ -96,34 +96,35 @@ const DoctorMessage = () => {
 
             const fetchAssignedData = async (messageId) => {
                 let assignedName;
-                
+
                 try {
-                  const companyDocRef = doc(db, "companies", messageId);
-                  const companyDocSnapshot = await getDoc(companyDocRef);
-              
-                  if (companyDocSnapshot.exists()) {
-                    assignedName = companyDocSnapshot.data().name;
-                  } else {
-                    const userDocRef = doc(db, "users", messageId);
-                    const userDocSnapshot = await getDoc(userDocRef);
-              
-                    if (userDocSnapshot.exists()) {
-                      const userData = userDocSnapshot.data();
-                      assignedName = `${userData.firstName} ${userData.lastName}`;
+                    const companyDocRef = doc(db, "companies", messageId);
+                    const companyDocSnapshot = await getDoc(companyDocRef);
+
+                    if (companyDocSnapshot.exists()) {
+                        assignedName = companyDocSnapshot.data().name;
                     } else {
-                      console.error(`No document found with ID ${messageId}`);
+                        const userDocRef = doc(db, "users", messageId);
+                        const userDocSnapshot = await getDoc(userDocRef);
+
+                        if (userDocSnapshot.exists()) {
+                            const userData = userDocSnapshot.data();
+                            assignedName = `${userData.firstName} ${userData.lastName}`;
+                        } else {
+                            console.error(`No document found with ID ${messageId}`);
+                        }
                     }
-                  }
                 } catch (error) {
-                  console.error("Error fetching assigned data:", error);
+                    console.error("Error fetching assigned data:", error);
                 }
-              
+
                 return assignedName;
-              };
+            };
 
             const groupedMessages = {};
             const promises = querySnapshot.docs.map(async (doc) => {
                 const messageData = doc.data();
+                console.log(messageData);
                 const companyData = await fetchCompanyData(messageData.companyID);
                 const assignedName = await fetchAssignedData(messageData.messageId);
                 const companyName = companyData ? companyData.companyName : "Unknown Company Name";
@@ -152,10 +153,11 @@ const DoctorMessage = () => {
                 const time = timestamp ? timestamp.toLocaleTimeString() : "N/A";
 
                 groupedMessages[key].messages.push({
-                    messageId: messageData.messageId, 
+                    messageId: messageData.messageId,
                     id: doc.id,
                     message: messageData.messages,
                     sentBy: messageData.sentBy,
+                    sentId: messageData.sentId,
                     date,
                     time,
                 });
@@ -184,7 +186,7 @@ const DoctorMessage = () => {
 
     useEffect(() => {
         fetchMessages();
-    }, [id, searchDate]); 
+    }, [id, searchDate]);
 
     const handleReply = (conversation) => {
         console.log("Selected Conversation:", conversation); // Add this line to check the selected conversation
@@ -289,13 +291,16 @@ const DoctorMessage = () => {
 
                         {currentConversation && showDoctorbox && (
                             <Doctorbox
-                                conversation={currentConversation}
+                                conversation={{
+                                    ...currentConversation,
+                                }}
                                 replyMessage={replyMessage}
                                 handleReplyMessageChange={(e) => setReplyMessage(e.target.value)}
                                 handleSendReply={handleSendReply}
                                 handleCloseChat={handleCloseChat}
                             />
                         )}
+
 
                         {/* Pagination */}
                         <div className="flex justify-end my-4">

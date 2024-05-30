@@ -16,7 +16,6 @@ const CompanySchedule = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
   const [searchDate, setSearchDate] = useState("");
-  const [searchTime, setSearchTime] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [selectedMeetingId, setSelectedMeetingId] = useState(null);
@@ -55,22 +54,22 @@ const CompanySchedule = () => {
         const fetchAssignedData = async (assigned) => {
           let assignedName;
           let assignedRole;
-          
+
           try {
             const companyDocRef = doc(db, "companies", assigned);
             const companyDocSnapshot = await getDoc(companyDocRef);
-        
+
             if (companyDocSnapshot.exists()) {
               assignedName = companyDocSnapshot.data().name;
-              assignedRole = companyDocSnapshot.data().role; 
+              assignedRole = companyDocSnapshot.data().role;
             } else {
               const userDocRef = doc(db, "users", assigned);
               const userDocSnapshot = await getDoc(userDocRef);
-        
+
               if (userDocSnapshot.exists()) {
                 const userData = userDocSnapshot.data();
                 assignedName = `${userData.firstName} ${userData.lastName}`;
-                assignedRole = userData.role; // Assuming the role field exists in the user document
+                assignedRole = userData.role;
               } else {
                 console.error(`No document found with ID ${assigned}`);
               }
@@ -78,12 +77,13 @@ const CompanySchedule = () => {
           } catch (error) {
             console.error("Error fetching assigned data:", error);
           }
-        
+
           return { assignedName, assignedRole };
         };
 
         const promises = querySnapshot.docs.map(async (doc) => {
           const meetingData = doc.data();
+          console.log(meetingData);
           const doctorData = await fetchDoctorData(meetingData.doctorID);
           const { assignedName, assignedRole } = await fetchAssignedData(meetingData.assigned);
           const doctorName = doctorData ? doctorData.name : "Unknown Doctor";
@@ -112,8 +112,14 @@ const CompanySchedule = () => {
 
         const filteredByDate = resolvedData.filter(meeting => !searchDate || meeting.date === searchDate);
 
-        const filteredByLocation = filteredByDate.filter(meeting => meeting.location.toLowerCase().includes(searchLocation.toLowerCase()));
-        setScheduleMeetings(filteredByLocation);
+        // const filteredByLocation = filteredByDate.filter(meeting => meeting?.location?.toLowerCase().includes(searchLocation.toLowerCase()));
+        let filteredData = filteredByDate;
+        if (searchLocation.trim() !== "") {
+          filteredData = filteredData.filter(meeting =>
+            meeting?.location?.toLowerCase().includes(searchLocation.toLowerCase())
+          );
+        }
+        setScheduleMeetings(filteredData);
 
       } catch (error) {
         console.error("Error fetching schedule meetings:", error);
@@ -384,7 +390,17 @@ const CompanySchedule = () => {
                             <MdAutoDelete />
                             {/* Delete */}
                           </button>
-                        ) : null}
+                        ) : (
+                          <button
+                            type="button"
+                            className="text-white bg-gray-400 rounded-lg px-3 py-2 text-center me-2 mb-2 cursor-not-allowed"
+                            disabled
+                          >
+                            <MdAutoDelete />
+                            {/* Delete */}
+                          </button>
+                        )}
+
                         {meeting.status === "Rescheduled" ? (
                           <button
                             type="button"

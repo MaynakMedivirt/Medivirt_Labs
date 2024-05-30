@@ -33,7 +33,7 @@ const MrSchedule = () => {
     };
 
     useEffect(() => {
-        
+
         const fetchScheduleMeetings = async () => {
             try {
                 const db = getFirestore();
@@ -100,9 +100,14 @@ const MrSchedule = () => {
 
                 const filteredByDate = resolvedData.filter(meeting => !searchDate || meeting.date === searchDate);
 
-                const filteredByLocation = filteredByDate.filter(meeting => meeting.location.toLowerCase().includes(searchLocation.toLowerCase()));
-                setScheduleMeetings(filteredByLocation);
-                console.log(filteredByLocation);
+                // const filteredByLocation = filteredByDate.filter(meeting => meeting?.location?.toLowerCase().includes(searchLocation.toLowerCase()));
+                let filteredData = filteredByDate;
+                if (searchLocation.trim() !== "") { 
+                    filteredData = filteredData.filter(meeting =>
+                        meeting?.location?.toLowerCase().includes(searchLocation.toLowerCase())
+                    );
+                }
+                setScheduleMeetings(filteredData);
 
             } catch (error) {
                 console.error("Error fetching schedule meetings:", error);

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import Header from "./Header";
 import Footer from "./Footer";
 import defaultAvatar from "../assets/img/defaultAvatar.png";
-import Banner from "../assets/img/Banner.png"; // Placeholder for the banner image
+import Banner from "../assets/img/Banner.png";
 
 const CompanyProfile = () => {
   const { id } = useParams();
@@ -36,8 +36,9 @@ const CompanyProfile = () => {
     const fetchProducts = async () => {
       try {
         const db = getFirestore();
-        const productsCollection = db.collection("products").where("companyId", "==", id);
-        const productsSnapshot = await productsCollection.get();
+        const productsCollection = collection(db, "products");
+        const q = query(productsCollection, where("companyId", "==", id));
+        const productsSnapshot = await getDocs(q);
         const fetchedProducts = [];
         productsSnapshot.forEach((doc) => {
           fetchedProducts.push({ id: doc.id, ...doc.data() });
@@ -162,11 +163,11 @@ const CompanyProfile = () => {
                 </h1>
                 <h1
                   className={`text-xl px-1 ml-5 font-semibold cursor-pointer ${
-                    activeTab === "product"
+                    activeTab === "products"
                       ? "bg-[#EEE7F6] text-black"
                       : "text-gray-800"
                   }`}
-                  onClick={() => setActiveTab("product")}
+                  onClick={() => setActiveTab("products")}
                 >
                   Product
                 </h1>
@@ -177,45 +178,44 @@ const CompanyProfile = () => {
                     <p className="p-4 mb-5">{company.about}</p>
                   </div>
                 )}
-                {activeTab === "product" && (
+                {activeTab === "products" && (
                   <div className="mt-10">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-5 gap-6 mt-3">
-                    {products.length > 0 ? (
-                      products.map((product, index) => (
-                        <div key={index} className="bg-white border border-gray-200 rounded-lg shadow p-4">
-                          <img
-                            src={product.image || defaultAvatar}
-                            alt={product.name}
-                            className="w-full h-32 object-cover mb-4 rounded"
-                          />
-                          <h2 className="text-lg font-semibold mb-2">{product.name}</h2>
-                          <p className="text-gray-600">{product.description}</p>
-                          <button
-                            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                          >
-                            Enquiry About The Product
-                          </button>
-                        </div>
-                      ))
-                    ) : (
-                      <p>No products available.</p>
-                    )}
-                    {/* Add empty grid items to fill remaining spaces for a 5x5 grid */}
-                    {Array.from({ length: 25 - (products.length % 25) }).map((_, index) => (
-                      <div key={index} className="bg-transparent"></div>
-                    ))}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6 mt-3">
+                      {products.length > 0 ? (
+                        products.map((product, index) => (
+                          <div key={index} className="bg-white border border-gray-200 rounded-lg shadow p-4">
+                            <img
+                              src={product.image}
+                              alt={product.productName}
+                              className="w-full h-32 object-cover mb-4 rounded"
+                            />
+                            <h2 className="text-lg font-semibold mb-2">{product.productName}</h2>
+                            <p className="text-gray-600">{product.productDetails}</p>
+                            <button
+                              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                            >
+                              Enquiry About The Product
+                            </button>
+                          </div>
+                        ))
+                      ) : (
+                        <p>No products available.</p>
+                      )}
+                      {/* Add empty grid items to fill remaining spaces for a 5x5 grid */}
+                      {Array.from({ length: Math.max(0, 5 - (products.length % 5)) }).map((_, index) => (
+                        <div key={index} className="bg-transparent"></div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <Footer />
-  </>
-);
+      <Footer />
+    </>
+  );
 };
 
 export default CompanyProfile;
-

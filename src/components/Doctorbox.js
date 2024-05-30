@@ -3,20 +3,22 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 const Doctorbox = ({ conversation, replyMessage, handleReplyMessageChange, handleSendReply, handleCloseChat }) => {
     const [senderNames, setSenderNames] = useState({});
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!conversation || conversation.messages.length === 0) {
-            return; 
+            setLoading(false);
+            return;
         }
 
         async function fetchSenderNames() {
             const db = getFirestore();
             const names = {};
-
-            for (const msg of conversation.messages) {
+            const promises = conversation.messages.map(async (msg) => {
                 const { sentId } = msg;
                 if (sentId && !names[sentId]) {
                     try {
+                        console.log(`Fetching name for sentId: ${sentId}`);
                         let senderRef = doc(db, "companies", sentId);
                         let senderSnapshot = await getDoc(senderRef);
 
@@ -27,8 +29,11 @@ const Doctorbox = ({ conversation, replyMessage, handleReplyMessageChange, handl
 
                         if (senderSnapshot.exists()) {
                             const senderData = senderSnapshot.data();
-                            let name = senderData.firstName && senderData.lastName ? `${senderData.firstName} ${senderData.lastName}` : senderData.name || "Unknown Sender";
+                            let name = senderData.firstName && senderData.lastName 
+                                ? `${senderData.firstName} ${senderData.lastName}` 
+                                : senderData.name || "Unknown Sender";
                             names[sentId] = name;
+                            console.log(`Fetched name: ${name} for sentId: ${sentId}`);
                         } else {
                             console.error(`Sender with ID ${sentId} not found.`);
                             names[sentId] = "Unknown Sender";
@@ -38,8 +43,12 @@ const Doctorbox = ({ conversation, replyMessage, handleReplyMessageChange, handl
                         names[sentId] = "Unknown Sender";
                     }
                 }
-            }
+            });
+
+            await Promise.all(promises);
             setSenderNames(names);
+            setLoading(false);
+            console.log("Sender names fetched:", JSON.stringify(names, null, 2));
         }
 
         fetchSenderNames();
@@ -60,20 +69,14 @@ const Doctorbox = ({ conversation, replyMessage, handleReplyMessageChange, handl
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(today.getDate() - 1);
-
-        if (date.toDateString() === today.toDateString()) {
-            return "Today";
-        } else if (date.toDateString() === yesterday.toDateString()) {
-            return "Yesterday";
-        } else {
-            return date.toLocaleDateString('en-GB');
-        }
+        return date.toLocaleDateString('en-GB');
     };
 
     let currentDate = null;
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
@@ -86,8 +89,8 @@ const Doctorbox = ({ conversation, replyMessage, handleReplyMessageChange, handl
                         const showDate = msg.date !== currentDate;
                         currentDate = msg.date;
                         let name;
-                        if (msg.sentBy === 'company') {
-                            name = senderNames[msg.sentId];
+                        if (msg.sentBy === 'company' || msg.sentBy === 'user') {
+                            name = senderNames[msg.sentId] || 'Loading...';
                         } else if (msg.sentBy === 'admin') {
                             name = 'Admin';
                         }

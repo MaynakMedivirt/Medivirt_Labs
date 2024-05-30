@@ -39,7 +39,7 @@ const AdminMessage = () => {
             const replyData = {
                 companyID: currentConversation.companyID,
                 doctorID: currentConversation.doctorID,
-                messageId: currentConversation.messages[0].messageId, 
+                messageId: currentConversation.messages[0].messageId,
                 messages: replyMessage,
                 sentBy: "admin",
                 timestamp: new Date(),
@@ -134,10 +134,11 @@ const AdminMessage = () => {
                 const time = timestamp ? timestamp.toLocaleTimeString() : "N/A";
 
                 groupedMessages[key].messages.push({
-                    messageId: messageData.messageId, 
+                    messageId: messageData.messageId,
                     id: doc.id,
                     message: messageData.messages,
                     sentBy: messageData.sentBy,
+                    sentId: messageData.sentId,
                     date,
                     time,
                 });
@@ -280,7 +281,9 @@ const AdminMessage = () => {
                     </div>
                     {currentConversation && showAdminbox && (
                         <Adminbox
-                            conversation={currentConversation}
+                            conversation={{
+                                ...currentConversation,
+                            }}
                             replyMessage={replyMessage}
                             handleReplyMessageChange={(e) => setReplyMessage(e.target.value)}
                             handleSendReply={handleSendReply}

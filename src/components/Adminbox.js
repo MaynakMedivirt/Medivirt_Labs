@@ -1,48 +1,96 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 const Adminbox = ({ conversation, replyMessage, handleReplyMessageChange, handleSendReply, handleCloseChat }) => {
+    const [senderNames, setSenderNames] = useState({});
+    console.log(conversation);
 
-    const getSenderName = (sentBy) => {
-        switch (sentBy) {
-            case 'doctor':
-                return conversation.doctorName;
-            case 'company':
-                return conversation.representativeName;
-            case 'admin':
-                return 'Admin';
-            default:
-                return 'Unknown';
+    useEffect(() => {
+        if (!conversation || conversation.messages.length === 0) {
+            return;
         }
+
+        async function fetchSenderNames() {
+            const db = getFirestore();
+            const names = {};
+            const promises = conversation.messages.map(async (msg) => {
+                const { sentId } = msg;
+                if (sentId && !names[sentId]) {
+                    try {
+                        console.log(`Fetching name for sentId: ${sentId}`);
+                        let senderRef = doc(db, "companies", sentId);
+                        let senderSnapshot = await getDoc(senderRef);
+
+                        if (!senderSnapshot.exists()) {
+                            senderRef = doc(db, "users", sentId);
+                            senderSnapshot = await getDoc(senderRef);
+                        }
+
+                        if (senderSnapshot.exists()) {
+                            const senderData = senderSnapshot.data();
+                            let name = senderData.firstName && senderData.lastName 
+                                ? `${senderData.firstName} ${senderData.lastName}` 
+                                : senderData.name || "Unknown Sender";
+                            names[sentId] = name;
+                            console.log(`Fetched name: ${name} for sentId: ${sentId}`);
+                        } else {
+                            console.error(`Sender with ID ${sentId} not found.`);
+                            names[sentId] = "Unknown Sender";
+                        }
+                    } catch (error) {
+                        console.error("Error fetching sender name:", error);
+                        names[sentId] = "Unknown Sender";
+                    }
+                }
+            });
+
+            await Promise.all(promises);
+            setSenderNames(names);
+            console.log("Sender names fetched:", JSON.stringify(names, null, 2));
+        }
+
+        fetchSenderNames();
+    }, [conversation]);
+
+    const getSenderName = (msg) => {
+        if (msg.sentBy === 'admin') {
+            return 'Admin';
+        }
+        return senderNames[msg.sentId] || 'Unknown';
     };
 
     const compareTimeStamps = (msg1, msg2) => {
-
         const date1 = new Date(msg1.date);
         const date2 = new Date(msg2.date);
 
         if (date1.getTime() !== date2.getTime()) {
             return date1.getTime() - date2.getTime();
         } else {
-
             const time1 = new Date("2000-01-01 " + msg1.time);
             const time2 = new Date("2000-01-01 " + msg2.time);
             return time1.getTime() - time2.getTime();
         }
     };
 
+    // const formatDate = (dateString) => {
+    //     const date = new Date(dateString);
+    //     const today = new Date();
+    //     const yesterday = new Date(today);
+    //     yesterday.setDate(today.getDate() - 1);
+
+    //     if (date.toDateString() === today.toDateString()) {
+    //         return "Today";
+    //     } else if (date.toDateString() === yesterday.toDateString()) {
+    //         return "Yesterday";
+    //     } else {
+    //         return date.toLocaleDateString('en-GB');
+    //     }
+    // };
+
+
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(today.getDate() - 1);
-
-        if (date.toDateString() === today.toDateString()) {
-            return "Today";
-        } else if (date.toDateString() === yesterday.toDateString()) {
-            return "Yesterday";
-        } else {
-            return date.toLocaleDateString('en-GB');
-        }
+        return date.toLocaleDateString('en-GB');
     };
 
     let currentDate = null;
@@ -57,16 +105,15 @@ const Adminbox = ({ conversation, replyMessage, handleReplyMessageChange, handle
                     <h3 className="text-lg font-semibold">Chat with {conversation.representativeName} and {conversation.doctorName}</h3>
                 </div>
                 <div className="overflow-auto max-h-60">
-                    {/* {conversation.messages.filter(msg => msg.time).sort(compareTimeStamps).map((msg, idx) => {
+                    {conversation.messages.filter(msg => msg.time).sort(compareTimeStamps).map((msg, idx) => {
                         const showDate = msg.date !== currentDate;
-                        currentDate = msg.date; */}
-
-                         {conversation.messages
-                            .filter(msg => new Date(msg.date) >= thirtyDaysAgo && msg.time) // Filter messages from last 30 days
+                        currentDate = msg.date;
+                        {/* {conversation.messages
+                            .filter(msg => new Date(msg.date) >= thirtyDaysAgo && msg.time) 
                             .sort(compareTimeStamps)
                             .map((msg, idx) => {
                                 const showDate = msg.date !== currentDate;
-                                currentDate = msg.date; 
+                                currentDate = msg.date;  */}
                         return (
                             <div key={idx}>
                                 {showDate && (
@@ -77,7 +124,7 @@ const Adminbox = ({ conversation, replyMessage, handleReplyMessageChange, handle
                                 <div className={`mb-2 ${msg.sentBy === 'company' ? 'text-left' : 'text-right'}`}>
                                     <span className="inline-block bg-gray-200 p-2 rounded-lg">
                                         <span className="block text-[0.75rem] font-bold">
-                                            {getSenderName(msg.sentBy)}
+                                            {getSenderName(msg)}
                                         </span>
                                         {msg.message}
                                     </span>

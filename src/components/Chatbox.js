@@ -6,7 +6,7 @@ const Chatbox = ({ conversation, replyMessage, handleReplyMessageChange, handleS
 
     useEffect(() => {
         if (!conversation || conversation.messages.length === 0) {
-            return; 
+            return;
         }
 
         async function fetchSenderNames() {
@@ -60,17 +60,7 @@ const Chatbox = ({ conversation, replyMessage, handleReplyMessageChange, handleS
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(today.getDate() - 1);
-
-        if (date.toDateString() === today.toDateString()) {
-            return "Today";
-        } else if (date.toDateString() === yesterday.toDateString()) {
-            return "Yesterday";
-        } else {
-            return date.toLocaleDateString('en-GB');
-        }
+        return date.toLocaleDateString('en-GB');
     };
 
     const handlePredefinedMessageClick = (message) => {
@@ -86,7 +76,7 @@ const Chatbox = ({ conversation, replyMessage, handleReplyMessageChange, handleS
                     <h3 className="text-lg font-semibold">Chat with {conversation && conversation.doctorName}</h3>
                 </div>
                 <div className="overflow-auto max-h-60">
-                    {conversation.messages.filter(msg => msg.time).sort(compareTimeStamps).map((msg, idx) => {
+                    {conversation && conversation.messages && conversation.messages.filter(msg => msg.time).sort(compareTimeStamps).map((msg, idx) => {
                         const showDate = msg.date !== currentDate;
                         currentDate = msg.date;
                         // const name = msg.sentId === currentUserId ? '' : senderNames[msg.sentId];

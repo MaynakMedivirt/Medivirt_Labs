@@ -73,6 +73,8 @@ const CompanyMessage = () => {
             setCurrentConversation(null);
 
             fetchMessages();
+            handleCloseChat();
+
         } catch (error) {
             console.error("Error sending reply:", error);
             Swal.fire({

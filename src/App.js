@@ -75,10 +75,14 @@ import SalesHeadUsers from './components/SalesHeadUsers';
 import AddSalesHeadUser from './components/AddSalesHaedUser';
 import EditSalesHeadUser from './components/EditSalesHeadUser';
 import SalesHeadMessage from './components/SalesHeadMessage';
+import SalesHeadProduct from './components/SalesHeadProduct';
+import SalesAddProduct from './components/SalesAddProduct';
 
 import MrDashboard from './components/MrDashboard';
 import MrSchedule from './components/MrSchedule';
 import MrMessage from './components/MrMessage';
+import MrProduct from './components/MrProduct';
+import MrAddProduct from './components/MrAddProduct';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -103,7 +107,7 @@ const App = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/doctordash" element={<DoctorDash />} />
           {/*<Route path="/companydash" element={<CompanyDash />} /> */}
-          <Route path="/companylist" element={<CompanyList />} />
+          <Route path="/company" element={<CompanyList />} />
           <Route path="/doctorlist" element={<DoctorList />} />
           <Route path="/doctor/:id" element={<DoctorProfile />} />
           <Route path="/company/:id" element={<CompanyProfile />} /> 
@@ -173,10 +177,14 @@ const App = () => {
           <Route path='/sales/add-user/:id' element={<AddSalesHeadUser />} />
           <Route path='/sales/edit-user/:id' element={<EditSalesHeadUser />} />
           <Route path='/sales/message/:id' element={<SalesHeadMessage />} />
+          <Route path='/sales/products/:id' element={<SalesHeadProduct />} />
+          <Route path='/sales/add-product/:id' element={<SalesAddProduct />} />
           
           <Route path='/mrDashboard/:id' element={<MrDashboard />} />
           <Route path='/mr/schedule/:id' element={<MrSchedule />} />
           <Route path='/mr/message/:id' element={<MrMessage />} />
+          <Route path='/mr/products/:id' element={<MrProduct />} />
+          <Route path='/mr/add-product/:id' element={<MrAddProduct />} />
 
 
           {/* Route for the home page */}
