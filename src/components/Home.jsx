@@ -288,7 +288,7 @@ const Home = () => {
         </div>
       </div>
       <div className="flex flex-col items-center px-5 pt-9 w-full bg-red-50 max-md:max-w-full">
-        <div className="text-4xl font-semibold text-indigo-800">
+        <div className="text-[2.8rem] font-semibold font-sans text-indigo-800">
           Simplified Process
         </div>
         <div className="mt-7 text-lg text-center text-indigo-800 uppercase max-md:max-w-full">
@@ -301,7 +301,7 @@ const Home = () => {
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col ">
-                    <div className="text-2xl py-[6.6rem] leading-5">
+                    <div className="text-2xl py-[5rem] leading-5">
                       User Registration and Profile Creation
                     </div>
                   </div>
@@ -325,7 +325,7 @@ const Home = () => {
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[7.2rem] ml-6 leading-5">
+                    <div className="text-2xl py-[5.6rem] ml-6 leading-5">
                       Scheduling Meetings
                     </div>
                   </div>
@@ -349,7 +349,7 @@ const Home = () => {
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[7.2rem] ml-10 leading-5">
+                    <div className="text-2xl py-[5.6rem] ml-10 leading-5">
                       Virtual Meetings
                     </div>
                   </div>
@@ -372,7 +372,7 @@ const Home = () => {
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[6.6rem] ml-10 leading-5">
+                    <div className="text-2xl py-[5rem] ml-10 leading-5">
                       Document Sharing and Collaboration
                     </div>
                   </div>
@@ -398,7 +398,7 @@ const Home = () => {
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[6.6rem] ml-10 leading-5">
+                    <div className="text-2xl py-[5rem] ml-10 leading-5">
                       Follow-up and Feedback
                     </div>
                   </div>
@@ -424,7 +424,7 @@ const Home = () => {
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[6.6rem] ml-10 leading-5">
+                    <div className="text-2xl py-[5rem] ml-10 leading-5">
                       Data Security and Compliance
                     </div>
                   </div>
@@ -449,7 +449,7 @@ const Home = () => {
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[6.6rem] ml-10 leading-5">
+                    <div className="text-2xl py-[5rem] ml-10 leading-5">
                       Monitoring and Analytics
                     </div>
                   </div>

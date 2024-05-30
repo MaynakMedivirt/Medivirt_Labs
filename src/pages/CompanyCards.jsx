@@ -4,7 +4,7 @@ import defaultAvatar from "../assets/img/defaultAvatar.png";
 const CompanyCard = ({ company, handleViewProfile }) => {
   return (
     <div className="overflow-auto md:overflow-visible" style={{ maxHeight: "calc(100vh - 200px)" }}>
-      <div className="bg-white border border-gray-200 rounded-lg shadow flex flex-col items-center text-center">
+      <div className="bg-white border border-gray-200 shadow flex flex-col items-center text-center">
         <img
           loading="lazy"
           src={company.image || defaultAvatar}

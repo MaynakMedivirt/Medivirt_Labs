@@ -142,10 +142,10 @@ const Footer = () => {
               </form>
             </div>
             <div className="flex justify-center lg:justify-start space-x-4 mb-6 text-white">
-              <a href="https://twitter.com/medivirt">
+              <a href="/">
                 <FaXTwitter className="w-5 h-5" />
               </a>
-              <a href="https://www.instagram.com/medivirt">
+              <a href="/">
                 <FaInstagram className="w-5 h-5" />
               </a>
               <a href="https://www.linkedin.com/company/medivirt-labs/?originalSubdomain=in">
@@ -163,7 +163,7 @@ const Footer = () => {
             >
               Better yet, Meet us Virttually!
               <br />
-              MEDIVIRT LABS PVT LTD
+              MEDIVIRT LABS 
               <br />
               Bangalore, Karnataka, India
               <br />

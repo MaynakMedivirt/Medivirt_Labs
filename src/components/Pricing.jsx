@@ -44,10 +44,10 @@ const Pricing = () => {
             <div className="flex flex-col border px-10 py-12 mt-4 text-base bg-white rounded-xl shadow-sm max-w-[329px] text-black">
               <div className="text-4xl font-bold text-indigo-400">STARTUP</div>
               <div className="mt-4 leading-5 capitalize">
-                For early startups - 3 CREDITS
+                For early startups - 5 CREDITS
               </div>
               <div className="mt-[2.2rem] text-5xl font-bold leading-10 text-indigo-400">
-                Rs. 999/-
+                Rs. 1999/-
               </div>
               <div className="flex gap-0.5 mt-11 capitalize">
                 <img
@@ -107,17 +107,17 @@ const Pricing = () => {
               </div>
               <div className="flex flex-col justify-center self-start mt-[3.9rem] text-lg font-semibold text-center text-white capitalize bg-indigo-800">
                 <div className="justify-center px-6 py-3.5 bg-indigo-400">
-                  setup fee : rs. 4499/-
+                  setup fee : rs. 3999/-
                 </div>
               </div>
             </div>
             <div className="flex flex-col border mt-4 px-10 py-12 text-base bg-white rounded-xl shadow-sm max-w-[329px] text-zinc-500">
               <div className="text-4xl font-bold text-indigo-400">STANDARD</div>
               <div className="mt-4 leading-5 capitalize">
-              FOR ESTABLISHED STARTUPS - 10 CREDITS
+              FOR ESTABLISHED STARTUPS - 13 CREDITS
               </div>
               <div className="mt-4 text-5xl font-bold leading-10 text-indigo-400">
-                Rs. 2999/-
+                Rs. 3999/-
               </div>
               <div className="flex gap-0.5 mt-11 capitalize">
                 <img
@@ -173,11 +173,11 @@ const Pricing = () => {
                   src="https://cdn.builder.io/api/v1/image/assets/TEMP/b598b7ae22dae37d5a9b4f3178e203023cd8cb8a8b980b0f542c420f7629a8ac?"
                   className="shrink-0 aspect-[0.9] w-[18px]"
                 />
-                <div className="flex-auto">Domestic and International both.</div>
+                <div className="flex-auto">Only Domestic </div>
               </div>
-              <div className="flex flex-col justify-center self-start mt-[2.5rem] text-lg font-semibold text-center text-white capitalize bg-indigo-800">
+              <div className="flex flex-col justify-center self-start mt-[3.9rem] text-lg font-semibold text-center text-white capitalize bg-indigo-800">
                 <div className="justify-center px-7 py-3.5 bg-indigo-400">
-                  setup fee : rs. 3999/-
+                  setup fee : rs. 2999/-
                 </div>
               </div>
             </div>
@@ -187,7 +187,7 @@ const Pricing = () => {
               FOR ESTABLISED COMPANIES - 25 CREDITS
               </div>
               <div className="mt-4 text-5xl font-bold leading-10 text-indigo-400">
-              5999/-
+              6999/-
               </div>
               <div className="flex gap-0.5 mt-11 capitalize">
                 <img
@@ -243,18 +243,18 @@ const Pricing = () => {
                   src="https://cdn.builder.io/api/v1/image/assets/TEMP/b598b7ae22dae37d5a9b4f3178e203023cd8cb8a8b980b0f542c420f7629a8ac?"
                   className="shrink-0 aspect-[0.9] w-[18px]"
                 />
-                <div className="flex-auto">Domestic and International both.</div>
+                <div className="flex-auto">Only Domestic </div>
               </div>
               <div className="flex flex-col justify-center self-start mt-10 text-lg font-semibold text-center text-white capitalize bg-indigo-800">
                 <div className="justify-center px-7 py-3.5 bg-indigo-400">
-                  setup fee : rs. 2999/-
+                  setup fee : rs. 1999/-
                 </div>
               </div>
             </div>
             <div className="flex flex-col border  px-10 py-12 mt-4 text-base bg-white rounded-xl shadow-sm max-w-[329px] text-zinc-500">
               <div className="text-4xl font-bold text-indigo-400">ADVANCE</div>
               <div className="mt-4 leading-5 capitalize">
-              FOR ESTABLISED COMPANIES - 35 CREDITS
+              FOR ESTABLISED COMPANIES - 40 CREDITS
               </div>
               <div className="mt-4 text-5xl font-bold leading-10 text-indigo-400">
                 Rs. 9999/-
@@ -313,11 +313,11 @@ const Pricing = () => {
                   src="https://cdn.builder.io/api/v1/image/assets/TEMP/b598b7ae22dae37d5a9b4f3178e203023cd8cb8a8b980b0f542c420f7629a8ac?"
                   className="shrink-0 aspect-[0.9] w-[18px]"
                 />
-                <div className="flex-auto">Domestic and International both.</div>
+                <div className="flex-auto">Only Domestic </div>
               </div>
-              <div className="flex flex-col justify-center self-start mt-10 ml-3 text-lg font-semibold text-center text-white capitalize bg-indigo-800">
+              <div className="flex flex-col justify-center self-start mt-[3.9rem] ml-3 text-lg font-semibold text-center text-white capitalize bg-indigo-800">
                 <div className="justify-center px-6 py-3.5 bg-indigo-400">
-                  setup fee : rs. 1999/-
+                  setup fee : rs. 999/-
                 </div>
               </div>
             </div>
