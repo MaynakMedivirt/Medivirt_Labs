@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import CompanySide from './CompanySide';
-import CompanyNavbar from './CompanyNavbar';
+import SalesNavbar from './SalesNavbar';
+import SalesSide from './SalesSide';
 import { getFirestore, collection, query, where, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
 import Swal from 'sweetalert2';
-import Chatbox from './Chatbox';
+import SalesBox from "./SalesBox";
 
-const CompanyMessage = () => {
+const SalesHeadMessage = () => {
     const [messages, setMessages] = useState([]);
     const [replyMessage, setReplyMessage] = useState("");
     const [currentConversation, setCurrentConversation] = useState(null);
@@ -48,7 +48,7 @@ const CompanyMessage = () => {
             const senderId = id;
 
             const replyData = {
-                companyID: id,
+                companyID: currentConversation.companyID,
                 doctorID: currentConversation.doctorID,
                 messageId: currentConversation.messages[0].messageId, 
                 messages: replyMessage,
@@ -87,7 +87,7 @@ const CompanyMessage = () => {
         try {
             const db = getFirestore();
             const messageRef = collection(db, "messages");
-            const q = query(messageRef, where("companyID", "==", id));
+            const q = query(messageRef, where("messageId", "==", id));
             const querySnapshot = await getDocs(q);
 
             const fetchDoctorData = async (doctorId) => {
@@ -211,9 +211,9 @@ const CompanyMessage = () => {
 
     return (
         <div className="flex flex-col h-screen">
-            <CompanyNavbar />
+            <SalesNavbar />
             <div className="flex flex-1">
-                <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
+                <SalesSide open={sidebarOpen} toggleSidebar={toggleSidebar} />
                 <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-20'}`}>
                     <div className="container max-w-6xl px-5 mx-auto my-10">
                         <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
@@ -283,7 +283,7 @@ const CompanyMessage = () => {
                         </div>
 
                         {showChatbox && (
-                            <Chatbox
+                            <SalesBox
                                 conversation={currentConversation}
                                 replyMessage={replyMessage}
                                 handleReplyMessageChange={handleReplyMessageChange}
@@ -314,4 +314,4 @@ const CompanyMessage = () => {
     );
 }
 
-export default CompanyMessage;
+export default SalesHeadMessage;

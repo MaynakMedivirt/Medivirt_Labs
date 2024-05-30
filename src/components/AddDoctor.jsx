@@ -89,10 +89,10 @@ const AddDoctor = () => {
       setImageUrl("");
       setGender("");
 
-      // Reload the page after 1 seconds
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 1000);
+      navigate('/admin/doctors');
     } catch (error) {
       console.log("Error adding document :", error);
     }

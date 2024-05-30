@@ -52,9 +52,40 @@ const CompanySchedule = () => {
           }
         };
 
+        const fetchAssignedData = async (assigned) => {
+          let assignedName;
+          let assignedRole;
+          
+          try {
+            const companyDocRef = doc(db, "companies", assigned);
+            const companyDocSnapshot = await getDoc(companyDocRef);
+        
+            if (companyDocSnapshot.exists()) {
+              assignedName = companyDocSnapshot.data().name;
+              assignedRole = companyDocSnapshot.data().role; 
+            } else {
+              const userDocRef = doc(db, "users", assigned);
+              const userDocSnapshot = await getDoc(userDocRef);
+        
+              if (userDocSnapshot.exists()) {
+                const userData = userDocSnapshot.data();
+                assignedName = `${userData.firstName} ${userData.lastName}`;
+                assignedRole = userData.role; // Assuming the role field exists in the user document
+              } else {
+                console.error(`No document found with ID ${assigned}`);
+              }
+            }
+          } catch (error) {
+            console.error("Error fetching assigned data:", error);
+          }
+        
+          return { assignedName, assignedRole };
+        };
+
         const promises = querySnapshot.docs.map(async (doc) => {
           const meetingData = doc.data();
           const doctorData = await fetchDoctorData(meetingData.doctorID);
+          const { assignedName, assignedRole } = await fetchAssignedData(meetingData.assigned);
           const doctorName = doctorData ? doctorData.name : "Unknown Doctor";
           const location = doctorData ? doctorData.location : "Unknown location";
 
@@ -63,11 +94,12 @@ const CompanySchedule = () => {
           const meetingDateTime = new Date(`${meetingData.date} ${meetingData.time}`);
           const isUpcoming = meetingDateTime > new Date(currentDate + ' ' + currentTime);
           // console.log(`Meeting: ${doctorName} - ${meetingData.date} ${meetingData.time} - Upcoming: ${isUpcoming}`);
-
           if (isUpcoming) {
             return {
               id: doc.id,
               doctorName,
+              assignedName,
+              assignedRole,
               location,
               ...meetingData,
             };
@@ -259,49 +291,55 @@ const CompanySchedule = () => {
                   <tr>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm tracking-wider"
+                      className="bg-gray-50 px-2 py-3 text-sm tracking-wider"
                     >
                       S.N.
                     </th>
                     <th
                       scope="col"
-                      className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-2 py-3 text-sm uppercase tracking-wider"
                     >
                       Doctor Name
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider"
+                      className="bg-gray-50 px-2 py-3 text-sm uppercase tracking-wider"
                     >
                       Assigned
                     </th>
                     <th
                       scope="col"
-                      className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-2 py-3 text-sm uppercase tracking-wider"
+                    >
+                      Role
+                    </th>
+                    <th
+                      scope="col"
+                      className="bg-gray-50 px-2 py-3 text-sm uppercase tracking-wider"
                     >
                       Date
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-2 py-3 text-sm uppercase tracking-wider"
                     >
                       Time
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider"
+                      className="bg-gray-50 px-2 py-3 text-sm uppercase tracking-wider"
                     >
                       Location
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 bg-gray-50 text-sm uppercase tracking-wider"
+                      className="px-2 py-3 text-sm uppercase tracking-wider"
                     >
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider"
+                      className="bg-gray-50 px-2 py-3 text-sm uppercase tracking-wider"
                     >
                       Action
                     </th>
@@ -310,18 +348,19 @@ const CompanySchedule = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {sortedMeetings.map((meeting, index) => (
                     <tr key={index} className="border-b border-gray-200">
-                      <td scope="row" className="px-3 py-3">
-                        {index + 1}
+                      <td scope="row" className="text-center bg-gray-50 px-1 py-2">
+                        {index + 1}.
                       </td>
-                      <td className="px-3 py-3 font-medium text-gray-900 bg-gray-50">
+                      <td className="px-1 py-2 font-semibold text-gray-900">
                         {meeting.doctorName}
                       </td>
-                      <td className="px-3 py-3"></td>
-                      <td className="px-3 py-3 bg-gray-50">{meeting.date}</td>
-                      <td className="px-3 py-3">{meeting.time}</td>
-                      <td className="px-3 py-3 capitalize bg-gray-50">{meeting.location}</td>
-                      <td className="px-3 py-3 capitalize">{meeting.status}</td>
-                      <td className="px-3 py-3 bg-gray-50">
+                      <td className=" bg-gray-50 px-1 py-2">{meeting.assignedName}</td>
+                      <td className="px-1 py-2 capitalize">{meeting.assignedRole}</td>
+                      <td className="px-1 py-2 bg-gray-50">{meeting.date}</td>
+                      <td className="px-1 py-2">{meeting.time}</td>
+                      <td className="px-1 py-2 capitalize bg-gray-50">{meeting.location}</td>
+                      <td className="px-1 py-2 capitalize">{meeting.status}</td>
+                      <td className="px-1 py-2 bg-gray-50">
                         <button
                           onClick={() => toggleCalendar(meeting.id)}
                           className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
@@ -400,7 +439,7 @@ const CompanySchedule = () => {
             <select
               value={selectedTime}
               onChange={(e) => setSelectedTime(e.target.value)}
-              className="mt-3 block w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-3 block w-full px-1 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">Select Time</option>
               <option value="09:00 AM">09:00 AM</option>

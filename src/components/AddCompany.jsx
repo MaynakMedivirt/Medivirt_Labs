@@ -46,6 +46,7 @@ const AddCompany = () => {
                 location,
                 headquarter,
                 category,
+                role: "company",
                 profileComplete: true,
             });
 
@@ -66,6 +67,8 @@ const AddCompany = () => {
             // setTimeout(() => {
             //     window.location.reload();
             // }, 1000);
+            navigate('/admin/companies');
+ 
 
         } catch (error) {
             console.log("Error adding document :", error);

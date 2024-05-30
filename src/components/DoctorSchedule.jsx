@@ -77,7 +77,6 @@ const DoctorSchedule = () => {
               ...meetingData,
             };
           } else {
-            // If the meeting has already occurred or is ongoing, do not include it
             return null;
           }
         });
@@ -93,33 +92,7 @@ const DoctorSchedule = () => {
     fetchScheduleMeetings();
 
   }, [id, searchDate, scheduleMeetings]);
-  // const checkAndCompleteMeetings = async () => {
-  //   const db = getFirestore();
-  //   const now = new Date();
-  //   const currentDate = now.toISOString().split("T")[0];
-  //   const currentTime = now.toTimeString().split(" ")[0];
-
-  //   const updatedMeetings = scheduleMeetings.map(async (meeting) => {
-  //     if (
-  //       meeting.date === currentDate &&
-  //       meeting.time <= currentTime &&
-  //       meeting.status === "accepted"
-  //     ) {
-  //       const meetingDocRef = doc(db, "scheduleMeeting", meeting.id);
-  //       await updateDoc(meetingDocRef, { status: "completed" });
-  //       meeting.status = "completed";
-  //     }
-  //     return meeting;
-  //   });
-
-  //   const resolvedUpdatedMeetings = await Promise.all(updatedMeetings);
-  //   setScheduleMeetings(resolvedUpdatedMeetings);
-  // };
-
-  // const intervalId = setInterval(checkAndCompleteMeetings, 60000);
-
-  // return () => clearInterval(intervalId);
-
+ 
   const handleModify = async () => {
     if (!selectedMeetingId) return;
 
@@ -326,7 +299,7 @@ const DoctorSchedule = () => {
                           {/* Modify */}
                         </button>
 
-                        {meeting.status !== "Rescheduled"(
+                        {meeting.status !== "Rescheduled" &&(
                           <button
                             type="button"
                             className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"

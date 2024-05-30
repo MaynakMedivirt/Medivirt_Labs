@@ -57,9 +57,9 @@ const AddManager = () => {
       setLocation("")
 
       // Reload the page after 1 seconds
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 1000);
       navigate('/admin/manager');
     } catch (error) {
       console.log("Error adding document :", error);
@@ -117,7 +117,7 @@ const AddManager = () => {
                     placeholder="Enter your Email"
                   />
                 </div>
-                <div class="mb-5">
+                <div class="mb-5 mt-5">
                   <label htmlFor="password" class="block mb-2 px-2 text-lg font-bold text-gray-900 dark:text-white">Password :</label>
                   <input
                     type="password"

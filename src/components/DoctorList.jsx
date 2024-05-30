@@ -43,7 +43,7 @@ const DoctorList = () => {
   }, []);
 
   const handleViewProfile = (doctor) => {
-    if (currentUser && (currentUser.emailVerified || currentUser.name)) {
+    if (currentUser && (currentUser.emailVerified || currentUser.name || currentUser.username)) {
       navigate(`/doctor/${doctor.id}`);
     } else {
       setShowSignInMessage(true);

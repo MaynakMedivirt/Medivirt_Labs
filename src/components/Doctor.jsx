@@ -47,11 +47,12 @@ const Doctor = () => {
   // Filter doctors based on searchQuery and selectedSpecialist
   const filteredDoctors = doctors.filter((doctor) => {
     return (
-      (doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doctor.specialist.toLowerCase().includes(searchQuery.toLowerCase())) &&
-      (selectedSpecialist === '' || doctor.specialist === selectedSpecialist)
+      (doctor.name && doctor.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (doctor.specialist && doctor.specialist.toLowerCase().includes(searchQuery.toLowerCase())) &&
+      (selectedSpecialist === '' || (doctor.specialist && doctor.specialist === selectedSpecialist))
     );
   });
+
 
   const handleViewProfile = (doctorId) => {
     navigate(`/doctor/${doctorId}`);

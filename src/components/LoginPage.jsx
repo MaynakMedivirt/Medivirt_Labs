@@ -130,46 +130,7 @@ const LoginPage = () => {
   //   return null;
   // };
 
-  // const getUserDocumentByEmail = async (email) => {
-  //   if (role === "Company") {
-  //     const companiesRef = collection(db, "companies");
-  //     const companyQuery = query(companiesRef, where("email", "==", email));
-  //     const companySnapshot = await getDocs(companyQuery);
-  //     if (!companySnapshot.empty) {
-  //       return {
-  //         ...companySnapshot.docs[0].data(),
-  //         role: "Company",
-  //         id: companySnapshot.docs[0].id,
-  //       };
-  //     }
-
-  //     // If not found in companies collection, check 'users' collection for a match based on username
-  //     const usersRef = collection(db, "users");
-  //     const userQuery = query(usersRef, where("email", "==", email));
-  //     const userSnapshot = await getDocs(userQuery);
-  //     if (!userSnapshot.empty) {
-  //       return {
-  //         ...userSnapshot.docs[0].data(),
-  //         role_company: userSnapshot.docs[0].data().role,
-  //         role: "Company",
-  //         id: userSnapshot.docs[0].id,
-  //       };
-  //     }
-  //   } else if (role === "Doctor") {
-  //     const doctorsRef = collection(db, "doctors");
-  //     const doctorQuery = query(doctorsRef, where("email", "==", email));
-  //     const doctorSnapshot = await getDocs(doctorQuery);
-  //     if (!doctorSnapshot.empty) {
-  //       return {
-  //         ...doctorSnapshot.docs[0].data(),
-  //         role: "Doctor",
-  //         id: doctorSnapshot.docs[0].id,
-  //       };
-  //     }
-  //   }
-
-  //   return null;
-  // };
+ 
 
   const handleLogin = async (event) => {
     event.preventDefault();

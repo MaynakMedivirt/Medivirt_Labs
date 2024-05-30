@@ -39,12 +39,13 @@ const AdminMessage = () => {
             const replyData = {
                 companyID: currentConversation.companyID,
                 doctorID: currentConversation.doctorID,
+                messageId: currentConversation.messages[0].messageId, 
                 messages: replyMessage,
                 sentBy: "admin",
                 timestamp: new Date(),
             };
 
-            const customId = `${id}_${currentConversation.doctorID}_${currentConversation.companyID}_${Date.now()}`;
+            const customId = `${currentConversation.doctorID}_${currentConversation.companyID}_${Date.now()}`;
             const customDocRef = doc(db, "messages", customId);
             await setDoc(customDocRef, replyData);
 
@@ -133,6 +134,7 @@ const AdminMessage = () => {
                 const time = timestamp ? timestamp.toLocaleTimeString() : "N/A";
 
                 groupedMessages[key].messages.push({
+                    messageId: messageData.messageId, 
                     id: doc.id,
                     message: messageData.messages,
                     sentBy: messageData.sentBy,

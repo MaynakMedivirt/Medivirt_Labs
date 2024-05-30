@@ -10,7 +10,7 @@ const Header = () => {
   const location = useLocation();
   // const [currentUser, setCurrentUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { currentUser } = useAuth();
+  const { currentUser, logout } = useAuth();
 
 
   // useEffect(() => {

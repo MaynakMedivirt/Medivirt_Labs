@@ -14,7 +14,7 @@ const DoctorMessage = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
-    const [searchDate, setSearchDate] = useState(''); // State for search date
+    const [searchDate, setSearchDate] = useState(''); 
     const { id } = useParams();
 
     const toggleSidebar = () => {
@@ -43,10 +43,11 @@ const DoctorMessage = () => {
             const replyData = {
                 companyID: currentConversation.companyID,
                 doctorID: id,
+                messageId: currentConversation.messages[0].messageId, 
                 messages: replyMessage,
                 sentBy: "doctor",
                 timestamp: new Date(),
-            };
+            };  
 
             const customId = `${id}_${currentConversation.companyID}_${Date.now()}`;
             const customDocRef = doc(db, "messages", customId);
@@ -80,25 +81,9 @@ const DoctorMessage = () => {
             const messageRef = collection(db, "messages");
             let q = query(messageRef, where("doctorID", "==", id));
 
-            // if (searchDate !== '') {
-            //     const searchTimestamp = new Date(searchDate).toLocaleString('en-US', {
-            //         timeZone: 'UTC',
-            //         year: 'numeric',
-            //         month: 'long',
-            //         day: '2-digit'
-            //     });
-
-            //     console.log("Search Timestamp:", searchTimestamp); 
-            //     q = query(q, where("recentMessage.date", "==", searchTimestamp));
-
-            //     console.log("Query:", q);
-            // }
-
-
             const querySnapshot = await getDocs(q);
-            console.log("Query Snapshot:", querySnapshot.docs); 
 
-            const fetchDoctorData = async (companyID) => {
+            const fetchCompanyData = async (companyID) => {
                 const companyDocRef = doc(db, "companies", companyID);
                 const companyDocSnapshot = await getDoc(companyDocRef);
                 if (companyDocSnapshot.exists()) {
@@ -109,10 +94,38 @@ const DoctorMessage = () => {
                 }
             };
 
+            const fetchAssignedData = async (messageId) => {
+                let assignedName;
+                
+                try {
+                  const companyDocRef = doc(db, "companies", messageId);
+                  const companyDocSnapshot = await getDoc(companyDocRef);
+              
+                  if (companyDocSnapshot.exists()) {
+                    assignedName = companyDocSnapshot.data().name;
+                  } else {
+                    const userDocRef = doc(db, "users", messageId);
+                    const userDocSnapshot = await getDoc(userDocRef);
+              
+                    if (userDocSnapshot.exists()) {
+                      const userData = userDocSnapshot.data();
+                      assignedName = `${userData.firstName} ${userData.lastName}`;
+                    } else {
+                      console.error(`No document found with ID ${messageId}`);
+                    }
+                  }
+                } catch (error) {
+                  console.error("Error fetching assigned data:", error);
+                }
+              
+                return assignedName;
+              };
+
             const groupedMessages = {};
             const promises = querySnapshot.docs.map(async (doc) => {
                 const messageData = doc.data();
-                const companyData = await fetchDoctorData(messageData.companyID);
+                const companyData = await fetchCompanyData(messageData.companyID);
+                const assignedName = await fetchAssignedData(messageData.messageId);
                 const companyName = companyData ? companyData.companyName : "Unknown Company Name";
                 const representativeName = companyData ? companyData.name : "Unknown Name";
 
@@ -121,6 +134,7 @@ const DoctorMessage = () => {
                     groupedMessages[key] = {
                         companyName,
                         representativeName,
+                        assignedName,
                         doctorID: messageData.doctorID,
                         companyID: messageData.companyID,
                         messages: [],
@@ -138,6 +152,7 @@ const DoctorMessage = () => {
                 const time = timestamp ? timestamp.toLocaleTimeString() : "N/A";
 
                 groupedMessages[key].messages.push({
+                    messageId: messageData.messageId, 
                     id: doc.id,
                     message: messageData.messages,
                     sentBy: messageData.sentBy,
@@ -172,6 +187,7 @@ const DoctorMessage = () => {
     }, [id, searchDate]); 
 
     const handleReply = (conversation) => {
+        console.log("Selected Conversation:", conversation); // Add this line to check the selected conversation
         setCurrentConversation(conversation);
         setShowDoctorbox(true);
     };
@@ -199,25 +215,6 @@ const DoctorMessage = () => {
                         <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
                             Messages
                         </h2>
-
-                        {/* Date filter input */}
-                        {/* <div className="flex justify-end items-center mb-5">
-                            <div className="flex flex-col mx-2 justify-center self-stretch my-auto border rounded-md">
-                                <input
-                                    type="date"
-                                    value={searchDate}
-                                    onChange={(e) => setSearchDate(e.target.value)}
-                                    className="p-2"
-                                />
-                            </div>
-                            <button
-                                onClick={() => setSearchDate('')}
-                                className="p-2 rounded bg-[#7191E6] text-white  hover:bg-[#3D52A1] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
-                            >
-                                Search
-                            </button>
-                        </div> */}
-
 
                         <div className="overflow-auto mt-3 border">
                             <table className="min-w-full divide-y divide-gray-200">
@@ -257,7 +254,7 @@ const DoctorMessage = () => {
                                                     {conversation.companyName}
                                                 </td>
                                                 <td className="p-2 font-medium text-gray-900">
-                                                    {conversation.representativeName}
+                                                    {conversation.assignedName}
                                                 </td>
                                                 <td className="p-2 font-medium text-gray-900 bg-gray-50">
                                                     {conversation.recentMessage.text}

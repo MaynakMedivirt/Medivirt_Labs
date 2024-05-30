@@ -74,8 +74,11 @@ import SalesHeadSchedule from './components/SalesHeadSchedule';
 import SalesHeadUsers from './components/SalesHeadUsers';
 import AddSalesHeadUser from './components/AddSalesHaedUser';
 import EditSalesHeadUser from './components/EditSalesHeadUser';
+import SalesHeadMessage from './components/SalesHeadMessage';
 
 import MrDashboard from './components/MrDashboard';
+import MrSchedule from './components/MrSchedule';
+import MrMessage from './components/MrMessage';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -169,8 +172,11 @@ const App = () => {
           <Route path='/sales/users/:id' element={<SalesHeadUsers />} />
           <Route path='/sales/add-user/:id' element={<AddSalesHeadUser />} />
           <Route path='/sales/edit-user/:id' element={<EditSalesHeadUser />} />
+          <Route path='/sales/message/:id' element={<SalesHeadMessage />} />
           
           <Route path='/mrDashboard/:id' element={<MrDashboard />} />
+          <Route path='/mr/schedule/:id' element={<MrSchedule />} />
+          <Route path='/mr/message/:id' element={<MrMessage />} />
 
 
           {/* Route for the home page */}

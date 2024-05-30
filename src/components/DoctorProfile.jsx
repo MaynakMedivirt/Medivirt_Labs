@@ -122,6 +122,7 @@ const DoctorProfiles = () => {
         sentBy: "company",
         timestamp: new Date(),
         messageId: currentUser.id,
+        sentId: currentUser.id,
       };
 
       const customId = `${doctor.id}_${currentUser.id}_${Date.now()}`;
