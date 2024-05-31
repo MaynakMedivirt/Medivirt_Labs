@@ -1,11 +1,49 @@
 import React, { useState, useEffect } from "react";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, onSnapshot } from "firebase/firestore";
 
-const Chatbox = ({ conversation, replyMessage, handleReplyMessageChange, handleSendReply, handleCloseChat, predefinedMessages, currentUserId }) => {
+const Chatbox = ({ conversation, replyMessage, handleReplyMessageChange, handleSendReply, handleCloseChat, predefinedMessages, currentUserId, setCurrentConversation }) => {
     const [senderNames, setSenderNames] = useState({});
 
     useEffect(() => {
-        if (!conversation || conversation.messages.length === 0) {
+        if (!conversation || !conversation.messages || conversation.messages.length === 0) {
+            return;
+        }
+
+        const db = getFirestore();
+        const firstMessage = conversation.messages[0];
+
+        if (!firstMessage.messageId) {
+            console.error("First message does not have a messageId");
+            return;
+        }
+
+        const unsubscribe = onSnapshot(doc(db, "messages", firstMessage.messageId), (doc) => {
+            const messageData = doc.data();
+            if (!messageData) {
+                console.error("No message data found for messageId:", firstMessage.messageId);
+                return;
+            }
+
+            const updatedConversation = {
+                ...conversation,
+                messages: [...conversation.messages, {
+                    messageId: messageData.messageId,
+                    sentId: messageData.sentId,
+                    id: doc.id,
+                    message: messageData.message,
+                    sentBy: messageData.sentBy,
+                    date: new Date(messageData.timestamp.toDate()).toLocaleDateString(),
+                    time: new Date(messageData.timestamp.toDate()).toLocaleTimeString(),
+                }]
+            };
+            setCurrentConversation(updatedConversation);
+        });
+
+        return () => unsubscribe();
+    }, [conversation, currentUserId, setCurrentConversation]);
+
+    useEffect(() => {
+        if (!conversation || !conversation.messages || conversation.messages.length === 0) {
             return;
         }
 
@@ -79,7 +117,6 @@ const Chatbox = ({ conversation, replyMessage, handleReplyMessageChange, handleS
                     {conversation && conversation.messages && conversation.messages.filter(msg => msg.time).sort(compareTimeStamps).map((msg, idx) => {
                         const showDate = msg.date !== currentDate;
                         currentDate = msg.date;
-                        // const name = msg.sentId === currentUserId ? '' : senderNames[msg.sentId];
                         let name;
                         if (msg.sentId === currentUserId) {
                             name = '';

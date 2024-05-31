@@ -132,7 +132,7 @@ const Footer = () => {
                     />
                     <button
                       type="submit"
-                      className="bg-indigo-600 text-white absolute top-0 right-0 h-full py-3 px-4"
+                      className="bg-indigo-600 text-white hover:bg-indigo-500 absolute top-0 right-0 h-full py-3 px-4 transition-all duration-300 ease-in-out"
                       style={{ height: "100%" }}
                     >
                       Subscribe

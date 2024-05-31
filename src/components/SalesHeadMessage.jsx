@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import SalesNavbar from './SalesNavbar';
 import SalesSide from './SalesSide';
-import { getFirestore, collection, query, where, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import Swal from 'sweetalert2';
 import SalesBox from "./SalesBox";
 
@@ -92,7 +92,7 @@ const SalesHeadMessage = () => {
 
             if (userDocSnapshot.exists()) {
                 const userData = userDocSnapshot.data();
-                
+
                 const companyId = userData.companyId;
 
                 const messageRef = collection(db, "messages");
@@ -102,98 +102,102 @@ const SalesHeadMessage = () => {
                 );
                 const querySnapshot = await getDocs(q);
 
-                const fetchDoctorData = async (doctorId) => {
-                    const doctorDocRef = doc(db, "doctors", doctorId);
-                    const doctorDocSnapshot = await getDoc(doctorDocRef);
-                    if (doctorDocSnapshot.exists()) {
-                        return doctorDocSnapshot.data();
-                    } else {
-                        console.error(`Doctor with ID ${doctorId} not found`);
-                        return null;
-                    }
-                };
-                const fetchAssignedData = async (messageId) => {
-                    let assignedName;
+                const unsubscribe = onSnapshot(q, async (querySnapshot) => {
 
-                    try {
-                        const companyDocRef = doc(db, "companies", messageId);
-                        const companyDocSnapshot = await getDoc(companyDocRef);
-
-                        if (companyDocSnapshot.exists()) {
-                            assignedName = companyDocSnapshot.data().name;
+                    const fetchDoctorData = async (doctorId) => {
+                        const doctorDocRef = doc(db, "doctors", doctorId);
+                        const doctorDocSnapshot = await getDoc(doctorDocRef);
+                        if (doctorDocSnapshot.exists()) {
+                            return doctorDocSnapshot.data();
                         } else {
-                            const userDocRef = doc(db, "users", messageId);
-                            const userDocSnapshot = await getDoc(userDocRef);
-
-                            if (userDocSnapshot.exists()) {
-                                const userData = userDocSnapshot.data();
-                                assignedName = `${userData.firstName} ${userData.lastName}`;
-                            } else {
-                                console.error(`No document found with ID ${messageId}`);
-                            }
+                            console.error(`Doctor with ID ${doctorId} not found`);
+                            return null;
                         }
-                    } catch (error) {
-                        console.error("Error fetching assigned data:", error);
-                    }
+                    };
+                    const fetchAssignedData = async (messageId) => {
+                        let assignedName;
 
-                    return assignedName;
-                };
+                        try {
+                            const companyDocRef = doc(db, "companies", messageId);
+                            const companyDocSnapshot = await getDoc(companyDocRef);
 
-                const groupedMessages = {};
-                const promises = querySnapshot.docs.map(async (doc) => {
-                    const messageData = doc.data();
-                    const assignedName = await fetchAssignedData(messageData.messageId);
-                    const doctorData = await fetchDoctorData(messageData.doctorID);
-                    const doctorName = doctorData ? doctorData.name : "Unknown Doctor";
+                            if (companyDocSnapshot.exists()) {
+                                assignedName = companyDocSnapshot.data().name;
+                            } else {
+                                const userDocRef = doc(db, "users", messageId);
+                                const userDocSnapshot = await getDoc(userDocRef);
 
-                    const key = `${messageData.doctorID}_${messageData.companyID}`;
-                    if (!groupedMessages[key]) {
-                        groupedMessages[key] = {
-                            doctorName,
-                            assignedName,
-                            doctorID: messageData.doctorID,
-                            companyID: messageData.companyID,
-                            messages: [],
-                            recentMessage: {
-                                text: "",
-                                isCompany: false,
-                                date: "",
-                                time: ""
+                                if (userDocSnapshot.exists()) {
+                                    const userData = userDocSnapshot.data();
+                                    assignedName = `${userData.firstName} ${userData.lastName}`;
+                                } else {
+                                    console.error(`No document found with ID ${messageId}`);
+                                }
                             }
-                        };
-                    }
+                        } catch (error) {
+                            console.error("Error fetching assigned data:", error);
+                        }
 
-                    const timestamp = messageData.timestamp?.toDate();
-                    const date = timestamp ? timestamp.toLocaleDateString() : "N/A";
-                    const time = timestamp ? timestamp.toLocaleTimeString() : "N/A";
+                        return assignedName;
+                    };
 
-                    groupedMessages[key].messages.push({
-                        messageId: messageData.messageId,
-                        sentId: messageData.sentId,
-                        id: doc.id,
-                        message: messageData.messages,
-                        sentBy: messageData.sentBy,
-                        date,
-                        time,
-                    });
+                    const groupedMessages = {};
+                    const promises = querySnapshot.docs.map(async (doc) => {
+                        const messageData = doc.data();
+                        const assignedName = await fetchAssignedData(messageData.messageId);
+                        const doctorData = await fetchDoctorData(messageData.doctorID);
+                        const doctorName = doctorData ? doctorData.name : "Unknown Doctor";
 
-                    // Check if the current message is the most recent one
-                    if (!groupedMessages[key].recentMessage.timestamp || timestamp > groupedMessages[key].recentMessage.timestamp) {
-                        groupedMessages[key].recentMessage = {
-                            text: messageData.messages,
-                            isCompany: messageData.sentBy === "company",
+                        const key = `${messageData.doctorID}_${messageData.companyID}`;
+                        if (!groupedMessages[key]) {
+                            groupedMessages[key] = {
+                                doctorName,
+                                assignedName,
+                                doctorID: messageData.doctorID,
+                                companyID: messageData.companyID,
+                                messages: [],
+                                recentMessage: {
+                                    text: "",
+                                    isCompany: false,
+                                    date: "",
+                                    time: ""
+                                }
+                            };
+                        }
+
+                        const timestamp = messageData.timestamp?.toDate();
+                        const date = timestamp ? timestamp.toLocaleDateString() : "N/A";
+                        const time = timestamp ? timestamp.toLocaleTimeString() : "N/A";
+
+                        groupedMessages[key].messages.push({
+                            messageId: messageData.messageId,
+                            sentId: messageData.sentId,
+                            id: doc.id,
+                            message: messageData.messages,
+                            sentBy: messageData.sentBy,
                             date,
                             time,
-                            timestamp
-                        };
-                    }
+                        });
+
+                        // Check if the current message is the most recent one
+                        if (!groupedMessages[key].recentMessage.timestamp || timestamp > groupedMessages[key].recentMessage.timestamp) {
+                            groupedMessages[key].recentMessage = {
+                                text: messageData.messages,
+                                isCompany: messageData.sentBy === "company",
+                                date,
+                                time,
+                                timestamp
+                            };
+                        }
+                    });
+
+                    await Promise.all(promises);
+
+                    // Convert groupedMessages object to array
+                    const messagesArray = Object.keys(groupedMessages).map(key => groupedMessages[key]);
+                    setMessages(messagesArray);
                 });
-
-                await Promise.all(promises);
-
-                // Convert groupedMessages object to array
-                const messagesArray = Object.keys(groupedMessages).map(key => groupedMessages[key]);
-                setMessages(messagesArray);
+                return () => unsubscribe();
             }
         } catch (error) {
             console.error("Error fetching schedule messages:", error);
@@ -304,6 +308,7 @@ const SalesHeadMessage = () => {
                                 handleCloseChat={handleCloseChat}
                                 predefinedMessages={predefinedMessages}
                                 currentUserId={id}
+                                setCurrentConversation={setCurrentConversation}
                             />
                         )}
 

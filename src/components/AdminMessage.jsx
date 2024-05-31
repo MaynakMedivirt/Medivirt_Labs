@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import AdminNavbar from "./AdminNavbar";
 import AdminSide from "./AdminSide";
-import { getFirestore, collection, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import Swal from 'sweetalert2';
 import { useAuth } from "./AuthContext";
 import Adminbox from './Adminbox';
@@ -190,6 +190,39 @@ const AdminMessage = () => {
         return <Navigate to="/admin" />;
     }
 
+    // const handleDeleteChat = async (doctorId, companyId) => {
+    //     try {
+    //         const db = getFirestore();
+    //         const messageRef = collection(db, "messages");
+    //         const querySnapshot = await getDocs(messageRef);
+    
+    //         querySnapshot.forEach(async (messageDoc) => {
+    //             const messageData = messageDoc.data();
+    //             if (messageData.doctorID === doctorId && messageData.companyID === companyId) {
+    //                 const conversationDocRef = doc(db, "messages", messageDoc.id);
+    //                 await deleteDoc(conversationDocRef);
+    //                 fetchMessages(); 
+
+    //                 Swal.fire({
+    //                     icon: 'success',
+    //                     title: 'Success',
+    //                     text: 'Conversation deleted successfully!',
+    //                 });
+    //             }
+    //         });
+    //     } catch (error) {
+    //         console.error('Error deleting conversation:', error);
+    
+    //         // Show error message
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Oops...',
+    //             text: 'Failed to delete conversation. Please try again.',
+    //         });
+    //     }
+    // };
+    
+
     return (
         <div className="flex">
             <AdminSide />
@@ -272,6 +305,12 @@ const AdminMessage = () => {
                                                 >
                                                     View Messages
                                                 </button>
+                                                {/* <button
+                                                    onClick={() => handleDeleteChat(conversation.doctorID, conversation.companyID)}
+                                                    className="text-white bg-[#4BCB5D] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                                                >
+                                                   Delete
+                                                </button> */}
                                             </td>
                                         </tr>
                                     ))}

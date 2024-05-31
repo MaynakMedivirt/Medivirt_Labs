@@ -55,6 +55,8 @@ const Adminbox = ({ conversation, replyMessage, handleReplyMessageChange, handle
     const getSenderName = (msg) => {
         if (msg.sentBy === 'admin') {
             return 'Admin';
+        }else if(msg.sentBy === 'doctor'){
+            return conversation.doctorName;
         }
         return senderNames[msg.sentId] || 'Unknown';
     };

@@ -152,21 +152,19 @@ const CompanyProfile = () => {
             <div className="mt-10">
               <div className="flex">
                 <h1
-                  className={`text-xl px-1 font-semibold cursor-pointer ${
-                    activeTab === "about"
+                  className={`text-xl px-1 font-semibold cursor-pointer ${activeTab === "about"
                       ? "bg-[#EEE7F6] text-black"
                       : "text-gray-800"
-                  }`}
+                    }`}
                   onClick={() => setActiveTab("about")}
                 >
                   About Company
                 </h1>
                 <h1
-                  className={`text-xl px-1 ml-5 font-semibold cursor-pointer ${
-                    activeTab === "products"
+                  className={`text-xl px-1 ml-5 font-semibold cursor-pointer ${activeTab === "products"
                       ? "bg-[#EEE7F6] text-black"
                       : "text-gray-800"
-                  }`}
+                    }`}
                   onClick={() => setActiveTab("products")}
                 >
                   Product
@@ -187,15 +185,17 @@ const CompanyProfile = () => {
                             <img
                               src={product.image}
                               alt={product.productName}
-                              className="w-full h-32 object-cover mb-4 rounded"
+                              className="w-full h-32 object-contain mb-4 rounded"
                             />
                             <h2 className="text-lg font-semibold mb-2">{product.productName}</h2>
                             <p className="text-gray-600">{product.productDetails}</p>
-                            <button
-                              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                            >
-                              Enquiry About The Product
-                            </button>
+                            <div className="text-center">
+                              <button
+                                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                              >
+                                About Product
+                              </button>
+                            </div>
                           </div>
                         ))
                       ) : (

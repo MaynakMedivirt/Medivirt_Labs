@@ -328,7 +328,27 @@ const DoctorSchedule = () => {
                           {/* Modify */}
                         </button>
 
-                        {meeting.status !== "Rescheduled" &&(
+                        {meeting.status !== "accepted" && meeting.status !== "Rescheduled" ? (
+                          <button
+                          onClick={() => handleAccept(meeting.id)}
+                            type="button"
+                            className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                          >
+                            <FaCheck />
+                    
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="text-white bg-gray-400 rounded-lg px-3 py-2 text-center me-2 mb-2 cursor-not-allowed"
+                            disabled
+                          >
+                            <FaCheck />
+          
+                          </button>
+                        )}
+
+                        {/* {meeting.status !== "Rescheduled" && (
                           <button
                             type="button"
                             className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
@@ -336,7 +356,7 @@ const DoctorSchedule = () => {
                           >
                             <FaCheck />
                           </button>
-                        )}
+                        )} */}
                         <Link
                           to={meeting.meetingLink}
                           type="button"

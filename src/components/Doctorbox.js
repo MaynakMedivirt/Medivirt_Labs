@@ -1,14 +1,50 @@
 import React, { useState, useEffect } from "react";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, onSnapshot } from "firebase/firestore";
 
-const Doctorbox = ({ conversation, replyMessage, handleReplyMessageChange, handleSendReply, handleCloseChat }) => {
+const Doctorbox = ({ conversation, replyMessage, handleReplyMessageChange, handleSendReply, handleCloseChat, setCurrentConversation }) => {
     const [senderNames, setSenderNames] = useState({});
-    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (!conversation || !conversation.messages || conversation.messages.length === 0) {
+            return;
+        }
+
+        const db = getFirestore();
+        const firstMessage = conversation.messages[0];
+
+        if (!firstMessage.messageId) {
+            console.error("First message does not have a messageId");
+            return;
+        }
+
+        const unsubscribe = onSnapshot(doc(db, "messages", firstMessage.messageId), (doc) => {
+            const messageData = doc.data();
+            if (!messageData) {
+                console.error("No message data found for messageId:", firstMessage.messageId);
+                return;
+            }
+
+            const updatedConversation = {
+                ...conversation,
+                messages: [...conversation.messages, {
+                    messageId: messageData.messageId,
+                    sentId: messageData.sentId,
+                    id: doc.id,
+                    message: messageData.message,
+                    sentBy: messageData.sentBy,
+                    date: new Date(messageData.timestamp.toDate()).toLocaleDateString(),
+                    time: new Date(messageData.timestamp.toDate()).toLocaleTimeString(),
+                }]
+            };
+            setCurrentConversation(updatedConversation);
+        });
+
+        return () => unsubscribe();
+    }, [conversation, setCurrentConversation]);
 
     useEffect(() => {
         if (!conversation || conversation.messages.length === 0) {
-            setLoading(false);
-            return;
+           return;
         }
 
         async function fetchSenderNames() {
@@ -47,7 +83,6 @@ const Doctorbox = ({ conversation, replyMessage, handleReplyMessageChange, handl
 
             await Promise.all(promises);
             setSenderNames(names);
-            setLoading(false);
             console.log("Sender names fetched:", JSON.stringify(names, null, 2));
         }
 
@@ -74,10 +109,6 @@ const Doctorbox = ({ conversation, replyMessage, handleReplyMessageChange, handl
 
     let currentDate = null;
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
     return (
         <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
             <div className="bg-white p-4 rounded-lg max-w-lg w-full">
@@ -90,7 +121,7 @@ const Doctorbox = ({ conversation, replyMessage, handleReplyMessageChange, handl
                         currentDate = msg.date;
                         let name;
                         if (msg.sentBy === 'company' || msg.sentBy === 'user') {
-                            name = senderNames[msg.sentId] || 'Loading...';
+                            name = senderNames[msg.sentId] || 'unknown';
                         } else if (msg.sentBy === 'admin') {
                             name = 'Admin';
                         }
