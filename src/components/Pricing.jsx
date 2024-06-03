@@ -42,11 +42,11 @@ const Pricing = () => {
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 xl:mt-[4rem] mb-6 max-w-8xl mx-auto">
             {/* Pricing plan cards */}
             <div className="flex flex-col border px-10 py-12 mt-4 text-base bg-white rounded-xl shadow-sm max-w-[329px] text-black">
-              <div className="text-4xl font-bold text-indigo-400">STARTUP</div>
+              <div className="text-4xl font-bold font-[K2D] text-indigo-500">STARTUP</div>
               <div className="mt-4 leading-5 capitalize">
-                For early startups - 5 CREDITS
+                FOR EARLY STARTUPS - <br/><p className='font-bold'>5 CREDITS</p>
               </div>
-              <div className="mt-[2.2rem] text-5xl font-bold leading-10 text-indigo-400">
+              <div className="mt-[1rem] text-4xl font-bold font-[K2D] leading-10 text-indigo-400">
                 Rs. 1999/-
               </div>
               <div className="flex gap-0.5 mt-11 capitalize">
@@ -111,7 +111,7 @@ const Pricing = () => {
                   src="https://cdn.builder.io/api/v1/image/assets/TEMP/b598b7ae22dae37d5a9b4f3178e203023cd8cb8a8b980b0f542c420f7629a8ac?"
                   className="shrink-0 aspect-[0.9] w-[18px]"
                 />
-                <div className="flex-auto">setup fee : rs. 2999/- </div>
+                <div className="flex-auto">setup fee : rs. 3999/- </div>
               </div>
               <div className="flex flex-col  mt-[3.8rem] ml-3 text-lg font-semibold text-center text-white capitalize bg-indigo-800">
                 <button className="text-center px-12 py-3.5 bg-indigo-400 hover:bg-indigo-500 transition-all duration-300 ease-in-out">
@@ -120,12 +120,12 @@ const Pricing = () => {
               </div>
             </div>
             <div className="flex flex-col border mt-4 px-10 py-12 text-base bg-white rounded-xl shadow-sm max-w-[329px] ">
-              <div className="text-4xl font-bold text-indigo-400">STANDARD</div>
+              <div className="text-4xl font-bold font-[K2D]  text-indigo-500">STANDARD</div>
               <div className="mt-4 leading-5 capitalize">
-              FOR ESTABLISHED STARTUPS - 13 CREDITS
+              FOR ESTABLISHED STARTUPS - <p className='font-bold'>15 CREDITS</p>
               </div>
-              <div className="mt-4 text-5xl font-bold leading-10 text-indigo-400">
-                Rs. 3999/-
+              <div className="mt-4 text-4xl font-bold font-[K2D]  leading-10 text-indigo-400">
+                Rs. 4499/-
               </div>
               <div className="flex gap-0.5 mt-11 capitalize">
                 <img
@@ -198,11 +198,11 @@ const Pricing = () => {
               </div>
             </div>
             <div className="flex flex-col border px-10 py-12 text-base bg-[#F9EDEF] rounded-xl shadow-sm max-w-[329px] mb-[2rem]"> {/* Add custom class and margin-top */}
-              <div className="text-4xl font-bold text-indigo-400">ECONOMY</div>
+              <div className="text-4xl font-bold font-[K2D]  text-indigo-500">ECONOMY</div>
               <div className="mt-4 leading-5 capitalize">
-              FOR ESTABLISED COMPANIES - 25 CREDITS
+              FOR ESTABLISED COMPANIES - <p className='font-bold'>25 CREDITS</p>
               </div>
-              <div className="mt-4 text-5xl font-bold leading-10 text-indigo-400">
+              <div className="mt-4 text-4xl font-bold font-[K2D]  leading-10 text-indigo-400">
               Rs. 6999/-
               </div>
               <div className="flex gap-0.5 mt-11 capitalize">
@@ -276,11 +276,11 @@ const Pricing = () => {
               </div>
             </div>
             <div className="flex flex-col border  px-10 py-12 mt-4 text-base bg-white rounded-xl shadow-sm max-w-[329px] ">
-              <div className="text-4xl font-bold text-indigo-400">ADVANCE</div>
+              <div className="text-4xl font-bold font-[K2D]  text-indigo-500">ADVANCE</div>
               <div className="mt-4 leading-5 capitalize">
-              FOR ESTABLISED COMPANIES - 40 CREDITS
+              FOR ESTABLISED COMPANIES - <p className='font-bold'>40 CREDITS</p>
               </div>
-              <div className="mt-4 text-5xl font-bold leading-10 text-indigo-400">
+              <div className="mt-4 text-4xl font-bold font-[K2D]  leading-10 text-indigo-400">
                 Rs. 9999/-
               </div>
               <div className="flex gap-0.5 mt-11 capitalize">

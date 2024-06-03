@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { IoIosArrowDropleftCircle } from "react-icons/io";
 import { FaHome, FaUser, FaProductHunt } from "react-icons/fa";
 import { AiFillMessage } from "react-icons/ai";
@@ -8,13 +8,11 @@ import { PiChartPieSliceFill } from "react-icons/pi";
 import { TiUserAdd } from "react-icons/ti";
 import { MdMissedVideoCall } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 const CompanySide = ({ open, toggleSidebar }) => {
-
-    const [activeMenu, setActiveMenu] = useState("/companyDashboard");
-    // const [selectedCity, setSelectedCity] = useState("");
+    const { pathname } = useLocation();
     const { id } = useParams();
 
     const Menus = [
@@ -31,8 +29,6 @@ const CompanySide = ({ open, toggleSidebar }) => {
         { title: "Setting", path: `/company/setting/${id}`, icon: <IoSettings className="text-[#7191E6]" /> },
     ];
 
-    // const cities = ["Bangalore", "Delhi", "Mumbai", "Kolkata", "Hyderabad", "Chennai", "All"];
-
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 600 && open) {
@@ -45,14 +41,6 @@ const CompanySide = ({ open, toggleSidebar }) => {
             window.removeEventListener("resize", handleResize);
         };
     }, [open, toggleSidebar]);
-
-    const handleMenuClick = (path) => {
-        setActiveMenu(path);
-    };
-
-    // const handleCityChange = (e) => {
-    //     setSelectedCity(e.target.value);
-    // };
 
     return (
         <div className="flex flex-col h-screen fixed top-[4.2rem]">
@@ -68,27 +56,11 @@ const CompanySide = ({ open, toggleSidebar }) => {
                         <IoIosArrowDropleftCircle className="h-6 w-6 text-[#7191E6]" />
                     </div>
 
-                    {/* <div className="my-3">
-                        <select
-                            className="w-full px-4 py-2 border bg-white shadow-lg border rounded-md focus:outline-none"
-                            value={selectedCity}
-                            onChange={handleCityChange}
-                        >
-                            <option value="">Select City</option>
-                            {cities.map((city, index) => (
-                                <option key={index} value={city}>
-                                    {city}
-                                </option>
-                            ))}
-                        </select>
-                    </div> */}
-
                     <ul>
                         {Menus.map((menu, index) => (
                             <li
                                 key={index}
-                                className={`flex items-center py-3 mt-2 px-4 cursor-pointer hover:bg-white hover:shadow hover:border text-[#808080] font-bold ${menu.path === activeMenu ? "bg-white-100" : ""} ${menu.path === activeMenu && open ? "shadow-xl border" : ""}`}
-                                onClick={() => handleMenuClick(menu.path)}
+                                className={`flex items-center py-3 mt-2 px-4 cursor-pointer hover:bg-white hover:shadow hover:border text-[#808080] font-bold ${pathname === menu.path ? "bg-white shadow-xl border" : ""}`}
                             >
                                 <Link to={menu.path} className="flex items-center">
                                     <span className="mr-4 text-xl">{menu.icon}</span>

@@ -6,10 +6,11 @@ import { MdManageAccounts, MdMessage } from "react-icons/md";
 import { RiCalendarScheduleFill } from "react-icons/ri";
 import { MdMissedVideoCall } from "react-icons/md";
 import { GrCompliance } from "react-icons/gr";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const AdminSide = () => {
   const [open, setOpen] = useState(true);
+  const { pathname } = useLocation();
 
   const Menus = [
     { title: "Dashboard", path: "/admin/dash", icon: <FaChartPie className="text-[#82746b]" /> },
@@ -20,7 +21,7 @@ const AdminSide = () => {
     { title: "Messages", path: "/admin/messages", icon: <MdMessage className="text-[#82746b]" /> },
     { title: "Completed Meetings", icon: <GrCompliance className="text-[#82746b]" /> },
     { title: "Missed Meetings", path: "/admin/missedMeeting", icon: <MdMissedVideoCall className="text-[#82746b]" /> },
-    { title: "Setting", path: "setting", icon: <FaCog className="text-[#82746b]" /> },
+    { title: "Setting", path: "/admin/setting", icon: <FaCog className="text-[#82746b]" /> },
   ];
 
   return (
@@ -53,7 +54,7 @@ const AdminSide = () => {
             <li
               key={index}
               className={`flex items-center py-3 px-4 cursor-pointer text-black hover:bg-gray-100 rounded-md ${
-                index === 0 && "bg-gray-100"
+                pathname === menu.path && "bg-gray-100"
               }`}
             >
               <Link to={menu.path} className="flex items-center">

@@ -418,7 +418,7 @@ const ScheduleList = () => {
                       className="border border-gray-300 rounded-md shadow-md"
                       calendarClassName="bg-white p-4 rounded-lg shadow-lg"
                       tileClassName={({ date, view }) =>
-                        view === 'month' && date.getDay() === 0 ? 'bg-red-200' : null
+                        view === 'month' && date.getDay() === 0 ? 'bg-indigo-200' : null
                       }
                     />
                   </div>

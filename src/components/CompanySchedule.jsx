@@ -441,14 +441,14 @@ const CompanySchedule = () => {
       {showCalendar && (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg">
-            <div className="w-full max-w-xs">
+            <div className="w-full max-w-[25rem]">
               <Calendar
                 onChange={setSelectedDate}
                 value={selectedDate}
                 className="border border-gray-300 rounded-md shadow-md"
                 calendarClassName="bg-white p-4 rounded-lg shadow-lg"
                 tileClassName={({ date, view }) =>
-                  view === "month" && date.getDay() === 0 ? "bg-red-200" : null
+                  view === "month" && date.getDay() === 0 ? "bg-indigo-300" : null
                 }
               />
             </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Routes, Route } from "react-router-dom";
 import DoctorNavbar from "./DoctorNavbar";
 import DoctorSide from "./DoctorSide";
 import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc,} from "firebase/firestore";
@@ -7,6 +7,7 @@ import Calendar from "react-calendar";
 import Swal from "sweetalert2";
 import { FaEdit, FaCheck } from "react-icons/fa";
 import { SiGooglemeet } from "react-icons/si";
+import JitsiMeeting from "./JitsiMeeting";
 
 const DoctorSchedule = () => {
   const [scheduleMeetings, setScheduleMeetings] = useState([]);
@@ -364,6 +365,7 @@ const DoctorSchedule = () => {
                         >
                           <SiGooglemeet className="inline-block mb-[5px]" />
                         </Link>
+
                       </td>
                     </tr>
                   ))}
@@ -393,15 +395,15 @@ const DoctorSchedule = () => {
       </div>
       {showCalendar && (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg">
-            <div className="w-full max-w-xs">
+          <div className="bg-white p-6">
+            <div className="w-full max-w-[50rem]">
               <Calendar
                 onChange={setSelectedDate}
                 value={selectedDate}
                 className="border border-gray-300 rounded-md shadow-md"
                 calendarClassName="bg-white p-4 rounded-lg shadow-lg"
                 tileClassName={({ date, view }) =>
-                  view === "month" && date.getDay() === 0 ? "bg-red-200" : null
+                  view === "month" && date.getDay() === 0 ? "bg-indigo-300" : null
                 }
               />
             </div>
@@ -439,13 +441,13 @@ const DoctorSchedule = () => {
             <div className="flex justify-end mt-4">
               <button
                 onClick={() => toggleCalendar(null)}
-                className="px-4 py-2 mr-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400"
+                className="px-4 py-2 mr-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400 transition-all duration-300 ease-in-out"
               >
                 Cancel
               </button>
               <button
                 onClick={handleModify}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                className="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600 transition-all duration-300 ease-in-out"
               >
                 Save
               </button>
@@ -453,6 +455,9 @@ const DoctorSchedule = () => {
           </div>
         </div>
       )}
+       <Routes>
+        <Route path="/jitsi/:roomName" element={<JitsiMeeting />} />
+      </Routes>
     </div>
   );
 };

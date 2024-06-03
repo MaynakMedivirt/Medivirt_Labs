@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { IoIosArrowDropleftCircle } from "react-icons/io";
 import { FaHome, FaUser } from "react-icons/fa";
 import { AiFillMessage } from "react-icons/ai";
@@ -7,12 +7,11 @@ import { FaChartLine } from "react-icons/fa6";
 import { PiChartPieSliceFill } from "react-icons/pi";
 import { MdMissedVideoCall } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 const DoctorSide = ({ open, toggleSidebar }) => {
-
-    const [activeMenu, setActiveMenu] = useState("/doctorDashboard");
+    const { pathname } = useLocation();
     const { id } = useParams();
 
     const Menus = [
@@ -39,10 +38,6 @@ const DoctorSide = ({ open, toggleSidebar }) => {
         };
     }, [open, toggleSidebar]);
 
-    const handleMenuClick = (path) => {
-        setActiveMenu(path);
-    };
-
     return (
         <div className="flex flex-col h-screen fixed top-[4.2rem]">
             <div className="flex flex-1">
@@ -61,8 +56,7 @@ const DoctorSide = ({ open, toggleSidebar }) => {
                         {Menus.map((menu, index) => (
                             <li
                                 key={index}
-                                className={`flex items-center py-3 mt-2 px-4 cursor-pointer hover:bg-white hover:shadow hover:border text-[#808080] font-bold ${menu.path === activeMenu ? "bg-white-100" : ""} ${menu.path === activeMenu && open ? "shadow-xl border" : ""}`}
-                                onClick={() => handleMenuClick(menu.path)}
+                                className={`flex items-center py-3 mt-2 px-4 cursor-pointer hover:bg-white hover:shadow hover:border text-[#808080] font-bold ${pathname === menu.path ? "bg-white shadow-xl border" : ""}`}
                             >
                                 <Link to={menu.path} className="flex items-center">
                                     <span className="mr-4 text-xl">{menu.icon}</span>
