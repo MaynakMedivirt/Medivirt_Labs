@@ -64,6 +64,8 @@ import EditCompanyAbout from './components/EditCompanyAbout';
 import EditCompanyDetails from './components/EditCompanyDetails';
 import EditCompanyUser from './components/EditCompanyUser';
 import CompanyMissedMeetings from './components/CompanyMissedMeetings';
+import MyDoctors from './components/MyDoctors';
+import DoctorViewProfile from './components/DoctorViewProfile';
 
 import DoctorEarning from './components/DoctorEarning';
 import LearnMore from './components/LearnMore';
@@ -77,12 +79,16 @@ import EditSalesHeadUser from './components/EditSalesHeadUser';
 import SalesHeadMessage from './components/SalesHeadMessage';
 import SalesHeadProduct from './components/SalesHeadProduct';
 import SalesAddProduct from './components/SalesAddProduct';
+import SalesAllDoctors from './components/SalesAllDoctors';
+import SalesViewDoctor from './components/SalesViewDoctor';
 
 import MrDashboard from './components/MrDashboard';
 import MrSchedule from './components/MrSchedule';
 import MrMessage from './components/MrMessage';
 import MrProduct from './components/MrProduct';
 import MrAddProduct from './components/MrAddProduct';
+import MrAllDoctors from './components/MrAllDoctors';
+import MrViewDoctor from './components/MrViewDoctor';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -165,6 +171,8 @@ const App = () => {
           <Route path='/company/profile/edit-details/:id' element={<EditCompanyDetails/>}/>
           <Route path='/company/edit-user/:id' element={<EditCompanyUser/>}/>
           <Route path='/company/missedMeeting/:id' element={<CompanyMissedMeetings/>}/>
+          <Route path='/company/doctors/:id' element={<MyDoctors/>}/>
+          <Route path='/company/viewProfile/:id' element={<DoctorViewProfile/>}/>
 
           <Route path='/doctor/earning/:id' element={<DoctorEarning/>}/>
           <Route path='/doctor/missedMeeting/:id' element={<DoctorMissedMeetings/>}/>
@@ -179,12 +187,16 @@ const App = () => {
           <Route path='/sales/message/:id' element={<SalesHeadMessage />} />
           <Route path='/sales/products/:id' element={<SalesHeadProduct />} />
           <Route path='/sales/add-product/:id' element={<SalesAddProduct />} />
+          <Route path='/sales/doctors/:id' element={<SalesAllDoctors />} />
+          <Route path='/sales/viewProfile/:id' element={<SalesViewDoctor />} />
           
           <Route path='/mrDashboard/:id' element={<MrDashboard />} />
           <Route path='/mr/schedule/:id' element={<MrSchedule />} />
           <Route path='/mr/message/:id' element={<MrMessage />} />
           <Route path='/mr/products/:id' element={<MrProduct />} />
           <Route path='/mr/add-product/:id' element={<MrAddProduct />} />
+          <Route path='/mr/doctors/:id' element={<MrAllDoctors />} />
+          <Route path='/mr/viewProfile/:id' element={<MrViewDoctor />} />
 
 
           {/* Route for the home page */}

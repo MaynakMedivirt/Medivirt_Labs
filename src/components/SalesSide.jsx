@@ -18,9 +18,9 @@ const SalesSide = ({ open, toggleSidebar }) => {
         { title: "Dashboard", path: `/salesDashboard/${id}`, icon: <FaHome className="text-[#7191E6]" /> },
         { title: "Message", path: `/sales/message/${id}`, icon: <AiFillMessage className="text-[#7191E6]" /> },
         { title: "Schedule", path: `/sales/schedule/${id}`, icon: <RiCalendarScheduleLine className="text-[#7191E6]" /> },
+        { title: "My Doctors", path: `/sales/doctors/${id}`, icon: <FaUserDoctor className="text-[#7191E6]" /> },
         { title: "Analytics", path: `/sales/analytics/${id}`, icon: <PiChartPieSliceFill className="text-[#7191E6]" /> },
         { title: "My Products", path: `/sales/products/${id}`, icon: <FaProductHunt className="text-[#7191E6]" /> },
-        { title: "My Doctors", path: `/sales/doctors/${id}`, icon: <FaUserDoctor className="text-[#7191E6]" /> },
         { title: "Add Users", path: `/sales/users/${id}`, icon: <TiUserAdd className="text-[#7191E6]" /> },
         { title: "Setting", path: `/sales/setting/${id}`, icon: <IoSettings className="text-[#7191E6]" /> },
     ];

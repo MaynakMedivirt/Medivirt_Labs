@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import CompanySide from "./CompanySide";
 import CompanyNavbar from "./CompanyNavbar";
-import { getFirestore, collection, query, where, getDocs, doc, getDoc, deleteDoc, updateDoc, } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, doc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import Calendar from "react-calendar";
 import Swal from "sweetalert2";
 import { FaEdit, FaCheck } from "react-icons/fa";
@@ -39,87 +39,87 @@ const CompanySchedule = () => {
         let q = query(scheduleMeetingsRef, where("companyID", "==", id));
 
         const querySnapshot = await getDocs(q);
-
-        const fetchDoctorData = async (doctorId) => {
-          const doctorDocRef = doc(db, "doctors", doctorId);
-          const doctorDocSnapshot = await getDoc(doctorDocRef);
-          if (doctorDocSnapshot.exists()) {
-            return doctorDocSnapshot.data();
-          } else {
-            console.error(`Doctor with ID ${doctorId} not found`);
-            return null;
-          }
-        };
-
-        const fetchAssignedData = async (assigned) => {
-          let assignedName;
-          let assignedRole;
-
-          try {
-            const companyDocRef = doc(db, "companies", assigned);
-            const companyDocSnapshot = await getDoc(companyDocRef);
-
-            if (companyDocSnapshot.exists()) {
-              assignedName = companyDocSnapshot.data().name;
-              assignedRole = companyDocSnapshot.data().role;
+          const fetchDoctorData = async (doctorId) => {
+            const doctorDocRef = doc(db, "doctors", doctorId);
+            const doctorDocSnapshot = await getDoc(doctorDocRef);
+            if (doctorDocSnapshot.exists()) {
+              return doctorDocSnapshot.data();
             } else {
-              const userDocRef = doc(db, "users", assigned);
-              const userDocSnapshot = await getDoc(userDocRef);
-
-              if (userDocSnapshot.exists()) {
-                const userData = userDocSnapshot.data();
-                assignedName = `${userData.firstName} ${userData.lastName}`;
-                assignedRole = userData.role;
-              } else {
-                console.error(`No document found with ID ${assigned}`);
-              }
+              console.error(`Doctor with ID ${doctorId} not found`);
+              return null;
             }
-          } catch (error) {
-            console.error("Error fetching assigned data:", error);
+          };
+
+          const fetchAssignedData = async (assigned) => {
+            let assignedName;
+            let assignedRole;
+
+            try {
+              const companyDocRef = doc(db, "companies", assigned);
+              const companyDocSnapshot = await getDoc(companyDocRef);
+
+              if (companyDocSnapshot.exists()) {
+                assignedName = companyDocSnapshot.data().name;
+                assignedRole = companyDocSnapshot.data().role;
+              } else {
+                const userDocRef = doc(db, "users", assigned);
+                const userDocSnapshot = await getDoc(userDocRef);
+
+                if (userDocSnapshot.exists()) {
+                  const userData = userDocSnapshot.data();
+                  assignedName = `${userData.firstName} ${userData.lastName}`;
+                  assignedRole = userData.role;
+                } else {
+                  console.error(`No document found with ID ${assigned}`);
+                }
+              }
+
+            } catch (error) {
+              console.error("Error fetching assigned data:", error);
+            }
+
+            return { assignedName, assignedRole };
+          };
+
+          const promises = querySnapshot.docs.map(async (doc) => {
+            const meetingData = doc.data();
+            console.log(meetingData);
+            const doctorData = await fetchDoctorData(meetingData.doctorID);
+            const { assignedName, assignedRole } = await fetchAssignedData(meetingData.assigned);
+            const doctorName = doctorData ? doctorData.name : "Unknown Doctor";
+            const location = doctorData ? doctorData.location : "Unknown location";
+
+            const currentDate = new Date().toISOString().split("T")[0];
+            const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const meetingDateTime = new Date(`${meetingData.date} ${meetingData.time}`);
+            const isUpcoming = meetingDateTime > new Date(currentDate + ' ' + currentTime);
+            // console.log(`Meeting: ${doctorName} - ${meetingData.date} ${meetingData.time} - Upcoming: ${isUpcoming}`);
+            if (isUpcoming) {
+              return {
+                id: doc.id,
+                doctorName,
+                assignedName,
+                assignedRole,
+                location,
+                ...meetingData,
+              };
+            } else {
+              return null;
+            }
+          });
+
+          const resolvedData = (await Promise.all(promises)).filter(meeting => meeting !== null);
+
+          const filteredByDate = resolvedData.filter(meeting => !searchDate || meeting.date === searchDate);
+
+          // const filteredByLocation = filteredByDate.filter(meeting => meeting?.location?.toLowerCase().includes(searchLocation.toLowerCase()));
+          let filteredData = filteredByDate;
+          if (searchLocation.trim() !== "") {
+            filteredData = filteredData.filter(meeting =>
+              meeting?.location?.toLowerCase().includes(searchLocation.toLowerCase())
+            );
           }
-
-          return { assignedName, assignedRole };
-        };
-
-        const promises = querySnapshot.docs.map(async (doc) => {
-          const meetingData = doc.data();
-          console.log(meetingData);
-          const doctorData = await fetchDoctorData(meetingData.doctorID);
-          const { assignedName, assignedRole } = await fetchAssignedData(meetingData.assigned);
-          const doctorName = doctorData ? doctorData.name : "Unknown Doctor";
-          const location = doctorData ? doctorData.location : "Unknown location";
-
-          const currentDate = new Date().toISOString().split("T")[0];
-          const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          const meetingDateTime = new Date(`${meetingData.date} ${meetingData.time}`);
-          const isUpcoming = meetingDateTime > new Date(currentDate + ' ' + currentTime);
-          // console.log(`Meeting: ${doctorName} - ${meetingData.date} ${meetingData.time} - Upcoming: ${isUpcoming}`);
-          if (isUpcoming) {
-            return {
-              id: doc.id,
-              doctorName,
-              assignedName,
-              assignedRole,
-              location,
-              ...meetingData,
-            };
-          } else {
-            return null;
-          }
-        });
-
-        const resolvedData = (await Promise.all(promises)).filter(meeting => meeting !== null);
-
-        const filteredByDate = resolvedData.filter(meeting => !searchDate || meeting.date === searchDate);
-
-        // const filteredByLocation = filteredByDate.filter(meeting => meeting?.location?.toLowerCase().includes(searchLocation.toLowerCase()));
-        let filteredData = filteredByDate;
-        if (searchLocation.trim() !== "") {
-          filteredData = filteredData.filter(meeting =>
-            meeting?.location?.toLowerCase().includes(searchLocation.toLowerCase())
-          );
-        }
-        setScheduleMeetings(filteredData);
+          setScheduleMeetings(filteredData);
 
       } catch (error) {
         console.error("Error fetching schedule meetings:", error);

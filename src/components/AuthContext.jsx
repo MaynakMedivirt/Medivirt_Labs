@@ -10,7 +10,7 @@ const AuthContext = createContext();
 
 // Custom AuthProvider component
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('currentUser')) || null);
   const [loading, setLoading] = useState(true);
 
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -27,19 +27,33 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setIsAdminLoggedIn(false);
     setIsManagerLoggedIn(false);
+    setCurrentUser(null);
+    localStorage.removeItem('currentUser');
   };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
+      if (user) {
+        const storedUser = JSON.parse(localStorage.getItem('currentUser'));
+        setCurrentUser(storedUser);
+      } else {
+        setCurrentUser(null);
+        localStorage.removeItem('currentUser');
+      }
       setLoading(false);
     });
 
-    // Cleanup
     return () => unsubscribe();
   }, []);
 
-  // Make setCurrentUser available in the context value
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    } else {
+      localStorage.removeItem('currentUser');
+    }
+  }, [currentUser]);
+
   const contextValue = { currentUser, setCurrentUser, isAdminLoggedIn, isManagerLoggedIn, login, logout  };
 
   return (

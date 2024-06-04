@@ -161,7 +161,7 @@ const Footer = () => {
               className="text-sm font-medium text-white mt-6"
               style={{ lineHeight: "2.5" }}
             >
-              Better yet, Meet us Virttually!
+              Better yet, Meet us Virtually!
               <br />
               MEDIVIRT LABS 
               <br />

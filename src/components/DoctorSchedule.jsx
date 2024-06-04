@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link, Routes, Route } from "react-router-dom";
 import DoctorNavbar from "./DoctorNavbar";
 import DoctorSide from "./DoctorSide";
-import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc,} from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
 import Calendar from "react-calendar";
 import Swal from "sweetalert2";
 import { FaEdit, FaCheck } from "react-icons/fa";
@@ -204,25 +204,33 @@ const DoctorSchedule = () => {
     }
   };
 
-  const indexOfLastMeeting = currentPage * itemsPerPage;
-  const indexOfFirstMeeting = indexOfLastMeeting - itemsPerPage;
-  const currentMeetings = scheduleMeetings.slice(
-    indexOfFirstMeeting,
-    indexOfLastMeeting
-  );
-
-  const sortedMeetings = [...currentMeetings].sort((a, b) => {
-    const dateComparison = new Date(a.date) - new Date(b.date);
-    if (dateComparison !== 0) {
-      return dateComparison;
-    }
-    const timeA = a.time.split(" ")[0];
-    const timeB = b.time.split(" ")[0];
-    return new Date(`1970/01/01 ${timeA}`) - new Date(`1970/01/01 ${timeB}`);
-  });
-
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
+  };
+
+  const handleOnLeave = () => {
+    window.location.href = "/home"; // Redirect the user to a custom page
+  };
+
+  const interfaceConfig = {
+    SHOW_JITSI_WATERMARK: false,
+    SHOW_WATERMARK_FOR_GUESTS: false,
+    DEFAULT_BACKGROUND: '#f0f0f0',
+    TOOLBAR_BUTTONS: [
+      'microphone', 'camera', 'desktop', 'fullscreen',
+      'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
+      'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
+      'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
+      'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
+      'e2ee'
+    ],
+    JITSI_WATERMARK_LINK: 'https://medivirt.com',
+    DEFAULT_LOGO_URL: 'https://medivirt.com/static/media/Medivirt.aa6fab5cce6b660ab2e2.png',
+    DEFAULT_WELCOME_PAGE_LOGO_URL: 'https://medivirt.com/static/media/Medivirt.aa6fab5cce6b660ab2e2.png',
+    BRAND_WATERMARK_LINK: 'https://medivirt.com',
+    SHOW_BRAND_WATERMARK: true,
+    SHOW_POWERED_BY: false,
+    SHOW_PROMOTIONAL_CLOSE_PAGE: false,
   };
 
   return (
@@ -305,7 +313,7 @@ const DoctorSchedule = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {sortedMeetings.map((meeting, index) => (
+                  {scheduleMeetings.map((meeting, index) => (
                     <tr key={meeting.id} className="border-b border-gray-200">
                       <td scope="row" className="px-3 py-4">
                         {index + 1}
@@ -320,7 +328,6 @@ const DoctorSchedule = () => {
                       <td className="px-3 py-4">{meeting.time}</td>
                       <td className="px-3 py-4 capitalize bg-gray-50">{meeting.status}</td>
                       <td className="px-3 py-4">
-
                         <button
                           onClick={() => toggleCalendar(meeting.id)}
                           className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
@@ -331,12 +338,11 @@ const DoctorSchedule = () => {
 
                         {meeting.status !== "accepted" && meeting.status !== "Rescheduled" ? (
                           <button
-                          onClick={() => handleAccept(meeting.id)}
+                            onClick={() => handleAccept(meeting.id)}
                             type="button"
                             className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
                           >
                             <FaCheck />
-                    
                           </button>
                         ) : (
                           <button
@@ -345,19 +351,9 @@ const DoctorSchedule = () => {
                             disabled
                           >
                             <FaCheck />
-          
                           </button>
                         )}
 
-                        {/* {meeting.status !== "Rescheduled" && (
-                          <button
-                            type="button"
-                            className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
-                            onClick={() => handleAccept(meeting.id)}
-                          >
-                            <FaCheck />
-                          </button>
-                        )} */}
                         <Link
                           to={meeting.meetingLink}
                           type="button"
@@ -365,7 +361,6 @@ const DoctorSchedule = () => {
                         >
                           <SiGooglemeet className="inline-block mb-[5px]" />
                         </Link>
-
                       </td>
                     </tr>
                   ))}
@@ -456,7 +451,7 @@ const DoctorSchedule = () => {
         </div>
       )}
        <Routes>
-        <Route path="/jitsi/:roomName" element={<JitsiMeeting />} />
+        <Route path="/jitsi/:roomName" element={<JitsiMeeting onLeave={handleOnLeave} interfaceConfig={interfaceConfig} />} />
       </Routes>
     </div>
   );

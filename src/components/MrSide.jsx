@@ -22,9 +22,9 @@ const MrSide = ({ open, toggleSidebar }) => {
         { title: "Dashboard", path: `/mrDashboard/${id}`, icon: <FaHome className="text-[#7191E6]" /> },
         { title: "Message", path: `/mr/message/${id}`, icon: <AiFillMessage className="text-[#7191E6]" /> },
         { title: "Schedule", path: `/mr/schedule/${id}`, icon: <RiCalendarScheduleLine className="text-[#7191E6]" /> },
+        { title: "My Doctors", path: `/mr/doctors/${id}`, icon: <FaUserDoctor className="text-[#7191E6]" /> },
         { title: "Analytics", path: `/mr/analytics/${id}`, icon: <PiChartPieSliceFill className="text-[#7191E6]" /> },
         { title: "My Products", path: `/mr/products/${id}`, icon: <FaProductHunt className="text-[#7191E6]" /> },
-        { title: "My Doctors", path: `/mr/doctors/${id}`, icon: <FaUserDoctor className="text-[#7191E6]" /> },
         { title: "Setting", path: `/mr/setting/${id}`, icon: <IoSettings className="text-[#7191E6]" /> },
     ];
 

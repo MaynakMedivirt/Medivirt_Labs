@@ -12,19 +12,6 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { currentUser, logout } = useAuth();
 
-
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, user => {
-  //     setCurrentUser(user);
-  //   });
-
-  //   return () => {
-  //     unsubscribe();
-  //   };
-  // }, []);
-
-  // console.log(currentUser)
-
   const closeMenu = () => {
     setMenuOpen(false);
   };
@@ -46,48 +33,32 @@ const Header = () => {
   };
 
 
+
   // const renderUserDetails = () => {
   //   if (currentUser) {
-  //     if (currentUser.name) {
-  //       const { name, role, id } = currentUser;
-  //       return (
-  //         <div className="mr-2">
-  //           <Link to={role === 'Doctor' ? `/doctorDashboard/${id}` : `/profilecomplete/${id}`} className='text-sm font-bold'>{name}</Link>
-  //           <p className='text-sm'>{role}</p>
-  //         </div>
-  //       );
-  //     } else if (currentUser.email) {
-  //       return currentUser.email;
+  //     const { role, role_company, id, name, firstName, lastName, companyName, profileComplete } = currentUser;
+  //     const userName = `${firstName || ''} ${lastName || ''}`.trim() || name;
+  //     const roleDisplay = role === 'Company' ? role_company : role;
+
+  //     let dashboardPath;
+  //     if (role === 'Company') {
+  //       dashboardPath = profileComplete ? `/companydashboard/${id}` : `/profilecomplete/${id}`;
+  //       if (role_company === 'Sales Head') dashboardPath = `/salesDashboard/${id}`;
+  //       if (role_company === 'Medical Representative') dashboardPath = `/mrDashboard/${id}`;
+  //     } else if (role === 'Doctor') {
+  //       dashboardPath = `/doctorDashboard/${id}`;
   //     }
+  //     return (
+  //       <div className="mr-2">
+  //         <Link to={dashboardPath} className="text-sm font-bold">
+  //           {userName}
+  //         </Link>
+  //         <p className="text-sm">{roleDisplay || companyName}</p>
+  //       </div>
+  //     );
   //   }
-  //   // return 'User Profile';
+  //   return null;
   // };
-
-  const renderUserDetails = () => {
-    if (currentUser) {
-      const { role, role_company, id, name, firstName, lastName, companyName, profileComplete } = currentUser;
-      const userName = `${firstName || ''} ${lastName || ''}`.trim() || name;
-      const roleDisplay = role === 'Company' ? role_company : role;
-
-      let dashboardPath;
-      if (role === 'Company') {
-        dashboardPath = profileComplete ? `/companydashboard/${id}` : `/profilecomplete/${id}`;
-        if (role_company === 'Sales Head') dashboardPath = `/salesDashboard/${id}`;
-        if (role_company === 'Medical Representative') dashboardPath = `/mrDashboard/${id}`;
-      } else if (role === 'Doctor') {
-        dashboardPath = `/doctorDashboard/${id}`;
-      }
-      return (
-        <div className="mr-2">
-          <Link to={dashboardPath} className="text-sm font-bold">
-            {userName}
-          </Link>
-          <p className="text-sm">{roleDisplay || companyName}</p>
-        </div>
-      );
-    }
-    return null;
-  };
 
 
 
@@ -126,7 +97,7 @@ const Header = () => {
           {currentUser ? (
             <>
               <div className="flex items-center">
-                <p className="text-white px-2 cursor-pointer">{renderUserDetails()}</p>
+                {/* <p className="text-white px-2 cursor-pointer">{renderUserDetails()}</p> */}
                 <AiOutlineUser className="w-6 h-6 text-white cursor-pointer" onClick={() => setMenuOpen(!menuOpen)} />
               </div>
               {menuOpen && (
