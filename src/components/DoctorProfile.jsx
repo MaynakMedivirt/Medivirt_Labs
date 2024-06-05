@@ -289,7 +289,7 @@ const DoctorProfiles = () => {
                     <div className="p-6 md:p-5 md:h-auto">
                       <div className="flex items-center justify-between mb-5">
                         <p className="text-lg ">Location:</p>
-                        <p className="text-lg font-semibold">Bangalore</p>
+                        <p className="text-lg font-semibold">{doctor.location}</p>
                       </div>
                       <hr className="mb-3 border-gray-300"></hr>
                       <div className="flex items-center justify-between mb-5">

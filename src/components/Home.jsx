@@ -299,7 +299,7 @@ const Home = () => {
           <Slider {...settings} className="-mx-5">
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
-                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
+                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col ">
                     <div className="text-2xl py-[5rem] leading-5">
                       User Registration and Profile Creation
@@ -323,7 +323,7 @@ const Home = () => {
 
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
-                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
+                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
                     <div className="text-2xl py-[5.6rem] ml-6 leading-5">
                       Scheduling Meetings
@@ -347,7 +347,7 @@ const Home = () => {
 
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
-                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
+                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
                     <div className="text-2xl py-[5.6rem] ml-10 leading-5">
                       Virtual Meetings
@@ -370,7 +370,7 @@ const Home = () => {
 
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
-                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
+                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
                     <div className="text-2xl py-[5rem] ml-10 leading-5">
                       Document Sharing and Collaboration
@@ -396,7 +396,7 @@ const Home = () => {
 
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
-                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
+                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
                     <div className="text-2xl py-[5rem] ml-10 leading-5">
                       Follow-up and Feedback
@@ -422,7 +422,7 @@ const Home = () => {
 
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
-                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
+                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
                     <div className="text-2xl py-[5rem] ml-10 leading-5">
                       Data Security and Compliance
@@ -447,7 +447,7 @@ const Home = () => {
 
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
-                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white rounded-3xl max-md:px-5 max-md:mt-8">
+                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
                     <div className="text-2xl py-[5rem] ml-10 leading-5">
                       Monitoring and Analytics
