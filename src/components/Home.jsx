@@ -296,12 +296,12 @@ const Home = () => {
         </div>
         <div className="flex flex-col self-stretch px-20 mt-6 w-full max-md:px-5 max-md:max-w-full">
           {/* Apply negative margin to create space between cards */}
-          <Slider {...settings} className="-mx-5">
+          <Slider {...settings} className="mx-5" id="silder">
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col ">
-                    <div className="text-2xl py-[5rem] leading-5">
+                    <div className="text-2xl py-[5rem]">
                       User Registration and Profile Creation
                     </div>
                   </div>
@@ -325,7 +325,7 @@ const Home = () => {
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[5.6rem] ml-6 leading-5">
+                    <div className="text-2xl py-[6rem] ml-6 ">
                       Scheduling Meetings
                     </div>
                   </div>
@@ -349,7 +349,7 @@ const Home = () => {
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[5.6rem] ml-10 leading-5">
+                    <div className="text-2xl py-[6rem] ml-10 ">
                       Virtual Meetings
                     </div>
                   </div>
@@ -372,7 +372,7 @@ const Home = () => {
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[5rem] ml-10 leading-5">
+                    <div className="text-2xl py-[5rem] ml-10 ">
                       Document Sharing and Collaboration
                     </div>
                   </div>
@@ -398,7 +398,7 @@ const Home = () => {
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[5rem] ml-10 leading-5">
+                    <div className="text-2xl py-[5rem] ml-10 ">
                       Follow-up and Feedback
                     </div>
                   </div>
@@ -424,7 +424,7 @@ const Home = () => {
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[5rem] ml-10 leading-5">
+                    <div className="text-2xl py-[5rem] ml-10 ">
                       Data Security and Compliance
                     </div>
                   </div>
@@ -449,7 +449,7 @@ const Home = () => {
               <div className="hover-container">
                 <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[5rem] ml-10 leading-5">
+                    <div className="text-2xl py-[5rem] ml-10 ">
                       Monitoring and Analytics
                     </div>
                   </div>

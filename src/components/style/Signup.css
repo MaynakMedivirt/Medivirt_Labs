@@ -1,0 +1,24 @@
+@media screen and (min-width: 768px) and (max-width: 1024px),
+       screen and (min-width: 810px) and (max-width: 1080px),
+       screen and (min-width: 1280px) and (max-width: 800px),
+       screen and (min-width: 1024px) and (max-width: 768px),
+       screen and (min-width: 1920px) and (max-width: 1080px) {
+  .signip {
+    min-height: 100vh;
+  }
+  
+  .signup {
+    height: 100vh; /* Set height to full viewport height */
+  }
+  
+  .max-w-screen-2xl {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 1024px){
+    #roles{
+        flex-wrap: wrap;
+    }
+}

@@ -17,9 +17,9 @@ const Footer = () => {
           {/* Left section */}
           <div className="w-full lg:w-1/3 px-4 flex justify-center mb-8 lg:mb-0 lg:justify-start">
             <div className="w-full lg:max-w-lg">
-              <div className="flex flex-wrap items-top mb-6 justify-center">
-                <div className="w-full lg:w-[170px] px-4">
-                  <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2 text-white">
+              <div className="flex flex-wrap items-top mb-6 justify-center lg:justify-start">
+                <div className="w-full md:w-1/2 lg:w-auto px-4 mb-6 md:mb-0">
+                  <span className="block uppercase text-sm font-semibold mb-2 text-white">
                     Useful Links
                   </span>
                   <ul className="list-unstyled">
@@ -60,8 +60,8 @@ const Footer = () => {
                     </li>
                   </ul>
                 </div>
-                <div className="w-full lg:w-[170px] px-4">
-                  <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2 text-white">
+                <div className="w-full md:w-1/2 lg:w-auto px-4">
+                  <span className="block uppercase text-sm font-semibold mb-2 text-white">
                     Other Resources
                   </span>
                   <ul className="list-unstyled">
@@ -98,7 +98,7 @@ const Footer = () => {
                         className="text-white hover:text-[#FFF] font-semibold block pb-2 text-sm"
                         href="/learnMore"
                       >
-                        How It Works ?
+                        How It Works?
                       </NavLink>
                     </li>
                   </ul>
@@ -108,36 +108,34 @@ const Footer = () => {
           </div>
 
           {/* Middle section (centered both horizontally and vertically) */}
-          <div className="w-full lg:w-1/3 flex flex-col justify-center items-center px-3 lg:text-center mb-8">
+          <div className="w-full lg:w-1/3 flex flex-col justify-center items-center px-4 lg:text-center mb-8 lg:mb-0">
             <img
               alt="Medivirt"
               className="max-w-full w-[170px] mx-auto"
               src={MedivirtLogo}
             />
-            <div className="mt-5 text-white">
-              Follow us on Medivirt for more updates !
+            <div className="mt-5 text-white text-center lg:text-left">
+              Follow us on Medivirt for more updates!
             </div>
-            <div className="mt-6 mb-8 relative">
+            <div className="mt-6 mb-8 relative w-full">
               <form
                 onSubmit={handleSubscribe}
                 className="flex flex-col md:flex-row items-center md:items-start"
               >
                 <div className="relative flex-grow w-full">
-                  <div className="relative">
-                    <input
-                      type="email"
-                      placeholder="Your Email"
-                      className="bg-white border border-gray-300 py-3 px-4 pr-40 focus:outline-none focus:border-indigo-500"
-                      required
-                    />
-                    <button
-                      type="submit"
-                      className="bg-indigo-600 text-white hover:bg-indigo-500 absolute top-0 right-0 h-full py-3 px-4 transition-all duration-300 ease-in-out"
-                      style={{ height: "100%" }}
-                    >
-                      Subscribe
-                    </button>
-                  </div>
+                  <input
+                    type="email"
+                    placeholder="Your Email"
+                    className="bg-white border border-gray-300 py-3 px-4 w-full pr-40 focus:outline-none focus:border-indigo-500"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="bg-indigo-600 text-white hover:bg-indigo-500 absolute top-0 right-0 h-full py-3 px-4 transition-all duration-300 ease-in-out"
+                    style={{ height: "100%" }}
+                  >
+                    Subscribe
+                  </button>
                 </div>
               </form>
             </div>
@@ -163,7 +161,7 @@ const Footer = () => {
             >
               Better yet, Meet us Virtually!
               <br />
-              MEDIVIRT LABS 
+              MEDIVIRT LABS
               <br />
               Bangalore, Karnataka, India
               <br />

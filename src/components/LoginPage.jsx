@@ -14,6 +14,8 @@ import { getFirestore, collection, query, where, getDocs } from "firebase/firest
 import { firebaseConfig } from "../components/firebase";
 import bcrypt from 'bcryptjs';
 
+import '../components/style/Signup.css'
+
 initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore();
@@ -35,6 +37,8 @@ const LoginPage = () => {
         navigate(`/salesDashboard/${userData.id}`);
       } else if (userData.role_company === "Medical Representative") {
         navigate(`/mrDashboard/${userData.id}`);
+      } else if (!userData.profileComplete) {
+        navigate(`/profilecomplete/${userData.id}`);
       } else {
         navigate(`/companydashboard/${userData.id}`);
       }
@@ -99,17 +103,34 @@ const LoginPage = () => {
   return (
     <>
       <Header />
-      <div className="min-h-screen flex items-center justify-center px-5 lg:px-0 bg-cover">
-        <div className="max-w-screen-2xl bg-white shadow sm:rounded-lg flex justify-center w-full lg:w-3/4 xl:w-full">
-          <div className="hidden bg-[#7191e6] md:flex md:w-[60%] rounded-l-lg bg-cover" style={{ backgroundImage: `url(${signupImage})`, height: "900px" }}>
-            <div className="mt-[6rem] ml-10 mr-10">
-              <img loading="lazy" srcSet={MedivirtLogo} className="max-w-full aspect-[7.14] w-[156px] mb-[5rem]" alt="Medivirt Logo" />
-              <h1 className="text-2xl xl:text-3xl font-semibold text-[#FFF]">Login as {role}</h1>
-              <p className="text-lg mt-3 text-[#fff]">Welcome back to MEDIVIRT! Sign in to your account</p>
-            </div>
+      <div className="flex px-5 lg:px-0 bg-cover">
+        <div className="max-w-screen-2xl bg-white shadow flex justify-center w-full lg:w-full xl:w-full">
+        <div className="hidden bg-[#7191e6] md:flex md:w-[60%]">
+        <div
+          className="w-full bg-contain bg-no-repeat"
+          style={{
+            backgroundImage: `url(${signupImage})`,
+            height: '735px',
+          }}
+        >
+          <div className="mt-[6rem] ml-10 mr-10">
+            <img
+              loading="lazy"
+              srcSet={MedivirtLogo}
+              className="max-w-full aspect-[7.14] w-[156px] mb-[5rem]"
+              alt="Medivirt Logo"
+            />
+            <h1 className="text-2xl xl:text-3xl font-semibold text-[#FFF]">
+              Sign Up as {role}
+            </h1>
+            <p className="text-lg mt-3 text-[#fff]">
+              Hey, Welcome to MEDIVIRT! Enter your details to create an account
+            </p>
           </div>
+        </div>
+      </div>
           <div className="w-full md:w-[40%] p-6 sm:p-8 lg:">
-            <div className="flex gap-4 max-w-xl mx-auto mt-20 text-base font-bold text-center uppercase mb-10 whitespace-nowrap tracking-[2px] max-md:flex-wrap">
+            <div id="roles" className="flex gap-4 max-w-xl mx-auto mt-20 text-base font-bold text-center uppercase mb-10 whitespace-nowrap tracking-[2px]">
               {["Company", "Doctor"].map(r => (
                 <button
                   key={r}
