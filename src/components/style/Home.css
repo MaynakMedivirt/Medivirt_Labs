@@ -167,3 +167,81 @@ li {
   }
 }
 
+@media screen and (min-width: 1024px){
+  #card{
+    height: 50vh;
+  }
+  #explore{
+    height: 80vh;
+    width: auto;
+  }
+}
+
+@media screen and (max-width: 1024px){
+  #card{
+    height: 40vh;
+  }
+}
+
+@media screen and (max-width: 1024px){
+  #card{
+    height: 40vh;
+  }
+}
+
+@media screen and (max-width: 1920px){
+  #card{
+    height: 40vh;
+  }
+}
+@media screen and (min-width: 1920px){
+  #card{
+    height: 40vh;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #doctors{
+    justify-content: end;
+    white-space: nowrap;
+  }
+  #doctortitle{
+    font-size: 2rem;
+    box-sizing: border-box;
+  }
+  #docotorinput{
+    border: none;
+    border-bottom: 1px solid gray;
+    border-radius: 5%;
+  }
+  #filterline{
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  #doctortitle{
+    font-size: 1.75rem;
+    box-sizing: border-box;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #companylist{
+    justify-content: end;
+    white-space: nowrap;
+  }
+  #companytitle{
+    font-size: 2rem;
+    box-sizing: border-box;
+  }
+  #companyinput{
+    border: none;
+    border-bottom: 1px solid gray;
+    border-radius: 5%;
+  }
+  #filterline{
+    margin: 0;
+  }
+}
+

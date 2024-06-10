@@ -42,24 +42,26 @@ const Home = () => {
     slidesToScroll: 1,
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1025, // Adjust this breakpoint to 1025px
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 2.1,
           slidesToScroll: 1,
           infinite: true,
           dots: true,
         },
       },
       {
-        breakpoint: 768,
+        breakpoint: 769, 
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 1.1, 
           slidesToScroll: 1,
-          initialSlide: 1,
+          infinite: true,
+          dots: true,
         },
       },
     ],
   };
+  
 
   return (
     <div className="relative">
@@ -299,7 +301,7 @@ const Home = () => {
           <Slider {...settings} className="mx-5" id="silder">
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
-                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
+                <div id="card" className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
                   <div className="flex flex-col ">
                     <div className="text-2xl py-[5rem]">
                       User Registration and Profile Creation
@@ -323,9 +325,9 @@ const Home = () => {
 
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
-                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
+                <div id="card" className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8 ">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[6rem] ml-6 ">
+                    <div className="text-2xl py-[5rem] ">
                       Scheduling Meetings
                     </div>
                   </div>
@@ -347,9 +349,9 @@ const Home = () => {
 
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
-                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
+                <div id="card" className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8 ">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[6rem] ml-10 ">
+                    <div className="text-2xl py-[5rem] ">
                       Virtual Meetings
                     </div>
                   </div>
@@ -370,9 +372,9 @@ const Home = () => {
 
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
-                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
+                <div id="card" className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8 ">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[5rem] ml-10 ">
+                    <div className="text-2xl py-[5rem]">
                       Document Sharing and Collaboration
                     </div>
                   </div>
@@ -396,9 +398,9 @@ const Home = () => {
 
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
-                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
+                <div id="card" className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8 ">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[5rem] ml-10 ">
+                    <div className="text-2xl py-[5rem]">
                       Follow-up and Feedback
                     </div>
                   </div>
@@ -422,9 +424,9 @@ const Home = () => {
 
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
-                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
+                <div id="card" className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8 ">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[5rem] ml-10 ">
+                    <div className="text-2xl py-[5rem] ">
                       Data Security and Compliance
                     </div>
                   </div>
@@ -447,9 +449,9 @@ const Home = () => {
 
             <div className="ml-5 mr-5 relative">
               <div className="hover-container">
-                <div className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8">
+                <div id="card" className="flex grow gap-2.5 px-7 py-12 w-full font-semibold text-indigo-800 uppercase bg-white max-md:px-5 max-md:mt-8 ">
                   <div className="flex flex-col">
-                    <div className="text-2xl py-[5rem] ml-10 ">
+                    <div className="text-2xl py-[5rem]">
                       Monitoring and Analytics
                     </div>
                   </div>
@@ -486,7 +488,7 @@ const Home = () => {
             Explore Medivirt
           </div>
           <div className="mt-12 max-md:mt-10 max-md:max-w-full">
-            <div className="flex gap-5 max-md:flex-col max-md:gap-0">
+            <div id="explore" className="flex gap-5 max-md:flex-col max-md:gap-0">
               {/* Card 1 */}
               <div className="card relative overflow-hidden flex flex-col grow justify-center text-lg font-medium text-center text-white whitespace-nowrap aspect-[0.81] max-md:mt-10 bg-black bg-opacity-20">
                 <img

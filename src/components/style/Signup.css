@@ -17,8 +17,14 @@
   }
 }
 
-@media (max-width: 1024px){
+@media screen and (max-width: 1024px){
     #roles{
         flex-wrap: wrap;
     }
+}
+
+@media screen and (max-width: 1280px) and (min-width: 1180px){
+  #roles{
+      flex-wrap: wrap;
+  }
 }

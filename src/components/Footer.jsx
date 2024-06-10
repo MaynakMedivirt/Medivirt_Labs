@@ -140,13 +140,13 @@ const Footer = () => {
               </form>
             </div>
             <div className="flex justify-center lg:justify-start space-x-4 mb-6 text-white">
-              <a href="/">
+              <a href="/" target="_blank">
                 <FaXTwitter className="w-5 h-5" />
               </a>
-              <a href="/">
+              <a href="https://www.instagram.com/medivirtlabs" target="_blank">
                 <FaInstagram className="w-5 h-5" />
               </a>
-              <a href="https://www.linkedin.com/company/medivirt-labs/?originalSubdomain=in">
+              <a href="https://www.linkedin.com/company/medivirt-labs/?originalSubdomain=in" target="_blank">
                 <FaLinkedin className="w-5 h-5" />
               </a>
             </div>
