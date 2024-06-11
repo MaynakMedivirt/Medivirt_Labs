@@ -157,7 +157,7 @@ const CompanyMessage = () => {
 
                     const timestamp = messageData.timestamp?.toDate();
                     const date = timestamp ? timestamp.toLocaleDateString() : "N/A";
-                    const time = timestamp ? timestamp.toLocaleTimeString() : "N/A";
+                    const time = timestamp ? timestamp.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) : "N/A";
 
                     groupedMessages[key].messages.push({
                         messageId: messageData.messageId,
@@ -220,8 +220,8 @@ const CompanyMessage = () => {
             <CompanyNavbar />
             <div className="flex flex-1 mt-[4.2rem]">
                 <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
-                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-20'}`}>
-                    <div className="container max-w-6xl px-5 mx-auto my-10">
+                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-20'}`}>
+                    <div className="container px-4 mx-auto my-10">
                         <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
                             Messages
                         </h2>

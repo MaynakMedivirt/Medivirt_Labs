@@ -23,7 +23,7 @@
 }
 
 .card::before {
-  content: ''; /* Create a pseudo-element for the overlay */
+  content: ""; /* Create a pseudo-element for the overlay */
   position: absolute;
   top: 0;
   left: 0;
@@ -91,7 +91,9 @@ li {
   background-color: rgb(255, 255, 255); /* Same color as the card */
   opacity: 20;
   transition: opacity 0.3s ease, transform 0.3s ease; /* Transition opacity and transform */
-  transform: translateY(100%); /* Initially, move the overlay below the container */
+  transform: translateY(
+    100%
+  ); /* Initially, move the overlay below the container */
 }
 
 .hover-container:hover .hover-overlay {
@@ -147,101 +149,116 @@ li {
 }
 
 @media screen and (max-width: 1024px) {
-  #cardname{
+  #cardname {
     font-size: 1.75rem;
   }
-  #cardinr{
+  #cardinr {
     font-size: 1.5rem;
   }
-  #cardbuy1 button{
+  #cardbuy1 button {
     padding: 5px 2px;
   }
-  #cardbuy2 button{
+  #cardbuy2 button {
     padding: 5px 2px;
   }
-  #cardbuy3 button{
+  #cardbuy3 button {
     padding: 5px 2px;
   }
-  #cardbuy4 button{
+  #cardbuy4 button {
     padding: 5px 2px;
   }
 }
 
-@media screen and (min-width: 1024px){
-  #card{
+@media screen and (min-width: 1024px) {
+  #card {
     height: 50vh;
   }
-  #explore{
+  #explore {
     height: 80vh;
     width: auto;
   }
 }
 
-@media screen and (max-width: 1024px){
-  #card{
+@media screen and (max-width: 1024px) {
+  #card {
     height: 40vh;
   }
 }
 
-@media screen and (max-width: 1024px){
-  #card{
+@media screen and (max-width: 1024px) {
+  #card {
     height: 40vh;
   }
 }
 
-@media screen and (max-width: 1920px){
-  #card{
+@media screen and (max-width: 1920px) {
+  #card {
     height: 40vh;
   }
 }
-@media screen and (min-width: 1920px){
-  #card{
+@media screen and (min-width: 1920px) {
+  #card {
     height: 40vh;
   }
 }
 
 @media screen and (max-width: 768px) {
-  #doctors{
+  #doctors {
     justify-content: end;
     white-space: nowrap;
   }
-  #doctortitle{
-    font-size: 2rem;
-    box-sizing: border-box;
+  #docotrtitle {
+    display: none;
   }
-  #docotorinput{
+  #doctordiv {
+    width: 100%;
+  }
+  #doctorinput {
+    justify-content: center;
+  }
+  #doctorinput input {
     border: none;
     border-bottom: 1px solid gray;
     border-radius: 5%;
   }
-  #filterline{
-    margin: 0;
+  #centerdiv{
+    align-items: center;
   }
-}
-
-@media screen and (max-width: 360px) {
-  #doctortitle{
-    font-size: 1.75rem;
-    box-sizing: border-box;
+  #filterline {
+    margin: 0;
   }
 }
 
 @media screen and (max-width: 768px) {
-  #companylist{
+  #companies {
     justify-content: end;
     white-space: nowrap;
   }
-  #companytitle{
-    font-size: 2rem;
-    box-sizing: border-box;
+  #companylist {
+    justify-content: end;
+    white-space: nowrap;
   }
-  #companyinput{
+  #companytitle {
+    display: none;
+  }
+  #companydiv {
+    width: 100%;
+  }
+  #companyinput {
+    justify-content: center;
     border: none;
     border-bottom: 1px solid gray;
     border-radius: 5%;
   }
-  #filterline{
+  #companyinput {
+    justify-content: center;
+  }
+  #companyinput input {
+    border: none;
+    border-bottom: 1px solid gray;
+    border-radius: 5%;
+  }
+  #filterline {
     margin: 0;
   }
 }
-

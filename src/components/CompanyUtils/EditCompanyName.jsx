@@ -107,9 +107,9 @@ const EditCompanyName = () => {
             <CompanyNavbar />
             <div className="flex flex-1 mt-[4.2rem]">
                 <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
-                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-20'}`}>
+                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-20'}`}>
 
-                    <div className="container max-w-6xl px-5 mx-auto my-10">
+                    <div className="container px-4 mx-auto my-10">
                         <form
                             onSubmit={handleSubmit}
                             className="bg-white shadow rounded px-8 pt-6 pb-8 mb-4"

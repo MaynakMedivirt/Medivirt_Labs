@@ -98,12 +98,12 @@ const CompanyCredits = () => {
             <CompanyNavbar />
             <div className="flex flex-1 mt-[4.2rem]">
                 <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
-                <div className={`overflow-y-auto flex-1 transition-margin duration-300 ${sidebarOpen ? 'ml-72' : 'ml-20'}`}>
-                    <div className="container max-w-6xl px-5 mx-auto my-10">
+                <div className={`overflow-y-auto flex-1 transition-margin duration-300 ${sidebarOpen ? 'ml-60' : 'ml-20'}`}>
+                    <div className="container px-4 mx-auto my-10">
                         <div className="my-5 text-center">
                             <h1 className="font-bold text-xl uppercase">Credits</h1>
                         </div>
-                        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+                        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                             <div className="bg-white border shadow-sm rounded p-5">
                                 <div className="flex space-x-4 items-center">
                                     <div>
@@ -146,7 +146,7 @@ const CompanyCredits = () => {
                             <div className="bg-white border shadow-sm rounded">
                                 <div className="flex justify-center items-center">
                                     <button
-                                        className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md"
+                                        className="my-4 px-4 py-2 bg-green-500 text-white rounded-md"
                                     >
                                         Add Credits
                                     </button>

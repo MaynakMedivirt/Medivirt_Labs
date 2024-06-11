@@ -64,9 +64,9 @@ const CompanyDashboard = () => {
             <CompanyNavbar />
             <div className="flex flex-1 mt-[4.2rem]">
                 <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
-                <div className={`overflow-y-auto flex-1 transition-margin duration-300 ${sidebarOpen ? 'ml-72' : 'ml-20'}`}>
-                    <div className="container max-w-6xl px-5 mx-auto my-10">
-                        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+                <div className={`overflow-y-auto flex-1 transition-margin duration-300 ${sidebarOpen ? 'ml-60' : 'ml-20'}`}>
+                    <div className="container px-4 mx-auto my-10">
+                        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                             <div className="bg-white border shadow-sm rounded p-5">
                                 <div className="flex space-x-4 items-center">
                                     <div>

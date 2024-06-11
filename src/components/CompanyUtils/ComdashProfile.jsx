@@ -86,17 +86,17 @@ const ComdashProfile = () => {
             <CompanyNavbar />
             <div className="flex flex-1 mt-[4.2rem]">
                 <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
-                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-72" : "ml-20"}`}>
+                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-60" : "ml-20"}`}>
                     {company && (
-                        <div className="container max-w-6xl px-5 mx-auto my-10">
-                            <div className="overflow-hidden mt-[20px]">
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 md:px-10">
+                        <div className="container px-4 mx-auto my-10">
+                            <div className="overflow-hidden mt-[15px]">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
                                     <div className="col-span-1 md:col-span-2 mt-5">
                                         <div
                                             className="overflow-hidden"
                                             style={{
                                                 backgroundImage: `url(${Banner})`,
-                                                height: "250px",
+                                                // height: "250px",
                                                 backgroundSize: "cover",
                                                 backgroundRepeat: "no-repeat",
                                                 backgroundPosition: "center",
@@ -113,13 +113,13 @@ const ComdashProfile = () => {
                                                                 style={{ width: '50%' }}
                                                             />
                                                         ) : (
-                                                            <img src={Image} alt="Placeholder" className="w-32 h-32 md:w-48 md:h-48" />
+                                                            <img src={Image} alt="Placeholder" className="" style={{ width: '20%' }}/>
                                                         )}
                                                     </div>
                                                     <div>
                                                         <div className="flex space-x-4">
                                                             <h1 className="text-xl text-gray-800 font-bold">
-                                                                {company.companyName}
+                                                                {company.companyName }
                                                             </h1>
                                                             <FaPen
                                                                 className="text-[#7091E6] cursor-pointer text-center m-auto"
@@ -139,7 +139,7 @@ const ComdashProfile = () => {
                                         <div className="bg-white border rounded-lg overflow-hidden shadow-lg">
                                             <div className="">
                                                 <div className="mt-5">
-                                                    <div className="p-6 md:p-5 md:h-auto">
+                                                    <div className="p-6 md:p-2 md:h-auto">
                                                         <div className="flex items-center justify-between mb-5">
                                                             <p className="text-sm ">Categories:</p>
                                                             <p className="text-sm font-semibold">{company.category}</p>

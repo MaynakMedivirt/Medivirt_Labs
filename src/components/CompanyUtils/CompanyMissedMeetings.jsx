@@ -77,10 +77,10 @@ const CompanyMissedMeetings = () => {
             <div className="flex flex-1 mt-[4.2rem]">
                 <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
                 <div
-                    className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-72" : "ml-20"
+                    className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-60" : "ml-20"
                         }`}
                 >
-                    <div className="container max-w-6xl px-5 mx-auto my-10">
+                    <div className="container px-4 mx-auto my-10">
                         <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
                             Missed Meetings
                         </h2>

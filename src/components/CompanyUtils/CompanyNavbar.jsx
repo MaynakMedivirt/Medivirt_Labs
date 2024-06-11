@@ -7,6 +7,7 @@ import MedivirtLogo from '../../assets/img/Medivirt.png';
 import Image from "../../assets/img/defaultAvatar.png";
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
+import "../style/Company.css";
 
 const CompanyNavbar = () => {
 
@@ -48,11 +49,11 @@ const CompanyNavbar = () => {
         <nav className="bg-[#3D52A1] border-b w-full fixed top-0 left-0">
             <div className="flex items-center justify-between py-3 px-6">
                 <NavLink to="/" className="flex-shrink-0">
-                    <img className="h-8" alt="Medivirt" src={MedivirtLogo} />
+                    <img id="logo" className="h-8" alt="Medivirt" src={MedivirtLogo} />
                 </NavLink>
                 {company && (
                     <div className="flex items-center space-x-4">
-                        <button className="w-10 h-10 outline-none rounded-full">
+                        <button id='companyimage' className="w-10 h-10 outline-none rounded-full">
                             {company.image ? (
                                 <img
                                     src={company.image}

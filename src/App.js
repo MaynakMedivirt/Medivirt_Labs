@@ -86,6 +86,8 @@ import MrAddProduct from './components/MrUtils/MrAddProduct';
 import MrAllDoctors from './components/MrUtils/MrAllDoctors';
 import MrViewDoctor from './components/MrUtils/MrViewDoctor';
 
+import './App.css'
+
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
