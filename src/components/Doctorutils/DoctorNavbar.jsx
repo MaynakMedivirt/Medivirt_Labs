@@ -6,6 +6,7 @@ import MedivirtLogo from '../../assets/img/Medivirt.png';
 import Image from "../../assets/img/defaultAvatar.png";
 import { signOut } from 'firebase/auth'; 
 import { auth } from '../firebase';
+import '../style/Doctor.css';
 
 const DoctorNavbar = () => {
     const [doctor, setDoctor] = useState(null);
@@ -46,10 +47,10 @@ const DoctorNavbar = () => {
         <nav className="bg-[#3D52A1] border-b w-full fixed top-0 left-0">
             <div className="flex items-center justify-between py-3 px-6">
                 <NavLink to="/" className="flex-shrink-0">
-                    <img className="h-8" alt="Medivirt" src={MedivirtLogo} />
+                    <img id="navlogo" className="h-8" alt="Medivirt" src={MedivirtLogo} />
                 </NavLink>
                 <div className="flex items-center space-x-4">
-                    <button className="w-10 h-10 outline-none rounded-full">
+                    <button id="doctorimg" className="w-10 h-10 outline-none rounded-full">
                         {doctor?.image ? (
                             <img
                                 src={doctor.image}
@@ -67,8 +68,8 @@ const DoctorNavbar = () => {
                         <p className="font-bold">{doctor?.name || "Loading..."}</p>
                         <p className="text-sm">Admin</p>
                     </div>
-                    <button className="w-7 h-7 text-white border rounded-full" onClick={() => setDropdownOpen(!dropdownOpen)}>
-                        <MdOutlineKeyboardArrowDown size={24} />
+                    <button id="docdropdown" className="w-7 h-7 text-white border rounded-full" onClick={() => setDropdownOpen(!dropdownOpen)}>
+                        <MdOutlineKeyboardArrowDown size={24} id="docicon"/>
                     </button>
                     {dropdownOpen && (
                         <div className="absolute top-full right-0 mt-2 w-40 bg-white rounded shadow z-10">

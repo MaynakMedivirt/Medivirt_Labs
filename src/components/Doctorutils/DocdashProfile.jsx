@@ -77,12 +77,12 @@ const DocdashProfile = () => {
         <DoctorSide open={sidebarOpen} toggleSidebar={toggleSidebar} />
         <div
           className={`overflow-y-auto flex-1 transition-all duration-300 ${
-            sidebarOpen ? "ml-72" : "ml-20"
+            sidebarOpen ? "ml-60" : "ml-20"
           }`}
         >
           {/* Your content goes here */}
           {doctor && (
-            <div className="container max-w-6xl px-5 mx-auto my-10">
+            <div className="container px-4 mx-auto my-10">
               <div className="overflow-hidden mt-[20px]">
                 <div className="flex flex-col pt-[5rem] px-2 bg-[#7191E6] rounded">
                   <div className="flex flex-col bg-[#E3E9E9] px-2 pb-2 rounded text-base text-neutral-800 max-md:max-w-full mb-4">

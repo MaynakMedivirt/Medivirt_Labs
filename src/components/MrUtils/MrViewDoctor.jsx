@@ -162,8 +162,8 @@ const MrViewDoctor = () => {
             <MrNavbar />
             <div className="flex flex-1 mt-[4.2rem]">
                 <MrSide open={sidebarOpen} toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-20'}`}>
-                    <div className="container max-w-6xl px-5 mx-auto overflow-auto my-5">
+                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-20'}`}>
+                    <div className="container px-4 mx-auto overflow-auto my-5">
                         <div className="flex items-center justify-between">
                             <button
                                 type="button"

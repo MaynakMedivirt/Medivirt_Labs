@@ -98,7 +98,7 @@ const DoctorSchedule = () => {
             const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             const meetingDateTime = new Date(`${meetingData.date} ${meetingData.time}`);
             const isUpcoming = meetingDateTime > new Date(currentDate + ' ' + currentTime);
-            console.log(`Meeting: ${companyName} - ${meetingData.date} ${meetingData.time} - Upcoming: ${isUpcoming}`);
+            // console.log(`Meeting: ${companyName} - ${meetingData.date} ${meetingData.time} - Upcoming: ${isUpcoming}`);
 
             if (isUpcoming) {
               return {
@@ -144,8 +144,6 @@ const DoctorSchedule = () => {
         try {
           const db = getFirestore();
           const meetingDocRef = doc(db, "scheduleMeeting", selectedMeetingId);
-
-          console.log(selectedMeetingId);
 
           const meetingDocSnapshot = await getDoc(meetingDocRef);
           if (!meetingDocSnapshot.exists()) {
@@ -244,10 +242,10 @@ const DoctorSchedule = () => {
       <div className="flex flex-1 mt-[4.2rem]">
         <DoctorSide open={sidebarOpen} toggleSidebar={toggleSidebar} />
         <div
-          className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-72" : "ml-20"
+          className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-60" : "ml-20"
             }`}
         >
-          <div className="container max-w-6xl px-5 mx-auto my-10">
+          <div className="container px-4 mx-auto my-10">
             <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
               Schedule Meetings
             </h2>

@@ -124,7 +124,6 @@ const DoctorMessage = () => {
                 const groupedMessages = {};
                 const promises = querySnapshot.docs.map(async (doc) => {
                     const messageData = doc.data();
-                    console.log(messageData);
                     const companyData = await fetchCompanyData(messageData.companyID);
                     const assignedName = await fetchAssignedData(messageData.messageId);
                     const companyName = companyData ? companyData.companyName : "Unknown Company Name";
@@ -214,8 +213,8 @@ const DoctorMessage = () => {
             <DoctorNavbar />
             <div className="flex flex-1 mt-[4.2rem]">
                 <DoctorSide open={sidebarOpen} toggleSidebar={toggleSidebar} />
-                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-20'}`}>
-                    <div className="container max-w-6xl px-5 mx-auto my-10">
+                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-20'}`}>
+                    <div className="container px-4 mx-auto my-10">
                         <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
                             Messages
                         </h2>

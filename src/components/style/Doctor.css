@@ -1,0 +1,17 @@
+@media screen and (max-width: 480px){
+    #navlogo{
+        height: 2rem;
+        max-width: 80%;
+    }
+    #doctorimg{
+        display: none;
+    }
+    #docdropdown{
+        width: 1rem; 
+        height: 1rem;
+    }
+    #docicon{
+        height: 1rem;
+        width: 1rem;
+    }
+}

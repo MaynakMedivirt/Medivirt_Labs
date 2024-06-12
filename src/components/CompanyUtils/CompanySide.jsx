@@ -111,7 +111,7 @@ const CompanySide = ({ open, toggleSidebar }) => {
         >
           <div
             className={`absolute cursor-pointer right-0 top-0 mt-2 mr-2 w-8 h-8 border-[#7191E6] border-2 rounded-full flex items-center justify-center ${
-              window.innerWidth >= 768 && open ? "duration-300" : ""
+              window.innerWidth >= 768 && open ? "transition-all duration-300" : ""
             }`}
             onClick={toggleSidebar}
           >

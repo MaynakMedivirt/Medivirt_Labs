@@ -76,8 +76,8 @@ const MrAllDoctors = () => {
             <MrNavbar />
             <div className="flex flex-1 mt-[4.2rem]">
                 <MrSide open={sidebarOpen} toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-20'}`}>
-                    <div className="container max-w-6xl px-5 mx-auto my-10 overflow-auto">
+                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-20'}`}>
+                    <div className="container px-4 mx-auto my-10 overflow-auto">
 
                         <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
                             <h2 className="text-2xl font-bold bg-[#3D52A1] text-white p-2 rounded mb-2 sm:mb-0 sm:mr-4 w-full sm:w-auto text-center sm:text-left">

@@ -161,8 +161,8 @@ const SalesViewDoctor = () => {
             <SalesNavbar />
             <div className="flex flex-1 mt-[4.2rem]">
                 <SalesSide open={sidebarOpen} toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-20'}`}>
-                    <div className="container max-w-6xl px-5 mx-auto overflow-auto my-5">
+                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-20'}`}>
+                    <div className="container px-4 mx-auto overflow-auto my-5">
                         <div className="flex items-center justify-center">
                             <h2 className="text-2xl font-bold">Doctor Profile</h2>
                         </div>
