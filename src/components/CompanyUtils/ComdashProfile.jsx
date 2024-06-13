@@ -89,8 +89,8 @@ const ComdashProfile = () => {
                 <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-60" : "ml-20"}`}>
                     {company && (
                         <div className="container px-4 mx-auto my-10">
-                            <div className="overflow-hidden mt-[15px]">
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
+                            <div className="overflow-hidden">
+                                <div id="comprofile" className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
                                     <div className="col-span-1 md:col-span-2 mt-5">
                                         <div
                                             className="overflow-hidden"
@@ -139,7 +139,7 @@ const ComdashProfile = () => {
                                         <div className="bg-white border rounded-lg overflow-hidden shadow-lg">
                                             <div className="">
                                                 <div className="mt-5">
-                                                    <div className="p-6 md:p-2 md:h-auto">
+                                                    <div id="companydetails" className="p-6 md:p-2 md:h-auto">
                                                         <div className="flex items-center justify-between mb-5">
                                                             <p className="text-sm ">Categories:</p>
                                                             <p className="text-sm font-semibold">{company.category}</p>
@@ -181,20 +181,27 @@ const ComdashProfile = () => {
                                     </div>
                                 </div>
                                 <div className="mt-10">
-                                    <div className="flex">
-                                        <h1
-                                            className={`text-xl px-1 font-semibold cursor-pointer ${activeTab === "about" ? "bg-[#EEE7F6] text-black" : "text-gray-800"}`}
-                                            onClick={() => setActiveTab("about")}
-                                        >
-                                            About Company
-                                        </h1>
-                                        <h1
-                                            className={`text-xl px-1 ml-5 font-semibold cursor-pointer ${activeTab === "product" ? "bg-[#EEE7F6] text-black" : "text-gray-800"}`}
-                                            onClick={() => setActiveTab("product")}
-                                        >
-                                            Product
-                                        </h1>
-                                    </div>
+                                <div className="flex" id="combutton">
+    <div className="relative">
+        <h1
+            className={`text-xl px-1 font-semibold cursor-pointer ${activeTab === "about" ? "bg-[#3D52A1] text-white" : "bg-gray-200 text-black"}`}
+            onClick={() => setActiveTab("about")}
+        >
+            About Company
+        </h1>
+        <div className="absolute right-[-10px] top-0 h-full border-r-2 border-gray"></div>
+    </div>
+
+    <div className="relative ml-5">
+        <h1
+            className={`text-xl px-1 font-semibold cursor-pointer ${activeTab === "product" ? "bg-[#3D52A1] text-white" : "bg-gray-200 text-black"}`}
+            onClick={() => setActiveTab("product")}
+        >
+            Product
+        </h1>
+    </div>
+</div>
+
                                     <div className="mt-5">
                                         {activeTab === "about" && (
                                             <div className="flex flex-col md:flex-row justify-between px-4 bg-white shadow-lg border p-3">

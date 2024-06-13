@@ -84,6 +84,7 @@ const Products = () => {
           }`}
         >
           <div className="container px-4 mx-auto my-10">
+            
             <div id="product"className="flex justify-between items-center">
               <h2 className="text-[1.5rem] font-bold text-center uppercase">
                 Products

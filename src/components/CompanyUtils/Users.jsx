@@ -2,15 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import CompanySide from "./CompanySide";
 import CompanyNavbar from "./CompanyNavbar";
-import {
-  getFirestore,
-  collection,
-  query,
-  where,
-  getDocs,
-} from "firebase/firestore";
+import {getFirestore, collection, query, where, getDocs,} from "firebase/firestore";
 import { FaEdit } from "react-icons/fa";
 import { MdAutoDelete } from "react-icons/md";
+import '../style/Company.css';
 
 const Users = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -80,22 +75,25 @@ const Users = () => {
       <div className="flex flex-1 mt-[4.2rem]">
         <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
         <div
-          className={`overflow-y-auto flex-1 transition-all duration-300 ${
-            sidebarOpen ? "ml-60" : "ml-20"
-          }`}
+          className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-60" : "ml-20"
+            }`}
         >
           <div className="container px-4 mx-auto my-10">
-            <div className="flex justify-between items-center">
+
+            <div id="users" className="flex justify-between items-center">
               <h2 className="text-[1.5rem] font-bold text-center uppercase">
                 Users
               </h2>
-              <Link
-                to={`/company/add-user/${id}`}
-                className="bg-[#7191E6] hover:bg-[#3a60c6] text-white font-bold py-2 px-4 rounded"
-              >
-                Add Users
-              </Link>
+              <div id="userslink">
+                <Link
+                  to={`/company/add-user/${id}`}
+                  className="bg-[#7191E6] hover:bg-[#3a60c6] text-white font-bold py-2 px-4 rounded"
+                >
+                  Add Users
+                </Link>
+              </div>
             </div>
+
             <div className="flex justify-end items-center py-2.5 pr-2.5 pl-5 bg-white rounded max-md:flex-wrap max-md:max-w-full">
               <div className="flex items-center">
                 <div className="flex flex-col justify-end sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full">
@@ -192,11 +190,10 @@ const Users = () => {
               {pageNumbers.map((number) => (
                 <button
                   key={number}
-                  className={`px-3 py-2 mx-1 rounded-md font-bold ${
-                    currentPage === number
-                      ? "bg-transparent text-gray-800 border border-[#7191E6] hover:bg-[#7191E6] hover:text-white"
-                      : "bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300"
-                  }`}
+                  className={`px-3 py-2 mx-1 rounded-md font-bold ${currentPage === number
+                    ? "bg-transparent text-gray-800 border border-[#7191E6] hover:bg-[#7191E6] hover:text-white"
+                    : "bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300"
+                    }`}
                   onClick={() => paginate(number)}
                 >
                   {number}

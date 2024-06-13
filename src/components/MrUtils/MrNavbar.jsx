@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom";
 import MedivirtLogo from '../../assets/img/Medivirt.png';
 import { signOut } from "firebase/auth";
 import { auth } from '../firebase';
+import '../style/Company.css';
 
 const MrNavbar = () => {
 
@@ -57,17 +58,17 @@ const MrNavbar = () => {
         <nav className="bg-[#3D52A1] border-b w-full fixed top-0 left-0">
             <div className="flex items-center justify-between py-3 px-6">
                 <NavLink to="/" className="flex-shrink-0">
-                    <img className="h-8" alt="Medivirt" src={MedivirtLogo} />
+                    <img id="mrlogo" className="h-8" alt="Medivirt" src={MedivirtLogo} />
                 </NavLink>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center">
                     {user && ( 
                         <div className="text-white">
-                            <p className="font-bold">{user.firstName} {user.lastName}</p>
-                            {companyName.companyName && <p className="text-sm">{companyName.companyName}</p>}
+                            <p id="mrtext" className="font-bold">{user.firstName} {user.lastName}</p>
+                            {companyName.companyName && <p id="mrtext" className="text-sm">{companyName.companyName}</p>}
                         </div>
                     )}
-                    <button className="w-7 h-7 text-white border rounded-full" onClick={() => setDropdownOpen(!dropdownOpen)}>
-                        <MdOutlineKeyboardArrowDown size={24} />
+                    <button id="mrbutton" className="w-7 h-7 text-white border rounded-full" onClick={() => setDropdownOpen(!dropdownOpen)}>
+                        <MdOutlineKeyboardArrowDown size={24} id="mricon"/>
                     </button>
                     {dropdownOpen && (
                         <div className="absolute top-full right-0 mt-2 w-40 bg-white rounded shadow z-10">

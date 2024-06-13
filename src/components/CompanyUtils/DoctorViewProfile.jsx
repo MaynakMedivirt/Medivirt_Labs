@@ -141,9 +141,8 @@ const DoctorViewProfile = () => {
         sentId: currentUser.id,
       };
 
-      const customId = `${location.state.doctorId}_${
-        currentUser.id
-      }_${Date.now()}`;
+      const customId = `${location.state.doctorId}_${currentUser.id
+        }_${Date.now()}`;
       const customDocRef = doc(db, "messages", customId);
       await setDoc(customDocRef, messageData);
 
@@ -175,9 +174,8 @@ const DoctorViewProfile = () => {
           toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         />
         <div
-          className={`overflow-y-auto flex-1 transition-all duration-300 ${
-            sidebarOpen ? "ml-60" : "ml-20"
-          }`}
+          className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-60" : "ml-20"
+            }`}
         >
           <div className="container px-4 mx-auto overflow-auto my-5">
             <div className="flex items-center justify-between">
@@ -193,7 +191,7 @@ const DoctorViewProfile = () => {
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5 px-4">
+            <div id="doctorprofile" className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5 px-4">
               <div className="col-span-1 md:col-span-2 mt-5">
                 <div
                   id="docprofile"
@@ -225,7 +223,7 @@ const DoctorViewProfile = () => {
                         )}
                       </div>
                     </div>
-                    <div className="px-6 md:flex-grow">
+                    <div id="docdetails" className="px-6 md:flex-grow">
                       <h1
                         id="docname"
                         className="text-xl font-semibold text-gray-800 mb-2 underline underline-offset-4"
@@ -289,82 +287,97 @@ const DoctorViewProfile = () => {
                           </button>
                         </div>
                         {showCalendar && (
-                          <div className="mt-5">
-                            <Calendar
-                              onChange={onChange}
-                              value={selectedDate}
-                              minDate={new Date()}
-                              className="custom-calendar"
-                            />
-                            <div className="flex justify-between mt-3">
-                              <select
-                                value={selectedTime}
-                                onChange={(e) =>
-                                  setSelectedTime(e.target.value)
-                                }
-                                className="p-2 border border-gray-300 rounded-md focus:outline-none w-full max-w-[200px]"
-                              >
-                                <option value="">Select Time</option>
-                                <option value="09:00 AM">09:00 AM</option>
-                                <option value="09:30 AM">09:30 AM</option>
-                                <option value="10:00 AM">10:00 AM</option>
-                                <option value="10:30 AM">10:30 AM</option>
-                                <option value="11:00 AM">11:00 AM</option>
-                                <option value="11:30 AM">11:30 AM</option>
-                                <option value="12:00 PM">12:00 PM</option>
-                                <option value="12:30 PM">12:30 PM</option>
-                                <option value="1:00 PM">1:00 PM</option>
-                                <option value="1:30 PM">1:30 PM</option>
-                                <option value="2:00 PM">2:00 PM</option>
-                                <option value="2:30 PM">2:30 PM</option>
-                                <option value="3:00 PM">3:00 PM</option>
-                                <option value="3:30 PM">3:30 PM</option>
-                                <option value="4:00 PM">4:00 PM</option>
-                                <option value="4:30 PM">4:30 PM</option>
-                                <option value="5:00 PM">5:00 PM</option>
-                                <option value="5:30 PM">5:30 PM</option>
-                                <option value="6:00 PM">6:00 PM</option>
-                                <option value="6:30 PM">6:30 PM</option>
-                                <option value="7:00 PM">7:00 PM</option>
-                                <option value="7:30 PM">7:30 PM</option>
-                                <option value="8:00 PM">8:00 PM</option>
-                                <option value="8:30 PM">8:30 PM</option>
-                              </select>
-                            </div>
-                            <div className="flex justify-center mt-5">
-                              <button
-                                onClick={handleBookSchedule}
-                                disabled={!selectedTime}
-                                className={`px-6 py-2 text-base font-bold text-center text-white uppercase ${
-                                  selectedTime
+                          <div className="overlay">
+                            <div className="overlay-content">
+                              <Calendar
+                                onChange={onChange}
+                                value={selectedDate}
+                                minDate={new Date()}
+                                className="custom-calendar"
+                              />
+                              <div className="flex justify-between mt-3">
+                                <select
+                                  value={selectedTime}
+                                  onChange={(e) =>
+                                    setSelectedTime(e.target.value)
+                                  }
+                                  className="p-2 border border-gray-300 rounded-md focus:outline-none w-full max-w-[200px]"
+                                >
+                                  <option value="">Select Time</option>
+                                  <option value="09:00 AM">09:00 AM</option>
+                                  <option value="09:30 AM">09:30 AM</option>
+                                  <option value="10:00 AM">10:00 AM</option>
+                                  <option value="10:30 AM">10:30 AM</option>
+                                  <option value="11:00 AM">11:00 AM</option>
+                                  <option value="11:30 AM">11:30 AM</option>
+                                  <option value="12:00 PM">12:00 PM</option>
+                                  <option value="12:30 PM">12:30 PM</option>
+                                  <option value="1:00 PM">1:00 PM</option>
+                                  <option value="1:30 PM">1:30 PM</option>
+                                  <option value="2:00 PM">2:00 PM</option>
+                                  <option value="2:30 PM">2:30 PM</option>
+                                  <option value="3:00 PM">3:00 PM</option>
+                                  <option value="3:30 PM">3:30 PM</option>
+                                  <option value="4:00 PM">4:00 PM</option>
+                                  <option value="4:30 PM">4:30 PM</option>
+                                  <option value="5:00 PM">5:00 PM</option>
+                                  <option value="5:30 PM">5:30 PM</option>
+                                  <option value="6:00 PM">6:00 PM</option>
+                                  <option value="6:30 PM">6:30 PM</option>
+                                  <option value="7:00 PM">7:00 PM</option>
+                                  <option value="7:30 PM">7:30 PM</option>
+                                  <option value="8:00 PM">8:00 PM</option>
+                                  <option value="8:30 PM">8:30 PM</option>
+                                </select>
+                              </div>
+                              <div className="flex justify-end mt-5">
+                                <button
+                                  onClick={() => setShowCalendar(false)}
+                                  className="px-4 py-2 mr-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400"
+                                >
+                                  Close
+                                </button>
+                                <button
+                                  onClick={handleBookSchedule}
+                                  disabled={!selectedTime}
+                                  className={`px-6 py-2 text-base font-bold text-center text-white uppercase ${selectedTime
                                     ? "bg-blue-800 hover:bg-blue-600 cursor-pointer"
                                     : "bg-gray-400 cursor-not-allowed"
-                                }`}
-                              >
-                                Book Schedule Meeting
-                              </button>
+                                    }`}
+                                >
+                                  Book Schedule Meeting
+                                </button>
+                              </div>
                             </div>
                           </div>
                         )}
                         {showMessaging && (
-                          <div className="mt-5">
-                            <div className="bg-gray-200 p-4 rounded-md">
-                              <p className="text-md font-semibold mb-2">
-                                Send a Message
-                              </p>
-                              <textarea
-                                placeholder="Type your message here..."
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                                className="w-full h-32 p-2 border border-gray-300 rounded-md resize-none focus:outline-none"
-                              ></textarea>
-                              <div className="flex justify-end mt-3">
-                                <button
-                                  onClick={handleSendMessage}
-                                  className="px-4 py-2 bg-indigo-800 text-white rounded-md font-semibold"
-                                >
-                                  Send
-                                </button>
+                          <div className="overlay">
+                            <div className="overlay-content">
+                              <div className="bg-gray-200 p-4 rounded-md">
+                                <p className="text-md font-semibold mb-2">
+                                  Send a Message
+                                </p>
+                                <textarea
+                                  placeholder="Type your message here..."
+                                  value={message}
+                                  onChange={(e) => setMessage(e.target.value)}
+                                  className="w-full h-32 p-2 border border-gray-300 rounded-md resize-none focus:outline-none"
+                                ></textarea>
+                                <div className="flex justify-end mt-3">
+                                  <button
+                                    onClick={() => setShowMessaging(false)}
+                                    className="px-4 py-2 mr-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400"
+                                  >
+                                    Close
+                                  </button>
+                                  <button
+                                    onClick={handleSendMessage}
+                                    className="px-4 py-2 bg-indigo-800 text-white rounded-md font-semibold"
+                                  >
+                                    Send
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>

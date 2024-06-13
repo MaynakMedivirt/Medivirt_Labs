@@ -5,6 +5,7 @@ import SalesSide from "./SalesSide";
 import { getFirestore, collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { FaEdit } from "react-icons/fa";
 import { MdAutoDelete } from "react-icons/md";
+import "../style/Company.css";
 
 const SalesHeadUsers = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -83,15 +84,21 @@ const SalesHeadUsers = () => {
                 <SalesSide open={sidebarOpen} toggleSidebar={toggleSidebar} />
                 <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-20'}`}>
                     <div className="container px-4 mx-auto my-10">
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-[1.5rem] font-bold text-center uppercase">Users</h2>
-                            <Link
-                                to={`/sales/add-user/${id}`}
-                                className="bg-[#7191E6] hover:bg-[#3a60c6] text-white font-bold py-2 px-4 rounded"
-                            >
-                                Add Users
-                            </Link>
+
+                        <div id="users" className="flex justify-between items-center">
+                            <h2 className="text-[1.5rem] font-bold text-center uppercase">
+                                Users
+                            </h2>
+                            <div id="userslink">
+                                <Link
+                                    to={`/sales/add-user/${id}`}
+                                    className="bg-[#7191E6] hover:bg-[#3a60c6] text-white font-bold py-2 px-4 rounded"
+                                >
+                                    Add Users
+                                </Link>
+                            </div>
                         </div>
+
                         <div className="flex justify-end items-center py-2.5 pr-2.5 pl-5 bg-white rounded max-md:flex-wrap max-md:max-w-full">
                             <div className="flex items-center">
                                 <div className="flex flex-col mx-2 justify-center self-stretch my-auto border rounded-md">

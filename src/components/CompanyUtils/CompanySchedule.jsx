@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import { FaEdit, FaCheck } from "react-icons/fa";
 import { SiGooglemeet } from "react-icons/si";
 import { MdAutoDelete } from "react-icons/md";
+import { IoSearchSharp } from "react-icons/io5";
 
 const CompanySchedule = () => {
   const [scheduleMeetings, setScheduleMeetings] = useState([]);
@@ -263,7 +264,7 @@ const CompanySchedule = () => {
               Schedule Meetings
             </h2>
 
-            <div className="flex justify-end items-center mb-5">
+            <div className="flex justify-end items-center flex-col sm:flex-row mb-5">
               <div className="flex flex-col mx-2 justify-center self-stretch my-auto border rounded-md">
                 <input
                   type="date"
@@ -272,22 +273,26 @@ const CompanySchedule = () => {
                   className="p-2"
                 />
               </div>
-              <div className="flex flex-col mx-2 justify-center self-stretch my-auto border rounded-md">
-                <input
-                  type="text"
-                  value={searchLocation}
-                  onChange={(e) => setSearchLocation(e.target.value)}
-                  placeholder="Search Location"
-                  className="p-2"
-                />
-
+              <div className="flex flex-col relative mx-2 justify-center self-stretch my-auto border rounded-md mt-2">
+                <div className="flex">
+                  <input
+                    type="text"
+                    id="searchLocation"
+                    value={searchLocation}
+                    onChange={(e) => setSearchLocation(e.target.value)}
+                    placeholder="Search Location"
+                    className="px-4 py-2 border border-gray-300 w-full"
+                  />
+                  <button
+                    type="button"
+                    className="flex-shrink-0 inline-flex px-2 items-center bg-[#3D52A1] text-white hover:bg-[#7191E6] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                  >
+                    <IoSearchSharp />
+                  </button>
+                </div>
               </div>
-              <button
-                onClick={() => console.log("Search logic here")}
-                className="p-2 rounded bg-[#7191E6] text-white  hover:bg-[#3D52A1] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
-              >
-                Search
-              </button>
+
+
             </div>
 
             <div className="overflow-auto mt-3">

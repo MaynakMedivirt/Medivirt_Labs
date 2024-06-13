@@ -87,7 +87,7 @@ const DoctorEarning = () => {
                 <DoctorSide open={sidebarOpen} toggleSidebar={toggleSidebar} />
                 <div className={`overflow-y-auto flex-1 transition-margin duration-300 ${sidebarOpen ? 'ml-60' : 'ml-20'}`}>
                     <div className="container px-4 mx-auto my-10">
-                        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4 mt-10">
+                        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                             <div className="bg-white border shadow-sm rounded p-5">
                                 <div className="flex space-x-4 items-center">
                                     <div>

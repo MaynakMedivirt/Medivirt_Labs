@@ -110,14 +110,15 @@ const DocdashProfile = () => {
                               )}
                             </div>
                             <p className="text-end" onClick={EditImage}>
-                              <FaPen
+                              <FaPen 
+                                id="editbutton"
                                 className="text-[#7091E6]"
                                 style={{ float: "inline-end" }}
                               />
                             </p>
                           </div>
 
-                          <div className="px-4 md:flex-grow m-auto">
+                          <div className="px-4 md:flex-grow my-auto">
                             <h1 className="text-lg font-semibold text-gray-800 ">
                               {doctor.name}
                             </h1>
@@ -127,17 +128,18 @@ const DocdashProfile = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="col-span-3 ... m-auto">
+                      <div className="col-span-3 ... my-auto">
                         <div className="flex-grow">
                           <div className="flex">
                             <h1 className="text-lg font-semibold text-gray-800 ">
                               Current Position
                             </h1>
                             <p
-                              className="text-end px-5 mt-1"
+                              className="text-end px-3 mt-2"
                               onClick={EditCurrentPosition}
                             >
-                              <FaPen
+                              <FaPen 
+                                id="editbutton"
                                 className="text-[#7091E6]"
                                 style={{ float: "inline-end" }}
                               />
@@ -161,7 +163,8 @@ const DocdashProfile = () => {
                     </h1>
                     <p className="text-md text-gray-500 mb-2">{doctor.about}</p>
                     <p className="text-end" onClick={EditAbout}>
-                      <FaPen
+                      <FaPen 
+                        id="editbutton"
                         className="bg-white border text-[#7091E6]"
                         style={{ float: "inline-end" }}
                       />
@@ -173,7 +176,8 @@ const DocdashProfile = () => {
                   <div className="bg-white border shadow-2xl rounded p-4">
                     <div className="flex-grow mb-[2rem] mt-4 ">
                       <p className="text-end" onClick={EditExperience}>
-                        <FaPen
+                        <FaPen 
+                          id="editbutton"
                           className="bg-white text-[#7091E6]"
                           style={{ float: "inline-end" }}
                         />
@@ -217,7 +221,8 @@ const DocdashProfile = () => {
                   <div className="bg-white border shadow-2xl rounded p-4">
                     <div className="flex-grow mb-[2rem] mt-4 ">
                       <p className="text-end" onClick={EditEducation}>
-                        <FaPen
+                        <FaPen 
+                          id="editbutton"
                           className="bg-white text-[#7091E6]"
                           style={{ float: "inline-end" }}
                         />

@@ -250,21 +250,23 @@ const DoctorSchedule = () => {
               Schedule Meetings
             </h2>
 
-            <div className="flex justify-end items-center mb-5">
-              <div className="flex flex-col mx-2 justify-center self-stretch my-auto border rounded-md">
-                <input
-                  type="date"
-                  value={searchDate}
-                  onChange={(e) => setSearchDate(e.target.value)}
-                  className="p-2"
-                />
+            <div className="flex justify-end items-center py-2.5 pr-2.5 pl-5 bg-white rounded max-md:flex-wrap max-md:max-w-full">
+              <div className="flex items-center">
+                <div className="flex flex-col justify-end sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full">
+                  <input
+                    type="date"
+                    value={searchDate}
+                    onChange={(e) => setSearchDate(e.target.value)}
+                    className="px-4 py-2 border border-gray-300 w-full lg:w-auto"
+                  />
+                </div>
+                <button
+                  onClick={() => console.log("Search logic here")}
+                  className="p-2 bg-[#3D52A1] text-white  hover:bg-[#7191E6] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                >
+                  Search
+                </button>
               </div>
-              <button
-                onClick={() => console.log("Search logic here")}
-                className="p-2 rounded bg-[#7191E6] text-white hover:bg-[#3D52A1] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
-              >
-                Search
-              </button>
             </div>
 
             <div className="overflow-auto mt-3">

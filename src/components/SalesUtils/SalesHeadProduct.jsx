@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import SalesSide from './SalesSide';
 import SalesNavbar from './SalesNavbar';
 import { getFirestore, collection, query, where, getDocs, getDoc, doc, onSnapshot } from 'firebase/firestore';
+import '../style/Company.css';
 
 const SalesHeadProduct = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -76,14 +77,18 @@ const SalesHeadProduct = () => {
                 <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-20'}`}>
                     <div className="container px-4 mx-auto my-10">
 
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-[1.5rem] font-bold text-center uppercase">Products</h2>
-                            <Link
-                                to={`/sales/add-product/${id}`}
-                                className="bg-[#7191E6] hover:bg-[#3a60c6] text-white font-bold py-2 px-4 rounded"
-                            >
-                                Add Product
-                            </Link>
+                        <div id="product" className="flex justify-between items-center">
+                            <h2 className="text-[1.5rem] font-bold text-center uppercase">
+                                Products
+                            </h2>
+                            <div id="productlink">
+                                <Link
+                                    to={`/sales/add-product/${id}`}
+                                    className="bg-[#7191E6] hover:bg-[#3a60c6] text-white font-bold py-2 px-4 rounded"
+                                >
+                                    Add Product
+                                </Link>
+                            </div>
                         </div>
 
                         <div className="flex justify-end items-center py-2.5 pr-2.5 pl-5 bg-white rounded max-md:flex-wrap max-md:max-w-full">
