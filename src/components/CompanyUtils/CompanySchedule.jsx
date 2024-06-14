@@ -83,7 +83,6 @@ const CompanySchedule = () => {
 
           const promises = querySnapshot.docs.map(async (doc) => {
             const meetingData = doc.data();
-            console.log(meetingData);
             const doctorData = await fetchDoctorData(meetingData.doctorID);
             const { assignedName, assignedRole } = await fetchAssignedData(meetingData.assigned);
             const doctorName = doctorData ? doctorData.name : "Unknown Doctor";

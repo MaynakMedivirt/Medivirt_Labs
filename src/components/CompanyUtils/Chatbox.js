@@ -1,180 +1,170 @@
 import React, { useState, useEffect } from "react";
 import { getFirestore, doc, getDoc, onSnapshot } from "firebase/firestore";
 
-const Chatbox = ({ conversation, replyMessage, handleReplyMessageChange, handleSendReply, handleCloseChat, predefinedMessages, currentUserId, setCurrentConversation }) => {
-    const [senderNames, setSenderNames] = useState({});
+const Chatbox = ({
+  conversation,
+  handleReplyMessageChange,
+  currentUserId,
+  setCurrentConversation,
+}) => {
+  const [senderNames, setSenderNames] = useState({});
 
-    useEffect(() => {
-        if (!conversation || !conversation.messages || conversation.messages.length === 0) {
-            return;
+  useEffect(() => {
+    if (!conversation || !conversation.messages || conversation.messages.length === 0) {
+      return;
+    }
+
+    const db = getFirestore();
+    const firstMessage = conversation.messages[0];
+
+    if (!firstMessage.messageId) {
+      console.error("First message does not have a messageId");
+      return;
+    }
+
+    const unsubscribe = onSnapshot(
+      doc(db, "messages", firstMessage.messageId),
+      (doc) => {
+        const messageData = doc.data();
+        if (!messageData) {
+          // console.error(
+          //   "No message data found for messageId:",
+          //   firstMessage.messageId
+          // );
+          return;
         }
 
-        const db = getFirestore();
-        const firstMessage = conversation.messages[0];
-
-        if (!firstMessage.messageId) {
-            console.error("First message does not have a messageId");
-            return;
-        }
-
-        const unsubscribe = onSnapshot(doc(db, "messages", firstMessage.messageId), (doc) => {
-            const messageData = doc.data();
-            if (!messageData) {
-                console.error("No message data found for messageId:", firstMessage.messageId);
-                return;
-            }
-
-            const updatedConversation = {
-                ...conversation,
-                messages: [...conversation.messages, {
-                    messageId: messageData.messageId,
-                    sentId: messageData.sentId,
-                    id: doc.id,
-                    message: messageData.message,
-                    sentBy: messageData.sentBy,
-                    date: new Date(messageData.timestamp.toDate()).toLocaleDateString(),
-                    time: new Date(messageData.timestamp.toDate()).toLocaleTimeString(),
-                }]
-            };
-            setCurrentConversation(updatedConversation);
-        });
-
-        return () => unsubscribe();
-    }, [conversation, currentUserId, setCurrentConversation]);
-
-    useEffect(() => {
-        if (!conversation || !conversation.messages || conversation.messages.length === 0) {
-            return;
-        }
-
-        async function fetchSenderNames() {
-            const db = getFirestore();
-            const names = {};
-
-            for (const msg of conversation.messages) {
-                const { sentId } = msg;
-                if (sentId && sentId !== currentUserId && !names[sentId]) {
-                    try {
-                        let senderRef = doc(db, "companies", sentId);
-                        let senderSnapshot = await getDoc(senderRef);
-
-                        if (!senderSnapshot.exists()) {
-                            senderRef = doc(db, "users", sentId);
-                            senderSnapshot = await getDoc(senderRef);
-                        }
-
-                        if (senderSnapshot.exists()) {
-                            const senderData = senderSnapshot.data();
-                            let name = senderData.firstName && senderData.lastName ? `${senderData.firstName} ${senderData.lastName}` : senderData.name || "Unknown Sender";
-                            names[sentId] = name;
-                        } else {
-                            console.error(`Sender with ID ${sentId} not found.`);
-                            names[sentId] = "Unknown Sender";
-                        }
-                    } catch (error) {
-                        console.error("Error fetching sender name:", error);
-                        names[sentId] = "Unknown Sender";
-                    }
-                }
-            }
-            setSenderNames(names);
-        }
-
-        fetchSenderNames();
-    }, [conversation, currentUserId]);
-
-    const compareTimeStamps = (msg1, msg2) => {
-        const date1 = new Date(msg1.date);
-        const date2 = new Date(msg2.date);
-
-        if (date1.getTime() !== date2.getTime()) {
-            return date1.getTime() - date2.getTime();
-        } else {
-            const time1 = new Date("2000-01-01 " + msg1.time);
-            const time2 = new Date("2000-01-01 " + msg2.time);
-            return time1.getTime() - time2.getTime();
-        }
-    };
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-GB');
-    };
-
-    const handlePredefinedMessageClick = (message) => {
-        handleReplyMessageChange({ target: { value: message } });
-    };
-
-    let currentDate = null;
-
-    return (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
-            <div className="bg-white p-4 rounded-lg max-w-lg w-full">
-                <div className="flex justify-between mb-4">
-                    <h3 className="text-lg font-semibold">Chat with {conversation && conversation.doctorName}</h3>
-                </div>
-                <div className="overflow-auto max-h-60">
-                    {conversation && conversation.messages && conversation.messages.filter(msg => msg.time).sort(compareTimeStamps).map((msg, idx) => {
-                        const showDate = msg.date !== currentDate;
-                        currentDate = msg.date;
-                        let name;
-                        if (msg.sentId === currentUserId) {
-                            name = '';
-                        } else if (msg.sentBy === 'company') {
-                            name = senderNames[msg.sentId];
-                        } else if (msg.sentBy === 'admin') {
-                            name = 'Admin';
-                        }
-                        return (
-                            <div key={idx}>
-                                {showDate && (
-                                    <div className="mb-2 text-center text-gray-600">
-                                        {formatDate(msg.date)}
-                                    </div>
-                                )}
-                                <div className={`mb-2 ${msg.sentBy === 'company' ? 'text-right' : 'text-left'}`}>
-                                    <span className="inline-block bg-gray-200 p-2 rounded-lg">
-                                        <span className="block text-[0.75rem] font-bold">
-                                            {name}
-                                        </span>
-                                        {msg.message}
-                                    </span>
-                                    <p className="text-xs text-gray-500 mt-1">{msg.time}</p>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-                <div>
-                    {predefinedMessages.map((msg, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => handlePredefinedMessageClick(msg)}
-                            className="px-2 py-1 bg-[#4BCB5D] text-white rounded-md mr-2 mb-2"
-                        >
-                            {msg}
-                        </button>
-                    ))}
-                </div>
-                <textarea
-                    placeholder="Type your message here..."
-                    value={replyMessage}
-                    onChange={handleReplyMessageChange}
-                    className="w-full p-2 border border-gray-300 rounded-md resize-none focus:outline-none"
-                ></textarea>
-                <div className="flex justify-between mt-2">
-                    <div>
-                        <button onClick={handleSendReply} className="px-4 py-2 bg-indigo-800 text-white rounded-md font-semibold mr-2">
-                            Send
-                        </button>
-                        <button onClick={handleCloseChat} className="px-4 py-2 bg-red-500 text-white rounded-md font-semibold">
-                            Close
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        const updatedConversation = {
+          ...conversation,
+          messages: [
+            ...conversation.messages,
+            {
+              messageId: messageData.messageId,
+              sentId: messageData.sentId,
+              id: doc.id,
+              message: messageData.message,
+              sentBy: messageData.sentBy,
+              date: new Date(messageData.timestamp.toDate()).toLocaleDateString(),
+              time: new Date(messageData.timestamp.toDate()).toLocaleTimeString(),
+            },
+          ],
+        };
+        setCurrentConversation(updatedConversation);
+      }
     );
+
+    return () => unsubscribe();
+  }, [conversation, currentUserId, setCurrentConversation]);
+
+  useEffect(() => {
+    if ( !conversation || !conversation.messages || conversation.messages.length === 0) {
+      return;
+    }
+
+    async function fetchSenderNames() {
+      const db = getFirestore();
+      const names = {};
+
+      for (const msg of conversation.messages) {
+        const { sentId } = msg;
+        if (sentId && sentId !== currentUserId && !names[sentId]) {
+          try {
+            let senderRef = doc(db, "companies", sentId);
+            let senderSnapshot = await getDoc(senderRef);
+
+            if (!senderSnapshot.exists()) {
+              senderRef = doc(db, "users", sentId);
+              senderSnapshot = await getDoc(senderRef);
+            }
+
+            if (senderSnapshot.exists()) {
+              const senderData = senderSnapshot.data();
+              let name = senderData.firstName && senderData.lastName ? `${senderData.firstName} ${senderData.lastName}` : senderData.name || "Unknown Sender";
+              names[sentId] = name;
+            } else {
+              console.error(`Sender with ID ${sentId} not found.`);
+              names[sentId] = "Unknown Sender";
+            }
+          } catch (error) {
+            console.error("Error fetching sender name:", error);
+            names[sentId] = "Unknown Sender";
+          }
+        }
+      }
+      setSenderNames(names);
+    }
+
+    fetchSenderNames();
+  }, [conversation, currentUserId]);
+
+  const compareTimeStamps = (msg1, msg2) => {
+    const date1 = new Date(msg1.date);
+    const date2 = new Date(msg2.date);
+
+    if (date1.getTime() !== date2.getTime()) {
+      return date1.getTime() - date2.getTime();
+    } else {
+      const time1 = new Date("2000-01-01 " + msg1.time);
+      const time2 = new Date("2000-01-01 " + msg2.time);
+      return time1.getTime() - time2.getTime();
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-GB");
+  };
+
+  const handlePredefinedMessageClick = (message) => {
+    handleReplyMessageChange({ target: { value: message } });
+  };
+
+  let currentDate = null;
+
+  return (
+    <div>
+      <div className="">
+        {conversation && conversation.messages && conversation.messages.filter((msg) => msg.time).sort(compareTimeStamps).map((msg, idx) => {
+          const showDate = msg.date !== currentDate;
+          currentDate = msg.date;
+          let name;
+          if (msg.sentId === currentUserId) {
+            name = "";
+          } else if (msg.sentBy === "company") {
+            name = senderNames[msg.sentId];
+          } else if (msg.sentBy === "admin") {
+            name = "Admin";
+          }
+          return (
+            <div key={idx}>
+              {showDate && (
+                <div className="mb-2 text-center text-gray-600">
+                  {formatDate(msg.date)}
+                </div>
+              )}
+              <div
+                className={`mb-2 ${
+                  msg.sentBy === "company" ? "text-right" : "text-left"
+                }`}
+              >
+              <span
+                className={`inline-block p-2 rounded-lg ${
+                  msg.sentBy === "company" ? "bg-[#7191E6] text-white" : "bg-gray-200"
+                }`}
+              >
+                  <span className="block text-[0.75rem] font-bold">
+                    {name}
+                  </span>
+                  {msg.message}
+                </span>
+                <p className="text-xs text-gray-500 mt-1">{msg.time}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 };
 
 export default Chatbox;

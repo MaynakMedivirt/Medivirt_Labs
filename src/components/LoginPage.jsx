@@ -55,7 +55,10 @@ const LoginPage = () => {
         const passwordMatch = await bcrypt.compare(password, userData.password);
         if (!passwordMatch) throw new Error("Invalid password.");
       } else {
-        await signInWithEmailAndPassword(auth, userData.email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, userData.email, password);
+        if (!userCredential.user.emailVerified) {
+          throw new Error("Email is not verified.");
+        }
       }
 
       setCurrentUser(userData);

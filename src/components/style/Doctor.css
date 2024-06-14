@@ -1,21 +1,46 @@
-@media screen and (max-width: 480px){
-    #navlogo{
-        height: 2rem;
-        max-width: 80%;
-    }
-    #doctorimg{
-        display: none;
-    }
-    #docdropdown{
-        width: 1rem; 
-        height: 1rem;
-    }
-    #docicon{
-        height: 1rem;
-        width: 1rem;
-    }
-    #editbutton{
-        height: 0.75rem;
-        width: 0.75rem;
-    }
+@media screen and (max-width: 480px) {
+  #navlogo {
+    height: 2rem;
+    max-width: 80%;
+  }
+  #doctorimg {
+    display: none;
+  }
+  #docdropdown {
+    width: 1rem;
+    height: 1rem;
+  }
+  #docicon {
+    height: 1rem;
+    width: 1rem;
+  }
+  #editbutton {
+    height: 0.75rem;
+    width: 0.75rem;
+  }
+}
+
+/* Hide scrollbar for WebKit browsers */
+.conversationlist-container::-webkit-scrollbar,
+.doctorbox-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for other browsers */
+.conversationlist-container,
+.doctorbox-content {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media screen and (max-width: 768px) {
+  #hide-on-smallscreen {
+    display: none;
+  }
+  #concomname {
+    font-size: 14px;
+  }
+  #conrecentmsg {
+    font-size: 12px;
+  }
 }

@@ -1,336 +1,454 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import SalesNavbar from './SalesNavbar';
-import SalesSide from './SalesSide';
-import { getFirestore, collection, query, where, getDocs, doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
-import Swal from 'sweetalert2';
+import SalesNavbar from "./SalesNavbar";
+import SalesSide from "./SalesSide";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  onSnapshot,
+} from "firebase/firestore";
+import Swal from "sweetalert2";
 import SalesBox from "./SalesBox";
+import "../style/Company.css";
+import { IoIosCloseCircleOutline } from "react-icons/io";
+import { FaCommentSlash } from "react-icons/fa";
+import { IoSearchSharp } from "react-icons/io5";
 
 const SalesHeadMessage = () => {
-    const [messages, setMessages] = useState([]);
-    const [replyMessage, setReplyMessage] = useState("");
-    const [currentConversation, setCurrentConversation] = useState(null);
-    const [showChatbox, setShowChatbox] = useState(false);
-    const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(10);
-    const { id } = useParams();
+  const [messages, setMessages] = useState([]);
+  const [replyMessage, setReplyMessage] = useState("");
+  const [currentConversation, setCurrentConversation] = useState(null);
+  const [showChatbox, setShowChatbox] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const { id } = useParams();
 
-    const predefinedMessages = [
-        "Welcome!",
-        "Thank You.",
-    ];
+  const predefinedMessages = ["Welcome!", "Thank You."];
 
-    const toggleSidebar = () => {
-        setSidebarOpen(!sidebarOpen);
-    };
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
-    const handleReplyMessageChange = (e) => {
-        setReplyMessage(e.target.value);
-    };
+  const handleReplyMessageChange = (e) => {
+    setReplyMessage(e.target.value);
+  };
 
-    const handleSendReply = async () => {
-        if (!replyMessage.trim()) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Message cannot be empty!',
-            });
-            return;
-        }
+  const handleSendReply = async () => {
+    if (!replyMessage.trim()) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Message cannot be empty!",
+      });
+      return;
+    }
 
-        try {
-            const db = getFirestore();
-            if (!currentConversation || !currentConversation.doctorID) {
-                throw new Error("Conversation or doctor ID not found.");
-            }
+    try {
+      const db = getFirestore();
+      if (!currentConversation || !currentConversation.doctorID) {
+        throw new Error("Conversation or doctor ID not found.");
+      }
 
-            const senderId = id;
+      const senderId = id;
 
-            const replyData = {
-                companyID: currentConversation.companyID,
-                doctorID: currentConversation.doctorID,
-                messageId: currentConversation.messages[0].messageId,
-                messages: replyMessage,
-                sentBy: "company",
-                sentId: senderId,
-                timestamp: new Date(),
+      const replyData = {
+        companyID: currentConversation.companyID,
+        doctorID: currentConversation.doctorID,
+        messageId: currentConversation.messages[0].messageId,
+        messages: replyMessage,
+        sentBy: "company",
+        sentId: senderId,
+        timestamp: new Date(),
+      };
+
+      const customId = `${id}_${currentConversation.doctorID}_${Date.now()}`;
+      const customDocRef = doc(db, "messages", customId);
+      await setDoc(customDocRef, replyData);
+
+      setReplyMessage("");
+
+      const timestamp = replyData.timestamp;
+      const date = timestamp.toLocaleDateString();
+      const time = timestamp.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      const newMessage = {
+        messageId: replyData.messageId,
+        sentId: replyData.sentId,
+        id: customId,
+        message: replyData.messages,
+        sentBy: replyData.sentBy,
+        date,
+        time,
+      };
+
+      setCurrentConversation((prev) => {
+        return {
+          ...prev,
+          messages: [...prev.messages, newMessage],
+          recentMessage: {
+            text: replyData.messages,
+            isCompany: replyData.sentBy === "company",
+            date,
+            time,
+            timestamp,
+          },
+        };
+      });
+
+      // Update the main messages array to reflect the new message in the conversation
+      setMessages((prevMessages) => {
+        const updatedMessages = prevMessages.map((conv) => {
+          if (
+            conv.doctorID === currentConversation.doctorID &&
+            conv.companyID === currentConversation.companyID
+          ) {
+            return {
+              ...conv,
+              messages: [...conv.messages, newMessage],
+              recentMessage: {
+                text: replyData.messages,
+                isCompany: replyData.sentBy === "company",
+                date,
+                time,
+                timestamp,
+              },
             };
+          }
+          return conv;
+        });
+        return updatedMessages;
+      });
+    } catch (error) {
+      console.error("Error sending reply:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Failed to send reply. Please try again.",
+      });
+    }
+  };
 
-            const customId = `${id}_${currentConversation.doctorID}_${Date.now()}`;
-            const customDocRef = doc(db, "messages", customId);
-            await setDoc(customDocRef, replyData);
+  const fetchMessages = async () => {
+    try {
+      const db = getFirestore();
 
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Reply sent successfully!",
-                showConfirmButton: false,
-                timer: 2000,
-            });
+      const userDocRef = doc(db, "users", id);
+      const userDocSnapshot = await getDoc(userDocRef);
 
-            setReplyMessage("");
-            setCurrentConversation(null);
+      if (userDocSnapshot.exists()) {
+        const userData = userDocSnapshot.data();
 
-            fetchMessages();
-        } catch (error) {
-            console.error("Error sending reply:", error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Failed to send reply. Please try again.',
-            });
-        }
-    };
+        const companyId = userData.companyId;
 
-    const fetchMessages = async () => {
-        try {
-            const db = getFirestore();
+        const messageRef = collection(db, "messages");
+        const q = query(messageRef, where("companyID", "==", companyId));
+        const querySnapshot = await getDocs(q);
 
-            const userDocRef = doc(db, "users", id);
-            const userDocSnapshot = await getDoc(userDocRef);
-
-            if (userDocSnapshot.exists()) {
-                const userData = userDocSnapshot.data();
-
-                const companyId = userData.companyId;
-
-                const messageRef = collection(db, "messages");
-                const q = query(
-                    messageRef,
-                    where("companyID", "==", companyId)
-                );
-                const querySnapshot = await getDocs(q);
-
-                const unsubscribe = onSnapshot(q, async (querySnapshot) => {
-
-                    const fetchDoctorData = async (doctorId) => {
-                        const doctorDocRef = doc(db, "doctors", doctorId);
-                        const doctorDocSnapshot = await getDoc(doctorDocRef);
-                        if (doctorDocSnapshot.exists()) {
-                            return doctorDocSnapshot.data();
-                        } else {
-                            console.error(`Doctor with ID ${doctorId} not found`);
-                            return null;
-                        }
-                    };
-                    const fetchAssignedData = async (messageId) => {
-                        let assignedName;
-
-                        try {
-                            const companyDocRef = doc(db, "companies", messageId);
-                            const companyDocSnapshot = await getDoc(companyDocRef);
-
-                            if (companyDocSnapshot.exists()) {
-                                assignedName = companyDocSnapshot.data().name;
-                            } else {
-                                const userDocRef = doc(db, "users", messageId);
-                                const userDocSnapshot = await getDoc(userDocRef);
-
-                                if (userDocSnapshot.exists()) {
-                                    const userData = userDocSnapshot.data();
-                                    assignedName = `${userData.firstName} ${userData.lastName}`;
-                                } else {
-                                    console.error(`No document found with ID ${messageId}`);
-                                }
-                            }
-                        } catch (error) {
-                            console.error("Error fetching assigned data:", error);
-                        }
-
-                        return assignedName;
-                    };
-
-                    const groupedMessages = {};
-                    const promises = querySnapshot.docs.map(async (doc) => {
-                        const messageData = doc.data();
-                        const assignedName = await fetchAssignedData(messageData.messageId);
-                        const doctorData = await fetchDoctorData(messageData.doctorID);
-                        const doctorName = doctorData ? doctorData.name : "Unknown Doctor";
-
-                        const key = `${messageData.doctorID}_${messageData.companyID}`;
-                        if (!groupedMessages[key]) {
-                            groupedMessages[key] = {
-                                doctorName,
-                                assignedName,
-                                doctorID: messageData.doctorID,
-                                companyID: messageData.companyID,
-                                messages: [],
-                                recentMessage: {
-                                    text: "",
-                                    isCompany: false,
-                                    date: "",
-                                    time: ""
-                                }
-                            };
-                        }
-
-                        const timestamp = messageData.timestamp?.toDate();
-                        const date = timestamp ? timestamp.toLocaleDateString() : "N/A";
-                        const time = timestamp ? timestamp.toLocaleTimeString() : "N/A";
-
-                        groupedMessages[key].messages.push({
-                            messageId: messageData.messageId,
-                            sentId: messageData.sentId,
-                            id: doc.id,
-                            message: messageData.messages,
-                            sentBy: messageData.sentBy,
-                            date,
-                            time,
-                        });
-
-                        // Check if the current message is the most recent one
-                        if (!groupedMessages[key].recentMessage.timestamp || timestamp > groupedMessages[key].recentMessage.timestamp) {
-                            groupedMessages[key].recentMessage = {
-                                text: messageData.messages,
-                                isCompany: messageData.sentBy === "company",
-                                date,
-                                time,
-                                timestamp
-                            };
-                        }
-                    });
-
-                    await Promise.all(promises);
-
-                    // Convert groupedMessages object to array
-                    const messagesArray = Object.keys(groupedMessages).map(key => groupedMessages[key]);
-                    setMessages(messagesArray);
-                });
-                return () => unsubscribe();
+        const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+          const fetchDoctorData = async (doctorId) => {
+            const doctorDocRef = doc(db, "doctors", doctorId);
+            const doctorDocSnapshot = await getDoc(doctorDocRef);
+            if (doctorDocSnapshot.exists()) {
+              return doctorDocSnapshot.data();
+            } else {
+              console.error(`Doctor with ID ${doctorId} not found`);
+              return null;
             }
-        } catch (error) {
-            console.error("Error fetching schedule messages:", error);
-        }
-    };
+          };
+          const fetchAssignedData = async (messageId) => {
+            let assignedName;
 
-    useEffect(() => {
-        fetchMessages();
-    }, [id]);
+            try {
+              const companyDocRef = doc(db, "companies", messageId);
+              const companyDocSnapshot = await getDoc(companyDocRef);
 
-    const handleReply = (conversation) => {
-        setCurrentConversation(conversation);
-        setShowChatbox(true);
-    };
+              if (companyDocSnapshot.exists()) {
+                assignedName = companyDocSnapshot.data().name;
+              } else {
+                const userDocRef = doc(db, "users", messageId);
+                const userDocSnapshot = await getDoc(userDocRef);
 
-    const handleCloseChat = () => {
-        setShowChatbox(false); // Hide the chatbox
-    };
+                if (userDocSnapshot.exists()) {
+                  const userData = userDocSnapshot.data();
+                  assignedName = `${userData.firstName} ${userData.lastName}`;
+                } else {
+                  console.error(`No document found with ID ${messageId}`);
+                }
+              }
+            } catch (error) {
+              console.error("Error fetching assigned data:", error);
+            }
 
-    const indexOfLastMessage = currentPage * itemsPerPage;
-    const indexOfFirstMessage = indexOfLastMessage - itemsPerPage;
-    const currentMessages = messages.slice(indexOfFirstMessage, indexOfLastMessage);
+            return assignedName;
+          };
 
-    // Handle pagination button click
-    const handlePageClick = (pageNumber) => {
-        setCurrentPage(pageNumber);
-    };
+          const groupedMessages = {};
+          const promises = querySnapshot.docs.map(async (doc) => {
+            const messageData = doc.data();
+            const assignedName = await fetchAssignedData(messageData.messageId);
+            const doctorData = await fetchDoctorData(messageData.doctorID);
+            const doctorName = doctorData ? doctorData.name : "Unknown Doctor";
 
-    return (
-        <div className="flex flex-col h-screen">
-            <SalesNavbar />
-            <div className="flex flex-1 mt-[4.2rem]">
-                <SalesSide open={sidebarOpen} toggleSidebar={toggleSidebar} />
-                <div className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-60' : 'ml-20'}`}>
-                    <div className="container px-4 mx-auto my-10">
-                        <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
-                            Messages
-                        </h2>
-                        <div className="overflow-auto mt-3 border">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
-                                    <tr>
-                                        <th scope="col" className="bg-gray-50 px-3 py-3 text-sm tracking-wider">
-                                            S.N.
-                                        </th>
-                                        <th scope="col" className="px-3 py-3 text-sm uppercase tracking-wider">
-                                            Doctor Name
-                                        </th>
-                                        <th scope="col" className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider">
-                                            Representative Name
-                                        </th>
-                                        <th scope="col" className="px-3 py-3 text-sm uppercase tracking-wider">
-                                            Recent Message
-                                        </th>
-                                        <th scope="col" className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider">
-                                            Date
-                                        </th>
-                                        <th scope="col" className="px-3 py-3 text-sm uppercase tracking-wider">
-                                            Time
-                                        </th>
-                                        <th scope="col" className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider">
-                                            Action
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {currentMessages.map((conversation, index) => (
-                                        <tr key={index} className="border-b border-gray-200">
-                                            <td scope="row" className="px-3 py-3 bg-gray-50">
-                                                {index + 1}
-                                            </td>
-                                            <td className="px-3 py-3 font-medium text-gray-900">
-                                                {conversation.doctorName}
-                                            </td>
-                                            <td className="px-3 py-3 font-medium text-gray-900 bg-gray-50">
-                                                {conversation.assignedName}
-                                            </td>
-                                            <td className="px-3 py-3 font-medium text-gray-900">
-                                                {conversation.recentMessage.text}
-                                            </td>
-                                            <td className="px-3 py-3 font-medium text-gray-900 bg-gray-50">
-                                                {conversation.recentMessage.date}
-                                            </td>
-                                            <td className="px-3 py-3 font-medium text-gray-900">
-                                                {conversation.recentMessage.time}
-                                            </td>
-                                            <td className="px-3 py-3 bg-gray-50">
-                                                <button
-                                                    type="button"
-                                                    className="text-white bg-[#4BCB5D] rounded-lg px-3 py-2 text-center me-2 mb-2"
-                                                    onClick={() => handleReply(conversation)}
-                                                >
-                                                    Reply
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+            const key = `${messageData.doctorID}_${messageData.companyID}`;
+            if (!groupedMessages[key]) {
+              groupedMessages[key] = {
+                doctorName,
+                assignedName,
+                doctorID: messageData.doctorID,
+                companyID: messageData.companyID,
+                messages: [],
+                recentMessage: {
+                  text: "",
+                  isCompany: false,
+                  date: "",
+                  time: "",
+                },
+              };
+            }
 
-                        {showChatbox && currentConversation && (
-                            <SalesBox
-                                conversation={currentConversation}
-                                replyMessage={replyMessage}
-                                handleReplyMessageChange={handleReplyMessageChange}
-                                handleSendReply={handleSendReply}
-                                handleCloseChat={handleCloseChat}
-                                predefinedMessages={predefinedMessages}
-                                currentUserId={id}
-                                setCurrentConversation={setCurrentConversation}
-                            />
-                        )}
+            const timestamp = messageData.timestamp?.toDate();
+            const date = timestamp ? timestamp.toLocaleDateString() : "N/A";
+            const time = timestamp ? timestamp.toLocaleTimeString() : "N/A";
 
+            groupedMessages[key].messages.push({
+              messageId: messageData.messageId,
+              sentId: messageData.sentId,
+              id: doc.id,
+              message: messageData.messages,
+              sentBy: messageData.sentBy,
+              date,
+              time,
+            });
 
-                        {/* Pagination */}
-                        <div className="flex justify-end my-4">
-                            {Array.from({ length: Math.ceil(messages.length / itemsPerPage) }, (_, i) => (
-                                <button
-                                    key={i}
-                                    className={`px-3 py-2 mx-1 rounded-md ${currentPage === i + 1 ? 'bg-[#7191E6] text-white' : 'bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300'}`}
-                                    onClick={() => handlePageClick(i + 1)}
-                                >
-                                    {i + 1}
-                                </button>
-                            ))}
-                        </div>
+            // Check if the current message is the most recent one
+            if (
+              !groupedMessages[key].recentMessage.timestamp ||
+              timestamp > groupedMessages[key].recentMessage.timestamp
+            ) {
+              groupedMessages[key].recentMessage = {
+                text: messageData.messages,
+                isCompany: messageData.sentBy === "company",
+                date,
+                time,
+                timestamp,
+              };
+            }
+          });
 
-                    </div>
-                </div>
-            </div>
-        </div>
+          await Promise.all(promises);
+
+          // Convert groupedMessages object to array
+          const messagesArray = Object.keys(groupedMessages).map(
+            (key) => groupedMessages[key]
+          );
+          // Sort messages by recent message timestamp
+          const sortedMessages = sortMessagesByTimestamp(messagesArray);
+          setMessages(sortedMessages);
+        });
+        return () => unsubscribe();
+      }
+    } catch (error) {
+      console.error("Error fetching schedule messages:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMessages();
+  }, [id]);
+
+  const handleReply = (conversation) => {
+    setCurrentConversation(conversation);
+    setShowChatbox(true);
+  };
+
+  const sortMessagesByTimestamp = (messagesArray) => {
+    return messagesArray.sort((a, b) => {
+      const timestampA = a.recentMessage.timestamp;
+      const timestampB = b.recentMessage.timestamp;
+      if (timestampA && timestampB) {
+        return timestampB - timestampA;
+      }
+      return 0;
+    });
+  };
+
+  const handleCloseChat = () => {
+    setShowChatbox(false); // Hide the chatbox
+  };
+
+  const handlePredefinedMessageClick = (message) => {
+    setReplyMessage(message);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filterMessages = (messages) => {
+    return messages.filter((conversation) =>
+      conversation.doctorName.toLowerCase().includes(searchQuery.toLowerCase())
     );
-}
+  };
+
+  return (
+    <div className="flex flex-col h-screen">
+      <SalesNavbar />
+      <div className="flex flex-1 mt-[4.2rem]">
+        <SalesSide open={sidebarOpen} toggleSidebar={toggleSidebar} />
+        <div
+          className={`overflow-y-auto flex-1 transition-all duration-300 ${
+            sidebarOpen ? "ml-60" : "ml-20"
+          }`}
+        >
+          <div
+            className="flex mt-5 px-3"
+            style={{ maxHeight: "calc(100vh - 6rem)" }}
+          >
+            <div
+              className={`conversation-list w-full md:w-1/3 ${
+                showChatbox && "hidden md:block"
+              }`}
+              style={{ borderRadius: "5% 0 0 0", boxShadow: "0 0 4px #7191E6" }}
+            >
+              <div style={{ background: "#7191E6", borderRadius: "0 0 0% 0" }}>
+                <h2 className="text-[1.5rem] font-bold font-[K2D] text-center text-white py-4">
+                  Chat
+                </h2>
+              </div>
+              <div
+                className="conversation-container px-2 overflow-y-auto"
+                style={{
+                  maxHeight: "calc(100vh - 10rem)",
+                  overflowY: "auto",
+                  background: "#F9F9FB",
+                  borderRadius: "5% 0 0 0",
+                }}
+              >
+                <div className="flex flex-col relative justify-center self-stretch border mt-2">
+                  <div className="flex rounded-lg">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      placeholder="Search doctor..."
+                      className="w-full px-3 py-2 border-b focus:outline-none focus:border-[#7191E6]"
+                    />
+                    <button
+                      type="button"
+                      className="flex-shrink-0 inline-flex px-2 items-center bg-[#7191E6] text-white"
+                    >
+                      <IoSearchSharp />
+                    </button>
+                  </div>
+                </div>
+                {filterMessages(messages).map((conversation, index) => (
+                  <div
+                    key={index}
+                    className="px-4 py-2 border-b my-2 shadow-lg cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleReply(conversation)}
+                    style={{ background: "white" }}
+                  >
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div
+                          id="condocname"
+                          className="font-bold text-gray-700"
+                        >
+                          {conversation.doctorName}
+                        </div>
+                        <div
+                          id="conrecent"
+                          className="text-sm font-bold text-gray-600 mt-1"
+                        >
+                          {conversation.recentMessage.text}
+                        </div>
+                      </div>
+                      <div className="text-xs text-gray-400 text-right">
+                        <div>{conversation.recentMessage.date}</div>
+                        <div>{conversation.recentMessage.time}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {showChatbox && currentConversation ? (
+              <div className="chatbox-container w-full md:w-2/3 flex flex-col border">
+                <div className="shadow-lg p-4 flex items-center justify-between">
+                  <h3 className="font-bold text-xl">
+                    {currentConversation?.doctorName}
+                  </h3>
+                  <button
+                    className="hover:text-gray-700"
+                    onClick={handleCloseChat}
+                  >
+                    <IoIosCloseCircleOutline size={24} />
+                  </button>
+                </div>
+                <div className="flex-1 overflow-y-auto bg-[#fafafa] p-4 chat-content">
+                  <SalesBox
+                    conversation={currentConversation}
+                    replyMessage={replyMessage}
+                    handleReplyMessageChange={handleReplyMessageChange}
+                    currentUserId={id}
+                    setCurrentConversation={setCurrentConversation}
+                  />
+                </div>
+                <div className="px-2 py-2 border-t bg-white">
+                  <div className="flex flex-wrap">
+                    {predefinedMessages.map((message, index) => (
+                      <button
+                        key={index}
+                        className="px-2 py-1 bg-[#4BCB5D] text-white rounded-md mr-2 mb-2"
+                        onClick={() => handlePredefinedMessageClick(message)}
+                      >
+                        {message}
+                      </button>
+                    ))}
+                  </div>
+                  <textarea
+                    className="w-full p-2 border rounded"
+                    rows="1"
+                    placeholder="Type your message..."
+                    value={replyMessage}
+                    onChange={handleReplyMessageChange}
+                  />
+                  <button
+                    className="bg-[#7191E6] text-white px-4 py-2 rounded"
+                    onClick={handleSendReply}
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div
+                id="hide-on-small-screen"
+                className="flex-1 flex flex-col items-center justify-center text-gray-500 bg-white rounded-lg shadow-lg p-10 m-4"
+              >
+                <FaCommentSlash className="text-gray-400 text-6xl mb-4" />
+                <p className="text-lg font-semibold">No conversation found</p>
+                <p className="text-sm text-gray-400 mt-2">
+                  Start a conversation by selecting a contact or sending a
+                  message.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default SalesHeadMessage;

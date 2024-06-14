@@ -26,6 +26,7 @@ import DoctorSchedule from './components/Doctorutils/DoctorSchedule';
 import DoctorMessage from './components/Doctorutils/DoctorMessage';
 import DoctorEarning from './components/Doctorutils/DoctorEarning';
 import DoctorMissedMeetings from './components/Doctorutils/DoctorMissedMeetings';
+import DoctorSetting from './components/Doctorutils/DoctorSetting';
 
 import AdminLogin from './components/AdminUtils/AdminLogin';
 import AdminDashboard from './components/AdminUtils/AdminDashboard';
@@ -65,6 +66,7 @@ import EditCompanyUser from './components/CompanyUtils/EditCompanyUser';
 import CompanyMissedMeetings from './components/CompanyUtils/CompanyMissedMeetings';
 import MyDoctors from './components/CompanyUtils/MyDoctors';
 import DoctorViewProfile from './components/CompanyUtils/DoctorViewProfile';
+import CompanySetting  from './components/CompanyUtils/CompanySetting ';
 
 
 import SalesDashboard from './components/SalesUtils/SalesDashboard';
@@ -77,6 +79,8 @@ import SalesAllDoctors from './components/SalesUtils/SalesAllDoctors';
 import SalesViewDoctor from './components/SalesUtils/SalesViewDoctor';
 import SalesHeadSchedule from './components/SalesUtils/SalesHeadSchedule';
 import EditSalesHeadUser from './components/SalesUtils/EditSalesHeadUser';
+import SalesHeadSetting  from './components/SalesUtils/SalesHeadSetting';
+
 
 import MrDashboard from './components/MrUtils/MrDashboard';
 import MrSchedule from './components/MrUtils/MrSchedule';
@@ -85,6 +89,7 @@ import MrProduct from './components/MrUtils/MrProduct';
 import MrAddProduct from './components/MrUtils/MrAddProduct';
 import MrAllDoctors from './components/MrUtils/MrAllDoctors';
 import MrViewDoctor from './components/MrUtils/MrViewDoctor';
+import MrSetting  from './components/MrUtils/MrSetting';
 
 import './App.css'
 
@@ -125,7 +130,9 @@ const App = () => {
           <Route path='/doctor/profile/edit-currentposition/:id' element={<EditDoctorCurrentposition/>}/>          
           <Route path='/doctor/profile/edit-image/:id' element={<EditDoctorImage/>}/>          
           <Route path='/doctor/schedule/:id' element={<DoctorSchedule/>}/>          
-          <Route path='/doctor/message/:id' element={<DoctorMessage/>}/>   
+          <Route path='/doctor/message/:id' element={<DoctorMessage/>}/>
+          <Route path='/doctor/setting/:id' element={<DoctorSetting/>}/>
+
           <Route path='/admin' element={<AdminLogin/>}/>
           <Route path='/admin/dash' element={<AdminDashboard/>}/>
           <Route path='/admin/doctors' element={<Doctor/>}/>
@@ -169,6 +176,7 @@ const App = () => {
           <Route path='/company/missedMeeting/:id' element={<CompanyMissedMeetings/>}/>
           <Route path='/company/doctors/:id' element={<MyDoctors/>}/>
           <Route path='/company/viewProfile/:id' element={<DoctorViewProfile/>}/>
+          <Route path='/company/setting/:id' element={<CompanySetting/>}/>
 
           <Route path='/doctor/earning/:id' element={<DoctorEarning/>}/>
           <Route path='/doctor/missedMeeting/:id' element={<DoctorMissedMeetings/>}/>
@@ -185,6 +193,7 @@ const App = () => {
           <Route path='/sales/add-product/:id' element={<SalesAddProduct />} />
           <Route path='/sales/doctors/:id' element={<SalesAllDoctors />} />
           <Route path='/sales/viewProfile/:id' element={<SalesViewDoctor />} />
+          <Route path='/sales/setting/:id' element={<SalesHeadSetting/>}/>
           
           <Route path='/mrDashboard/:id' element={<MrDashboard />} />
           <Route path='/mr/schedule/:id' element={<MrSchedule />} />
@@ -193,6 +202,7 @@ const App = () => {
           <Route path='/mr/add-product/:id' element={<MrAddProduct />} />
           <Route path='/mr/doctors/:id' element={<MrAllDoctors />} />
           <Route path='/mr/viewProfile/:id' element={<MrViewDoctor />} />
+          <Route path='/mr/setting/:id' element={<MrSetting/>}/>
 
 
           {/* Route for the home page */}

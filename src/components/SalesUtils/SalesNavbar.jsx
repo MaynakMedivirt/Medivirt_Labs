@@ -47,7 +47,7 @@ const SalesNavbar = () => {
         signOut(auth)
             .then(() => {
                 console.log('User logged out successfully.');
-                navigate('/login');
+                navigate('/');
             })
             .catch(error => {
                 console.error('Error logging out:', error);
