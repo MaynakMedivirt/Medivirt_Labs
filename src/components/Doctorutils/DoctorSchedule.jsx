@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link, Routes, Route } from "react-router-dom";
 import DoctorNavbar from "./DoctorNavbar";
 import DoctorSide from "./DoctorSide";
-import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
+import {getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc, onSnapshot,} from "firebase/firestore";
 import Calendar from "react-calendar";
 import Swal from "sweetalert2";
+import "../style/Doctor.css";
 import { FaEdit, FaCheck } from "react-icons/fa";
 import { SiGooglemeet } from "react-icons/si";
 import JitsiMeeting from "../JitsiMeeting";
@@ -43,8 +44,6 @@ const DoctorSchedule = () => {
 
         const querySnapshot = await getDocs(q);
         const unsubscribe = onSnapshot(q, async (querySnapshot) => {
-
-
           const fetchCompanyData = async (companyId) => {
             const companyDocRef = doc(db, "companies", companyId);
             const companyDocSnapshot = await getDoc(companyDocRef);
@@ -95,9 +94,15 @@ const DoctorSchedule = () => {
 
             // Check if the meeting date is in the future
             const currentDate = new Date().toISOString().split("T")[0];
-            const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const meetingDateTime = new Date(`${meetingData.date} ${meetingData.time}`);
-            const isUpcoming = meetingDateTime > new Date(currentDate + ' ' + currentTime);
+            const currentTime = new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            const meetingDateTime = new Date(
+              `${meetingData.date} ${meetingData.time}`
+            );
+            const isUpcoming =
+              meetingDateTime > new Date(currentDate + " " + currentTime);
             // console.log(`Meeting: ${companyName} - ${meetingData.date} ${meetingData.time} - Upcoming: ${isUpcoming}`);
 
             if (isUpcoming) {
@@ -113,7 +118,9 @@ const DoctorSchedule = () => {
             }
           });
 
-          const resolvedData = (await Promise.all(promises)).filter(meeting => meeting !== null);
+          const resolvedData = (await Promise.all(promises)).filter(
+            (meeting) => meeting !== null
+          );
           setScheduleMeetings(resolvedData);
         });
 
@@ -123,9 +130,7 @@ const DoctorSchedule = () => {
       }
     };
 
-
     fetchScheduleMeetings();
-
   }, [id, searchDate, scheduleMeetings]);
 
   const handleModify = async () => {
@@ -194,7 +199,9 @@ const DoctorSchedule = () => {
 
       setScheduleMeetings((prevMeetings) =>
         prevMeetings.map((meeting) =>
-          meeting.id === meetingId ? { ...meeting, status: "accepted" } : meeting
+          meeting.id === meetingId
+            ? { ...meeting, status: "accepted" }
+            : meeting
         )
       );
     } catch (error) {
@@ -218,19 +225,41 @@ const DoctorSchedule = () => {
   const interfaceConfig = {
     SHOW_JITSI_WATERMARK: false,
     SHOW_WATERMARK_FOR_GUESTS: false,
-    DEFAULT_BACKGROUND: '#f0f0f0',
+    DEFAULT_BACKGROUND: "#f0f0f0",
     TOOLBAR_BUTTONS: [
-      'microphone', 'camera', 'desktop', 'fullscreen',
-      'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
-      'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
-      'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
-      'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
-      'e2ee'
+      "microphone",
+      "camera",
+      "desktop",
+      "fullscreen",
+      "fodeviceselection",
+      "hangup",
+      "profile",
+      "chat",
+      "recording",
+      "livestreaming",
+      "etherpad",
+      "sharedvideo",
+      "settings",
+      "raisehand",
+      "videoquality",
+      "filmstrip",
+      "invite",
+      "feedback",
+      "stats",
+      "shortcuts",
+      "tileview",
+      "videobackgroundblur",
+      "download",
+      "help",
+      "mute-everyone",
+      "e2ee",
     ],
-    JITSI_WATERMARK_LINK: 'https://medivirt.com',
-    DEFAULT_LOGO_URL: 'https://medivirt.com/static/media/Medivirt.aa6fab5cce6b660ab2e2.png',
-    DEFAULT_WELCOME_PAGE_LOGO_URL: 'https://medivirt.com/static/media/Medivirt.aa6fab5cce6b660ab2e2.png',
-    BRAND_WATERMARK_LINK: 'https://medivirt.com',
+    JITSI_WATERMARK_LINK: "https://medivirt.com",
+    DEFAULT_LOGO_URL:
+      "https://medivirt.com/static/media/Medivirt.aa6fab5cce6b660ab2e2.png",
+    DEFAULT_WELCOME_PAGE_LOGO_URL:
+      "https://medivirt.com/static/media/Medivirt.aa6fab5cce6b660ab2e2.png",
+    BRAND_WATERMARK_LINK: "https://medivirt.com",
     SHOW_BRAND_WATERMARK: true,
     SHOW_POWERED_BY: false,
     SHOW_PROMOTIONAL_CLOSE_PAGE: false,
@@ -242,15 +271,16 @@ const DoctorSchedule = () => {
       <div className="flex flex-1 mt-[4.2rem]">
         <DoctorSide open={sidebarOpen} toggleSidebar={toggleSidebar} />
         <div
-          className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-60" : "ml-20"
-            }`}
+          className={`overflow-y-auto flex-1 transition-all duration-300 ${
+            sidebarOpen ? "ml-60" : "ml-20"
+          }`}
         >
-          <div className="container px-4 mx-auto my-10">
+          <div className="container px-4 mx-auto mt-10">
             <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
-              Schedule Meetings
+              <span className="bg-[#8697C4] text-white p-2"> Schedule Meetings </span>
             </h2>
 
-            <div className="flex justify-end items-center py-2.5 pr-2.5 pl-5 bg-white rounded max-md:flex-wrap max-md:max-w-full">
+            <div className="flex justify-end items-center bg-white rounded max-md:flex-wrap max-md:max-w-full">
               <div className="flex items-center">
                 <div className="flex flex-col justify-end sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full">
                   <input
@@ -262,56 +292,56 @@ const DoctorSchedule = () => {
                 </div>
                 <button
                   onClick={() => console.log("Search logic here")}
-                  className="p-2 bg-[#3D52A1] text-white  hover:bg-[#7191E6] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                  className="p-2 bg-[#ADBBDA] text-white  hover:bg-[#8697C4] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                 >
                   Search
                 </button>
               </div>
             </div>
 
-            <div className="overflow-auto mt-3">
-              <table className="min-w-full divide-y divide-gray-200 border">
+            <div className="overflow-auto mt-3 table-container">
+              <table id="tables" className="min-w-full divide-y divide-gray-200 border">
                 <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
                   <tr>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm tracking-wider"
+                      className="px-3 py-3 w-10 text-sm tracking-wider bg-[#ADBBDA] text-white"
                     >
                       S.N.
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider bg-gray-50"
+                      className="px-3 py-3 w-25 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
                     >
                       Company Name
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
                     >
                       Representative Name
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider bg-gray-50"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
                     >
                       Date
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
                     >
                       Time
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider bg-gray-50"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
                     >
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
                     >
                       Actions
                     </th>
@@ -320,32 +350,33 @@ const DoctorSchedule = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {scheduleMeetings.map((meeting, index) => (
                     <tr key={meeting.id} className="border-b border-gray-200">
-                      <td scope="row" className="px-3 py-4">
+                      <td scope="row" className="px-3 py-4 w-10">
                         {index + 1}
                       </td>
                       <td className="px-3 py-4 font-medium text-gray-900 bg-gray-50">
                         {meeting.companyName}
                       </td>
-                      <td className="px-3 py-4">
-                        {meeting.assignedName}
-                      </td>
+                      <td className="px-3 py-4">{meeting.assignedName}</td>
                       <td className="px-3 py-4 bg-gray-50">{meeting.date}</td>
                       <td className="px-3 py-4">{meeting.time}</td>
-                      <td className="px-3 py-4 capitalize bg-gray-50">{meeting.status}</td>
+                      <td className="px-3 py-4 capitalize bg-gray-50">
+                        {meeting.status}
+                      </td>
                       <td className="px-3 py-4">
                         <button
                           onClick={() => toggleCalendar(meeting.id)}
-                          className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                          className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
                         >
                           <FaEdit />
                           {/* Modify */}
                         </button>
 
-                        {meeting.status !== "accepted" && meeting.status !== "Rescheduled" ? (
+                        {meeting.status !== "accepted" &&
+                        meeting.status !== "Rescheduled" ? (
                           <button
                             onClick={() => handleAccept(meeting.id)}
                             type="button"
-                            className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                            className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
                           >
                             <FaCheck />
                           </button>
@@ -362,7 +393,7 @@ const DoctorSchedule = () => {
                         <Link
                           to={meeting.meetingLink}
                           type="button"
-                          className="text-white bg-[#7091E6] rounded-lg px-3 py-[6px] text-center me-2 mb-2"
+                          className="text-white bg-[#8697C4] rounded-lg px-3 py-[6px] text-center me-2 mb-2"
                         >
                           <SiGooglemeet className="inline-block mb-[5px]" />
                         </Link>
@@ -372,6 +403,7 @@ const DoctorSchedule = () => {
                 </tbody>
               </table>
             </div>
+
             {/* Pagination */}
             <div className="flex justify-end my-4">
               {Array.from(
@@ -379,10 +411,11 @@ const DoctorSchedule = () => {
                 (_, i) => (
                   <button
                     key={i}
-                    className={`px-3 py-2 mx-1 rounded-md ${currentPage === i + 1
-                      ? "bg-[#7191E6] text-white"
-                      : "bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300"
-                      }`}
+                    className={`px-3 py-2 mx-1 rounded-md ${
+                      currentPage === i + 1
+                        ? "bg-[#7191E6] text-white"
+                        : "bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300"
+                    }`}
                     onClick={() => handlePageClick(i + 1)}
                   >
                     {i + 1}
@@ -394,50 +427,47 @@ const DoctorSchedule = () => {
         </div>
       </div>
       {showCalendar && (
-        <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6">
-            <div className="w-full max-w-[50rem]">
-              <Calendar
-                onChange={setSelectedDate}
-                value={selectedDate}
-                className="border border-gray-300 rounded-md shadow-md"
-                calendarClassName="bg-white p-4 rounded-lg shadow-lg"
-                tileClassName={({ date, view }) =>
-                  view === "month" && date.getDay() === 0 ? "bg-indigo-300" : null
-                }
-              />
+        <div className="overlay">
+          <div className="overlay-content">
+            <Calendar
+              onChange={setSelectedDate}
+              value={selectedDate}
+              minDate={new Date()}
+              className="custom-calendar"
+            />
+            <div className="flex justify-between mt-3">
+              <select
+                value={selectedTime}
+                onChange={(e) => setSelectedTime(e.target.value)}
+                className="p-2 border border-gray-300 rounded-md focus:outline-none w-full max-w-[200px]"
+              >
+                <option value="">Select Time</option>
+                <option value="09:00 AM">09:00 AM</option>
+                <option value="09:30 AM">09:30 AM</option>
+                <option value="10:00 AM">10:00 AM</option>
+                <option value="10:30 AM">10:30 AM</option>
+                <option value="11:00 AM">11:00 AM</option>
+                <option value="11:30 AM">11:30 AM</option>
+                <option value="12:00 PM">12:00 PM</option>
+                <option value="12:30 PM">12:30 PM</option>
+                <option value="1:00 PM">1:00 PM</option>
+                <option value="1:30 PM">1:30 PM</option>
+                <option value="2:00 PM">2:00 PM</option>
+                <option value="2:30 PM">2:30 PM</option>
+                <option value="3:00 PM">3:00 PM</option>
+                <option value="3:30 PM">3:30 PM</option>
+                <option value="4:00 PM">4:00 PM</option>
+                <option value="4:30 PM">4:30 PM</option>
+                <option value="5:00 PM">5:00 PM</option>
+                <option value="5:30 PM">5:30 PM</option>
+                <option value="6:00 PM">6:00 PM</option>
+                <option value="6:30 PM">6:30 PM</option>
+                <option value="7:00 PM">7:00 PM</option>
+                <option value="7:30 PM">7:30 PM</option>
+                <option value="8:00 PM">8:00 PM</option>
+                <option value="8:30 PM">8:30 PM</option>
+              </select>
             </div>
-            <select
-              value={selectedTime}
-              onChange={(e) => setSelectedTime(e.target.value)}
-              className="mt-3 block w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">Select Time</option>
-              <option value="09:00 AM">09:00 AM</option>
-              <option value="09:30 AM">09:30 AM</option>
-              <option value="10:00 AM">10:00 AM</option>
-              <option value="10:30 AM">10:30 AM</option>
-              <option value="11:00 AM">11:00 AM</option>
-              <option value="11:30 AM">11:30 AM</option>
-              <option value="12:00 PM">12:00 PM</option>
-              <option value="12:30 PM">12:30 PM</option>
-              <option value="1:00 PM">1:00 PM</option>
-              <option value="1:30 PM">1:30 PM</option>
-              <option value="2:00 PM">2:00 PM</option>
-              <option value="2:30 PM">2:30 PM</option>
-              <option value="3:00 PM">3:00 PM</option>
-              <option value="3:30 PM">3:30 PM</option>
-              <option value="4:00 PM">4:00 PM</option>
-              <option value="4:30 PM">4:30 PM</option>
-              <option value="5:00 PM">5:00 PM</option>
-              <option value="5:30 PM">5:30 PM</option>
-              <option value="6:00 PM">6:00 PM</option>
-              <option value="6:30 PM">6:30 PM</option>
-              <option value="7:00 PM">7:00 PM</option>
-              <option value="7:30 PM">7:30 PM</option>
-              <option value="8:00 PM">8:00 PM</option>
-              <option value="8:30 PM">8:30 PM</option>
-            </select>
             <div className="flex justify-end mt-4">
               <button
                 onClick={() => toggleCalendar(null)}
@@ -456,7 +486,15 @@ const DoctorSchedule = () => {
         </div>
       )}
       <Routes>
-        <Route path="/jitsi/:roomName" element={<JitsiMeeting onLeave={handleOnLeave} interfaceConfig={interfaceConfig} />} />
+        <Route
+          path="/jitsi/:roomName"
+          element={
+            <JitsiMeeting
+              onLeave={handleOnLeave}
+              interfaceConfig={interfaceConfig}
+            />
+          }
+        />
       </Routes>
     </div>
   );

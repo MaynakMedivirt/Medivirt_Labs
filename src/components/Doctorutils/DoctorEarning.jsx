@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import DoctorSide from './DoctorSide';
 import DoctorNavbar from './DoctorNavbar';
 import { MdCreditScore } from "react-icons/md";
-
+import "../style/Doctor.css";
 
 const DoctorEarning = () => {
     const [completedMeetings, setCompletedMeetings] = useState([]);
@@ -92,7 +92,7 @@ const DoctorEarning = () => {
                                 <div className="flex space-x-4 items-center">
                                     <div>
                                         <div className="bg-gray-50 rounded-full w-12 h-12 text-rose-300 flex justify-center items-center">
-                                            <MdCreditScore className="text-[#7191E6] h-6 w-6" />
+                                            <MdCreditScore className="text-[#8697C4] h-6 w-6" />
                                         </div>
                                     </div>
                                     <div>
@@ -105,7 +105,7 @@ const DoctorEarning = () => {
                                 <div className="flex space-x-4 items-center">
                                     <div>
                                         <div className="bg-gray-50 rounded-full w-12 h-12 text-rose-300 flex justify-center items-center">
-                                            <MdCreditScore className="text-[#7191E6] h-6 w-6" />
+                                            <MdCreditScore className="text-[#8697C4] h-6 w-6" />
                                         </div>
                                     </div>
                                     <div>
@@ -120,23 +120,23 @@ const DoctorEarning = () => {
                             <div className="my-5 text-center">
                                 <h1 className="font-bold text-xl uppercase">Completed Meetings ({completedMeetings.length})</h1>
                             </div>
-                            <div className="overflow-auto mt-3">
-                                <table className="min-w-full divide-y divide-gray-200">
+                            <div className="overflow-auto mt-3 table-container">
+                                <table id="tables" className="min-w-full divide-y divide-gray-200">
                                     <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
                                         <tr>
-                                            <th scope="col" className="px-6 py-3 text-sm tracking-wider">
+                                            <th scope="col" className="px-6 py-3 text-sm tracking-wider bg-[#ADBBDA] text-white">
                                                 S.N.
                                             </th>
-                                            <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
+                                            <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white">
                                                 Company Name
                                             </th>
-                                            <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
+                                            <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white">
                                                 Representative Name
                                             </th>
-                                            <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
+                                            <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white">
                                                 Date
                                             </th>
-                                            <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
+                                            <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white">
                                                 Time
                                             </th>
                                         </tr>

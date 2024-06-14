@@ -81,7 +81,7 @@ const MyDoctors = () => {
                     <div className="container px-4 mx-auto my-10 overflow-auto">
 
                         <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
-                            <h2 className="text-2xl font-bold bg-[#3D52A1] text-white p-2 rounded mb-2 sm:mb-0 sm:mr-4 w-full sm:w-auto text-center sm:text-left">
+                            <h2 className="text-2xl font-bold bg-[#8697C4] text-white p-2 rounded mb-2 sm:mb-0 sm:mr-4 w-full sm:w-auto text-center sm:text-left">
                                 Doctors
                             </h2>
                             <div className="flex flex-col justify-end sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full">
@@ -152,7 +152,7 @@ const MyDoctors = () => {
                                             </div>
                                             <button
                                                 onClick={() => handleViewProfile(doctor.id, id)}
-                                                className="justify-center px-2 py-1 mt-3 font-semibold text-white capitalize bg-indigo-800 tracking-[2px] max-md:px-5 hover:bg-indigo-600"
+                                                className="justify-center px-2 py-1 mt-3 font-semibold text-white capitalize bg-[#8697C4] tracking-[2px] max-md:px-5 hover:bg-[#ADBBDA]"
                                             >
                                                 View Profile
                                             </button>

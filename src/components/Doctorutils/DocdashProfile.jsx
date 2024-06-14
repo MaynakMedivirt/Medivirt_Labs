@@ -112,7 +112,7 @@ const DocdashProfile = () => {
                             <p className="text-end" onClick={EditImage}>
                               <FaPen 
                                 id="editbutton"
-                                className="text-[#7091E6]"
+                                className="text-[#8697C4]"
                                 style={{ float: "inline-end" }}
                               />
                             </p>
@@ -140,7 +140,7 @@ const DocdashProfile = () => {
                             >
                               <FaPen 
                                 id="editbutton"
-                                className="text-[#7091E6]"
+                                className="text-[#8697C4]"
                                 style={{ float: "inline-end" }}
                               />
                             </p>
@@ -165,7 +165,7 @@ const DocdashProfile = () => {
                     <p className="text-end" onClick={EditAbout}>
                       <FaPen 
                         id="editbutton"
-                        className="bg-white border text-[#7091E6]"
+                        className="bg-white border text-[#8697C4]"
                         style={{ float: "inline-end" }}
                       />
                     </p>
@@ -178,7 +178,7 @@ const DocdashProfile = () => {
                       <p className="text-end" onClick={EditExperience}>
                         <FaPen 
                           id="editbutton"
-                          className="bg-white text-[#7091E6]"
+                          className="bg-white text-[#8697C4]"
                           style={{ float: "inline-end" }}
                         />
                       </p>
@@ -186,7 +186,7 @@ const DocdashProfile = () => {
 
                       {doctor.experience_1 && (
                         <div className="mt-5 flex items-center">
-                          <button className="bg-white shadow px-3 border text-[#7091E6] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                          <button className="bg-white shadow px-3 border text-[#8697C4] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
                             A
                           </button>
                           <div className="px-5">
@@ -197,7 +197,7 @@ const DocdashProfile = () => {
 
                       {doctor.experience_2 && (
                         <div className="mt-5 flex items-center">
-                          <button className="bg-white shadow px-3 border text-[#7091E6] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                          <button className="bg-white shadow px-3 border text-[#8697C4] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
                             B
                           </button>
                           <div className="px-5">
@@ -208,7 +208,7 @@ const DocdashProfile = () => {
 
                       {doctor.experience_3 && (
                         <div className="mt-5 flex items-center">
-                          <button className="bg-white shadow px-3 border text-[#7091E6] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                          <button className="bg-white shadow px-3 border text-[#8697C4] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
                             C
                           </button>
                           <div className="px-5">
@@ -223,14 +223,14 @@ const DocdashProfile = () => {
                       <p className="text-end" onClick={EditEducation}>
                         <FaPen 
                           id="editbutton"
-                          className="bg-white text-[#7091E6]"
+                          className="bg-white text-[#8697C4]"
                           style={{ float: "inline-end" }}
                         />
                       </p>
                       <h1 className="text-xl font-semibold">Education</h1>
                       {doctor.education_1 && (
                         <div className="mt-5 flex items-center">
-                          <button className="bg-white shadow px-3 border text-[#7091E6] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                          <button className="bg-white shadow px-3 border text-[#8697C4] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
                             A
                           </button>
                           <div className="px-5">
@@ -241,7 +241,7 @@ const DocdashProfile = () => {
 
                       {doctor.education_2 && (
                         <div className="mt-5 flex items-center">
-                          <button className="bg-white shadow px-3 border text-[#7091E6] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                          <button className="bg-white shadow px-3 border text-[#8697C4] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
                             B
                           </button>
                           <div className="px-5">
@@ -252,7 +252,7 @@ const DocdashProfile = () => {
 
                       {doctor.education_3 && (
                         <div className="mt-5 flex items-center">
-                          <button className="bg-white shadow px-3 border text-[#7091E6] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                          <button className="bg-white shadow px-3 border text-[#8697C4] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
                             C
                           </button>
                           <div className="px-5">

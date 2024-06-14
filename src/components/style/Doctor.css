@@ -18,17 +18,30 @@
     height: 0.75rem;
     width: 0.75rem;
   }
+  #edittexts h2{
+    font-size: 1rem;
+  }
+  #edittexts button{
+    width: 1rem;
+    height: 1rem;
+  }
+  #edittexts button{
+    width: 1rem;
+    height: 1rem;
+  }
 }
 
 /* Hide scrollbar for WebKit browsers */
 .conversationlist-container::-webkit-scrollbar,
-.doctorbox-content::-webkit-scrollbar {
+.doctorbox-content::-webkit-scrollbar, 
+.doctorbox-container::-webkit-scrollbar {
   display: none;
 }
 
 /* Hide scrollbar for other browsers */
 .conversationlist-container,
-.doctorbox-content {
+.doctorbox-content,
+.doctorbox-container {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -43,4 +56,67 @@
   #conrecentmsg {
     font-size: 12px;
   }
+}
+
+.doctorbox-container {
+  display: flex;
+  flex-direction: column-reverse;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* for tables */
+
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+.table-container::-webkit-scrollbar {
+  height: 2px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #8697c4;
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.table-row:hover {
+  background-color: #f9f9fb;
+}
+
+
+/* Responsive table adjustments for screen sizes between 768px and 1180px */
+@media screen and (min-width: 768px) and (max-width: 1180px) {
+  #tables thead th {
+    padding: 0.75rem 0.5rem;
+    font-size: small;
+  }
+  #tables tbody td {
+    padding: 0.5rem;
+    font-size: small;
+  }
+  #tables tbody td button {
+    margin-inline-end: 3px;
+  }
+}
+
+/* Responsive table adjustments for screen sizes less than 768px */
+@media screen and (max-width: 768px) {
+  #tables thead th {
+    padding: 0.75rem 0.5rem;
+    font-size: small;
+  }
+  #tables tbody td {
+    padding: 0.5rem;
+    font-size: small;
+  }
+  /* Uncomment the following if additional button margin is required */
+  /* #tables tbody td button {
+    margin: 0 3px;
+  } */
 }

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { getFirestore, doc, getDoc, onSnapshot } from "firebase/firestore";
 
 const Doctorbox = ({ conversation, setCurrentConversation }) => {
   const [senderNames, setSenderNames] = useState({});
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     if (
@@ -107,6 +108,10 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
     fetchSenderNames();
   }, [conversation]);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [conversation]);
+
   const compareTimeStamps = (msg1, msg2) => {
     const date1 = new Date(msg1.date);
     const date2 = new Date(msg2.date);
@@ -128,7 +133,7 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
   let currentDate = null;
 
   return (
-    <div>
+    <div className="doctorbox-container" style={{ display: "flex", flexDirection: "column-reverse", height: "100%", overflowY: "auto" }}>
       <div className="">
         {conversation &&
           conversation.messages &&
@@ -160,7 +165,7 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
                       className={`inline-block p-2 rounded-lg ${
                         msg.sentBy === "company"
                           ? "bg-gray-200"
-                          : "bg-[#7191E6] text-white"
+                          : "bg-[#8697C4] text-white"
                       }`}
                     >
                       <span className="block text-[0.75rem] font-bold">

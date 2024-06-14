@@ -404,60 +404,57 @@ const SalesHeadSchedule = () => {
         </div>
       </div>
       {showCalendar && (
-        <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg">
-            <div className="w-full max-w-xs">
-              <Calendar
-                onChange={setSelectedDate}
-                value={selectedDate}
-                className="border border-gray-300 rounded-md shadow-md"
-                calendarClassName="bg-white p-4 rounded-lg shadow-lg"
-                tileClassName={({ date, view }) =>
-                  view === "month" && date.getDay() === 0 ? "bg-red-200" : null
-                }
-              />
+        <div className="overlay">
+          <div className="overlay-content">
+            <Calendar
+              onChange={setSelectedDate}
+              value={selectedDate}
+              minDate={new Date()}
+              className="custom-calendar"
+            />
+            <div className="flex justify-between mt-3">
+              <select
+                value={selectedTime}
+                onChange={(e) => setSelectedTime(e.target.value)}
+                className="p-2 border border-gray-300 rounded-md focus:outline-none w-full max-w-[200px]"
+              >
+                <option value="">Select Time</option>
+                <option value="09:00 AM">09:00 AM</option>
+                <option value="09:30 AM">09:30 AM</option>
+                <option value="10:00 AM">10:00 AM</option>
+                <option value="10:30 AM">10:30 AM</option>
+                <option value="11:00 AM">11:00 AM</option>
+                <option value="11:30 AM">11:30 AM</option>
+                <option value="12:00 PM">12:00 PM</option>
+                <option value="12:30 PM">12:30 PM</option>
+                <option value="1:00 PM">1:00 PM</option>
+                <option value="1:30 PM">1:30 PM</option>
+                <option value="2:00 PM">2:00 PM</option>
+                <option value="2:30 PM">2:30 PM</option>
+                <option value="3:00 PM">3:00 PM</option>
+                <option value="3:30 PM">3:30 PM</option>
+                <option value="4:00 PM">4:00 PM</option>
+                <option value="4:30 PM">4:30 PM</option>
+                <option value="5:00 PM">5:00 PM</option>
+                <option value="5:30 PM">5:30 PM</option>
+                <option value="6:00 PM">6:00 PM</option>
+                <option value="6:30 PM">6:30 PM</option>
+                <option value="7:00 PM">7:00 PM</option>
+                <option value="7:30 PM">7:30 PM</option>
+                <option value="8:00 PM">8:00 PM</option>
+                <option value="8:30 PM">8:30 PM</option>
+              </select>
             </div>
-            <select
-              value={selectedTime}
-              onChange={(e) => setSelectedTime(e.target.value)}
-              className="mt-3 block w-full px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">Select Time</option>
-              <option value="09:00 AM">09:00 AM</option>
-              <option value="09:30 AM">09:30 AM</option>
-              <option value="10:00 AM">10:00 AM</option>
-              <option value="10:30 AM">10:30 AM</option>
-              <option value="11:00 AM">11:00 AM</option>
-              <option value="11:30 AM">11:30 AM</option>
-              <option value="12:00 PM">12:00 PM</option>
-              <option value="12:30 PM">12:30 PM</option>
-              <option value="1:00 PM">1:00 PM</option>
-              <option value="1:30 PM">1:30 PM</option>
-              <option value="2:00 PM">2:00 PM</option>
-              <option value="2:30 PM">2:30 PM</option>
-              <option value="3:00 PM">3:00 PM</option>
-              <option value="3:30 PM">3:30 PM</option>
-              <option value="4:00 PM">4:00 PM</option>
-              <option value="4:30 PM">4:30 PM</option>
-              <option value="5:00 PM">5:00 PM</option>
-              <option value="5:30 PM">5:30 PM</option>
-              <option value="6:00 PM">6:00 PM</option>
-              <option value="6:30 PM">6:30 PM</option>
-              <option value="7:00 PM">7:00 PM</option>
-              <option value="7:30 PM">7:30 PM</option>
-              <option value="8:00 PM">8:00 PM</option>
-              <option value="8:30 PM">8:30 PM</option>
-            </select>
             <div className="flex justify-end mt-4">
               <button
                 onClick={() => toggleCalendar(null)}
-                className="px-4 py-2 mr-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400"
+                className="px-4 py-2 mr-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400 transition-all duration-300 ease-in-out"
               >
                 Cancel
               </button>
               <button
                 onClick={handleModify}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                className="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600 transition-all duration-300 ease-in-out"
               >
                 Save
               </button>

@@ -299,9 +299,9 @@ const DoctorMessage = () => {
               className={`conversation-list w-full md:w-1/3 ${
                 showDoctorbox && "hidden md:block"
               }`}
-              style={{ borderRadius: "5% 0 0 0", boxShadow: "0 0 4px #7191E6" }}
+              style={{ borderRadius: "5% 0 0 0", boxShadow: "0 0 4px #aeafb2" }}
             >
-              <div style={{ background: "#7191E6", borderRadius: "0 0 0% 0" }}>
+              <div style={{ background: "#8697C4", borderRadius: "0 0 0% 0" }}>
                 <h2 className="text-[1.5rem] font-bold font-[K2D] text-center text-white py-4">
                   Chat
                 </h2>
@@ -322,11 +322,11 @@ const DoctorMessage = () => {
                       value={searchQuery}
                       onChange={handleSearchChange}
                       placeholder="Search Company..."
-                      className="w-full px-3 py-2 border-b focus:outline-none focus:border-[#7191E6]"
+                      className="w-full px-3 py-2 border-b focus:outline-none focus:border-[#aeafb2]"
                     />
                     <button
                       type="button"
-                      className="flex-shrink-0 inline-flex px-2 items-center bg-[#7191E6] text-white"
+                      className="flex-shrink-0 inline-flex px-2 items-center bg-[#8697C4] text-white"
                     >
                       <IoSearchSharp />
                     </button>
@@ -388,13 +388,13 @@ const DoctorMessage = () => {
                 <div className="px-2 py-2 border-t bg-white">
                   <textarea
                     className="w-full p-2 border rounded"
-                    rows="1"
+                    rows="2"
                     placeholder="Type your message..."
                     value={replyMessage}
                     onChange={handleReplyMessageChange}
                   />
                   <button
-                    className="bg-[#7191E6] text-white px-4 py-2 rounded"
+                    className="bg-[#7191E6] text-white float-end px-4 py-2 rounded"
                     onClick={handleSendReply}
                   >
                     Send
@@ -404,7 +404,7 @@ const DoctorMessage = () => {
             ) : (
               <div
                 id="hide-on-smallscreen"
-                className="flex-1 flex flex-col items-center justify-center text-gray-500 bg-white rounded-lg shadow-lg p-10 m-4"
+                className="flex-1 flex flex-col items-center justify-center text-gray-500 bg-white rounded-lg shadow-lg m-2"
               >
                 <FaCommentSlash className="text-gray-400 text-6xl mb-4" />
                 <p className="text-lg font-semibold">No conversation found</p>

@@ -83,6 +83,17 @@
     text-align: end;
     margin-bottom: 5px;
   }
+  #edittexts h2{
+    font-size: 1rem;
+  }
+  #edittexts button{
+    width: 1rem;
+    height: 1rem;
+  }
+  #edittexts button{
+    width: 1rem;
+    height: 1rem;
+  }
 }
 
 .overlay {
@@ -133,13 +144,15 @@
 
 /* Hide scrollbar for WebKit browsers */
 .conversation-container::-webkit-scrollbar,
-.chat-content::-webkit-scrollbar {
+.chat-content::-webkit-scrollbar,
+.companybox-container::-webkit-scrollbar {
   display: none;
 }
 
 /* Hide scrollbar for other browsers */
 .conversation-container,
-.chat-content {
+.chat-content,
+.companybox-container {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -154,4 +167,60 @@
   #conrecent {
     font-size: 12px;
   }
+}
+
+/* for tables */
+
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+.table-container::-webkit-scrollbar {
+  height: 2px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #8697c4;
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.table-row:hover {
+  background-color: #f9f9fb;
+}
+
+
+/* Responsive table adjustments for screen sizes between 768px and 1180px */
+@media screen and (min-width: 768px) and (max-width: 1180px) {
+  #tables thead th {
+    padding: 0.75rem 0.5rem;
+    font-size: small;
+  }
+  #tables tbody td {
+    padding: 0.5rem;
+    font-size: small;
+  }
+  #tables tbody td button {
+    margin-inline-end: 3px;
+  }
+}
+
+/* Responsive table adjustments for screen sizes less than 768px */
+@media screen and (max-width: 768px) {
+  #tables thead th {
+    padding: 0.75rem 0.5rem;
+    font-size: small;
+  }
+  #tables tbody td {
+    padding: 0.5rem;
+    font-size: small;
+  }
+  /* Uncomment the following if additional button margin is required */
+  /* #tables tbody td button {
+    margin: 0 3px;
+  } */
 }
