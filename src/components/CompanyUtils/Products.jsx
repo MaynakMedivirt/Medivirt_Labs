@@ -87,12 +87,12 @@ const Products = () => {
             
             <div id="product"className="flex justify-between items-center">
               <h2 className="text-[1.5rem] font-bold text-center uppercase">
-                Products
+                <span className="bg-[#8697C4] text-white p-2">Products</span>
               </h2>
               <div id="productlink">
               <Link
                 to={`/company/add-product/${id}`}
-                className="bg-[#7191E6] hover:bg-[#3a60c6] text-white font-bold py-2 px-4 rounded"
+                className="bg-[#8697C4] hover:bg-[#ADBBDA] text-white font-bold py-2 px-4 rounded"
               >
                 Add Product
               </Link>
@@ -107,37 +107,37 @@ const Products = () => {
                     value={searchQuery}
                     onChange={handleSearch}
                     placeholder="Search by product name"
-                    className="px-4 py-2 border border-gray-300 w-full sm:w-1/3 lg:w-auto"
+                    className="px-4 py-2 border border-gray-300 w-full lg:w-auto"
                     />
                 </div>
                 <button
                   onClick={() => console.log("Search logic here")}
-                  className="p-2 bg-[#3D52A1] text-white  hover:bg-[#7191E6] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                  className="p-2 bg-[#ADBBDA] text-white hover:bg-[#8697C4] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                 >
                   Search
                 </button>
               </div>
             </div>
 
-            <div className="overflow-auto mt-3 border">
-              <table className="min-w-full divide-y divide-gray-200">
+            <div className="overflow-auto mt-3 border tzble-container">
+              <table id="tables" className="min-w-full divide-y divide-gray-200">
                 <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
                   <tr>
                     <th
                       scope="col"
-                      className="px-4 py-3 text-sm tracking-wider"
+                      className="px-4 py-3 text-sm tracking-wider bg-[#ADBBDA] text-white"
                     >
                       S.N.
                     </th>
                     <th
                       scope="col"
-                      className="bg-gray-50 px-4 py-3 text-sm uppercase tracking-wider"
+                      className="px-4 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
                     >
                       Product Name
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 text-sm uppercase tracking-wider"
+                      className="px-4 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
                     >
                       Action
                     </th>
@@ -155,7 +155,7 @@ const Products = () => {
                       <td className="px-4 py-2">
                         <button
                           type="button"
-                          className="text-white bg-[#7191E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                          className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
                         >
                           About Product
                         </button>

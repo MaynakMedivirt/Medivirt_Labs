@@ -2,12 +2,24 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import MrNavbar from "./MrNavbar";
 import MrSide from "./MrSide";
-import { getFirestore, collection, query, where, getDocs, doc, getDoc, deleteDoc, updateDoc, onSnapshot, } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+  deleteDoc,
+  updateDoc,
+  onSnapshot,
+} from "firebase/firestore";
 import Calendar from "react-calendar";
 import Swal from "sweetalert2";
 import { FaEdit, FaCheck } from "react-icons/fa";
 import { SiGooglemeet } from "react-icons/si";
 import { IoSearchSharp } from "react-icons/io5";
+import "../style/Company.css";
 
 const MrSchedule = () => {
   const [scheduleMeetings, setScheduleMeetings] = useState([]);
@@ -242,12 +254,13 @@ const MrSchedule = () => {
       <div className="flex flex-1 mt-[4.2rem]">
         <MrSide open={sidebarOpen} toggleSidebar={toggleSidebar} />
         <div
-          className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-60" : "ml-20"
-            }`}
+          className={`overflow-y-auto flex-1 transition-all duration-300 ${
+            sidebarOpen ? "ml-60" : "ml-20"
+          }`}
         >
           <div className="container px-4 mx-auto my-10">
             <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
-              Schedule Meetings
+              <span className="bg-[#8697C4] text-white p-2"> Schedule Meetings </span>
             </h2>
 
             <div className="flex justify-end items-center flex-col sm:flex-row mb-5">
@@ -271,7 +284,7 @@ const MrSchedule = () => {
                   />
                   <button
                     type="button"
-                    className="flex-shrink-0 inline-flex px-2 items-center bg-[#3D52A1] text-white hover:bg-[#7191E6] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                    className="flex-shrink-0 inline-flex px-2 items-center bg-[#ADBBDA] text-white hover:bg-[#8697C4] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                   >
                     <IoSearchSharp />
                   </button>
@@ -279,55 +292,55 @@ const MrSchedule = () => {
               </div>
             </div>
 
-            <div className="overflow-auto mt-3">
-              <table className="min-w-full divide-y border divide-gray-200">
+            <div className="overflow-auto mt-3 table-container">
+              <table id="tables" className="min-w-full divide-y border divide-gray-200">
                 <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
                   <tr>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm tracking-wider"
+                      className="px-3 py-3 text-sm tracking-wider bg-[#ADBBDA] text-white"
                     >
                       S.N.
                     </th>
                     <th
                       scope="col"
-                      className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
                     >
                       Doctor Name
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
                     >
                       Assigned
                     </th>
                     <th
                       scope="col"
-                      className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
                     >
                       Date
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
                     >
                       Time
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
                     >
                       Location
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 bg-gray-50 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
                     >
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
                     >
                       Action
                     </th>
@@ -352,7 +365,7 @@ const MrSchedule = () => {
                       <td className="px-3 py-3 bg-gray-50">
                         <button
                           onClick={() => toggleCalendar(meeting.id)}
-                          className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                          className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
                         >
                           <FaEdit />
                           {/* Modify */}
@@ -360,7 +373,7 @@ const MrSchedule = () => {
                         <Link
                           to={meeting.meetingLink}
                           type="button"
-                          className="text-white bg-[#7091E6] rounded-lg px-3 py-[6px] text-center me-2 mb-2"
+                          className="text-white bg-[#8697C4] rounded-lg px-3 py-[6px] text-center me-2 mb-2"
                         >
                           <SiGooglemeet className="inline-block mb-[5px]" />
                         </Link>
@@ -368,7 +381,7 @@ const MrSchedule = () => {
                           <button
                             type="button"
                             onClick={() => handleAccept(meeting.id)}
-                            className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                            className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
                           >
                             <FaCheck />
                           </button>
@@ -387,10 +400,11 @@ const MrSchedule = () => {
                 (_, i) => (
                   <button
                     key={i}
-                    className={`px-3 py-2 mx-1 rounded-md ${currentPage === i + 1
+                    className={`px-3 py-2 mx-1 rounded-md ${
+                      currentPage === i + 1
                         ? "bg-[#7191E6] text-white"
                         : "bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300"
-                      }`}
+                    }`}
                     onClick={() => handlePageClick(i + 1)}
                   >
                     {i + 1}

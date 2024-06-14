@@ -92,7 +92,7 @@ const SalesHeadUsers = () => {
                             <div id="userslink">
                                 <Link
                                     to={`/sales/add-user/${id}`}
-                                    className="bg-[#7191E6] hover:bg-[#3a60c6] text-white font-bold py-2 px-4 rounded"
+                                    className="bg-[#8697C4] hover:bg-[#ADBBDA] text-white font-bold py-2 px-4 rounded"
                                 >
                                     Add Users
                                 </Link>
@@ -112,29 +112,29 @@ const SalesHeadUsers = () => {
                                 </div>
                                 <button
                                     onClick={() => console.log('Search logic here')}
-                                    className="p-2 rounded bg-[#3D52A1] text-white  hover:bg-[#7191E6] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                                    className="p-2 rounded bg-[#ADBBDA] text-white  hover:bg-[#8697C4] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                                 >
                                     Search
                                 </button>
                             </div>
                         </div>
-                        <div className="overflow-auto mt-3 border">
-                            <table className="min-w-full divide-y divide-gray-200">
+                        <div className="overflow-auto mt-3 border table-container">
+                            <table id="tables" className="min-w-full divide-y divide-gray-200">
                                 <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
                                     <tr>
-                                        <th scope="col" className="px-4 py-3 text-sm tracking-wider">
+                                        <th scope="col" className="px-4 py-3 text-sm tracking-wider bg-[#ADBBDA] text-white">
                                             S.N.
                                         </th>
-                                        <th scope="col" className="bg-gray-50 px-4 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="px-4 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white">
                                             Name
                                         </th>
-                                        <th scope="col" className="px-4 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="px-4 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white">
                                             Role
                                         </th>
-                                        <th scope="col" className="bg-gray-50 px-4 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="px-4 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white">
                                             Location
                                         </th>
-                                        <th scope="col" className="px-4 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="px-4 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white">
                                             Action
                                         </th>
                                     </tr>
@@ -158,13 +158,13 @@ const SalesHeadUsers = () => {
                                                 <button
                                                     onClick={() => handleEditProfile(user.id, user.companyId)}
                                                     type="button"
-                                                    className="text-white bg-[#7191E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                                                    className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
                                                 >
                                                     <FaEdit />
                                                 </button>
                                                 <button
                                                     type="button"
-                                                    className="text-white bg-[#7191E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                                                    className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
                                                 >
                                                     <MdAutoDelete />
                                                 </button>

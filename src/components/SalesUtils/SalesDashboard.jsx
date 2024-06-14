@@ -81,7 +81,7 @@ const SalesDashboard = () => {
                 <div className="flex space-x-4 items-center">
                   <div>
                     <div className="bg-gray-50 rounded-full w-12 h-12 text-rose-300 flex justify-center items-center">
-                      <AiFillMessage className="text-[#7191E6] h-6 w-6" />
+                      <AiFillMessage className="text-[#8697C4] h-6 w-6" />
                     </div>
                   </div>
                   <div>
@@ -96,7 +96,7 @@ const SalesDashboard = () => {
                 <div className="flex space-x-4 items-center">
                   <div>
                     <div className="bg-gray-50 rounded-full w-12 h-12 text-rose-300 flex justify-center items-center">
-                      <RiCalendarScheduleLine className="text-[#7191E6] h-6 w-6" />
+                      <RiCalendarScheduleLine className="text-[#8697C4] h-6 w-6" />
                     </div>
                   </div>
                   <div>
@@ -111,7 +111,7 @@ const SalesDashboard = () => {
                 <div className="flex space-x-4 items-center">
                   <div>
                     <div className="bg-gray-50 rounded-full w-12 h-12 text-rose-300 flex justify-center items-center">
-                      <FaChartLine className="text-[#7191E6] h-6 w-6" />
+                      <FaChartLine className="text-[#8697C4] h-6 w-6" />
                     </div>
                   </div>
                   <div>
@@ -126,7 +126,7 @@ const SalesDashboard = () => {
                 <div className="flex space-x-4 items-center">
                   <div>
                     <div className="bg-gray-50 rounded-full w-12 h-12 text-rose-300 flex justify-center items-center">
-                      <PiChartPieSliceFill className="text-[#7191E6] h-6 w-6" />
+                      <PiChartPieSliceFill className="text-[#8697C4] h-6 w-6" />
                     </div>
                   </div>
                   <div>

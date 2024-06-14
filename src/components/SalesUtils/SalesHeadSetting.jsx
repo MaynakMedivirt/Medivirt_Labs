@@ -56,10 +56,12 @@ const SalesHeadSetting = () => {
             sidebarOpen ? "ml-60" : "ml-20"
           }`}
         >
-          <div className="flex flex-col items-center justify-center h-full p-4">
-            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-              <h1 className="text-2xl font-bold mb-4">Password Change</h1>
-              <form onSubmit={handleSubmit}>
+          <div className="flex flex-col h-full p-4">
+            <div className="bg-white shadow-lg rounded-lg w-full max-w-md">
+              <div className="bg-[#8697C4] text-white p-4">
+                <h1 className="text-2xl font-bold">Change Your Password</h1>
+              </div>
+              <form onSubmit={handleSubmit} className="p-4">
                 <div className="mb-4">
                   <label
                     className="block text-gray-700 text-sm font-bold mb-2"
@@ -114,7 +116,7 @@ const SalesHeadSetting = () => {
                 <div className="flex items-center justify-between">
                   <button
                     type="submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="bg-[#4f46e5] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   >
                     Reset Password
                   </button>

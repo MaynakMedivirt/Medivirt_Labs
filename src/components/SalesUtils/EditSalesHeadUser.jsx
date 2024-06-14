@@ -8,6 +8,7 @@ import { TbEye, TbEyeClosed } from "react-icons/tb";
 import { firebaseConfig } from "../firebase";
 import { initializeApp } from "firebase/app";
 import { IoMdArrowBack } from "react-icons/io";
+import "../style/Company.css";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -99,13 +100,13 @@ const EditSalesHeadUser = () => {
                             onSubmit={handleSubmit}
                             className="bg-white shadow rounded px-8 pt-6 pb-8 mb-4"
                         >
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between" id="edittexts">
                                 <button
                                     type="button"
                                     onClick={() => navigate(-1)}
                                     className="w-8 h-8 bg-white shadow border rounded-full flex items-center justify-center"
                                 >
-                                    <IoMdArrowBack className="h-6 w-6 font-bold text-[#3D52A1]" />
+                                    <IoMdArrowBack className="h-6 w-6 font-bold text-[#8697C4]" />
                                 </button>
                                 <h2 className="flex-grow text-2xl my-5 font-bold text-center uppercase">Edit User</h2>
                             </div>

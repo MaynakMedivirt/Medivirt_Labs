@@ -170,7 +170,7 @@ const SalesViewDoctor = () => {
                                 onClick={() => navigate(-1)}
                                 className="w-8 h-8 bg-white shadow border rounded-full flex items-center justify-center"
                             >
-                                <IoMdArrowBack className="h-6 w-6 font-bold text-[#3D52A1]" />
+                                <IoMdArrowBack className="h-6 w-6 font-bold text-[#8697C4]" />
                             </button>
                             <h2 className="flex-grow text-2xl font-bold text-center">
                                 Doctor Profile
@@ -389,7 +389,7 @@ const SalesViewDoctor = () => {
 
                                         {doctor && doctor.experience_1 && (
                                             <div className="mt-5 flex items-center">
-                                                <button className="bg-white shadow px-3 border text-[#7091E6] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                                                <button className="bg-white shadow px-3 border text-[#8697C4] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
                                                     A
                                                 </button>
                                                 <div className="px-5">
@@ -400,7 +400,7 @@ const SalesViewDoctor = () => {
 
                                         {doctor && doctor.experience_2 && (
                                             <div className="mt-5 flex items-center">
-                                                <button className="bg-white shadow px-3 border text-[#7091E6] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                                                <button className="bg-white shadow px-3 border text-[#8697C4] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
                                                     B
                                                 </button>
                                                 <div className="px-5">
@@ -411,7 +411,7 @@ const SalesViewDoctor = () => {
 
                                         {doctor && doctor.experience_3 && (
                                             <div className="mt-5 flex items-center">
-                                                <button className="bg-white shadow px-3 border text-[#7091E6] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                                                <button className="bg-white shadow px-3 border text-[#8697C4] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
                                                     C
                                                 </button>
                                                 <div className="px-5">
@@ -431,7 +431,7 @@ const SalesViewDoctor = () => {
 
                                         {doctor && doctor.education_1 && (
                                             <div className="mt-5 flex items-center">
-                                                <button className="bg-white shadow px-3 border text-[#7091E6] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                                                <button className="bg-white shadow px-3 border text-[#8697C4] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
                                                     A
                                                 </button>
                                                 <div className="px-5">
@@ -442,7 +442,7 @@ const SalesViewDoctor = () => {
 
                                         {doctor && doctor.education_2 && (
                                             <div className="mt-5 flex items-center">
-                                                <button className="bg-white shadow px-3 border text-[#7091E6] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                                                <button className="bg-white shadow px-3 border text-[#8697C4] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
                                                     B
                                                 </button>
                                                 <div className="px-5">
@@ -453,7 +453,7 @@ const SalesViewDoctor = () => {
 
                                         {doctor && doctor.education_3 && (
                                             <div className="mt-5 flex items-center">
-                                                <button className="bg-white shadow px-3 border text-[#7091E6] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
+                                                <button className="bg-white shadow px-3 border text-[#8697C4] font-semibold rounded-full h-8 w-8 flex items-center justify-center">
                                                     C
                                                 </button>
                                                 <div className="px-5">

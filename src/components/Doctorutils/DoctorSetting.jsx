@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getAuth, reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import DoctorSide from "./DoctorSide";
 import DoctorNavbar from "./DoctorNavbar";
 
@@ -19,6 +19,7 @@ const DoctorSetting = () => {
   const [bankSuccess, setBankSuccess] = useState("");
   const [bankDetails, setBankDetails] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [reloadPage, setReloadPage] = useState(false); // State to trigger page reload
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -47,6 +48,7 @@ const DoctorSetting = () => {
         setOldPassword("");
         setNewPassword("");
         setConfirmPassword("");
+        setReloadPage(true); // Trigger page reload
       } catch (error) {
         setError(error.message);
       }
@@ -74,7 +76,7 @@ const DoctorSetting = () => {
 
         setBankSuccess("Bank details added successfully!");
         setIsEditMode(false);
-        fetchBankDetails(); // Fetch updated bank details
+        setReloadPage(true); // Trigger page reload
       } catch (error) {
         setError(error.message);
         console.error("Error adding bank details: ", error);
@@ -103,7 +105,7 @@ const DoctorSetting = () => {
 
         setBankSuccess("Bank details updated successfully!");
         setIsEditMode(false);
-        fetchBankDetails(); // Fetch updated bank details
+        setReloadPage(true); // Trigger page reload
       } catch (error) {
         setError(error.message);
         console.error("Error updating bank details: ", error);
@@ -158,6 +160,14 @@ const DoctorSetting = () => {
   useEffect(() => {
     fetchBankDetails();
   }, []);
+
+  useEffect(() => {
+    if (reloadPage) {
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+    }
+  }, [reloadPage]);
 
   return (
     <div className="flex flex-col h-screen">
@@ -259,9 +269,7 @@ const DoctorSetting = () => {
                         id="bankName"
                         value={bankName}
                         onChange={(e) => setBankName(e.target.value)}
-                        className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                          bankDetails && !isEditMode ? 'cursor-not-allowed' : ''
-                        }`}
+                        className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${!isEditMode ? 'cursor-not-allowed' : ''}`}
                         disabled={!isEditMode}
                       />
                     </div>
@@ -277,9 +285,7 @@ const DoctorSetting = () => {
                         id="accountHolderName"
                         value={accountHolderName}
                         onChange={(e) => setAccountHolderName(e.target.value)}
-                        className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                          bankDetails && !isEditMode ? 'cursor-not-allowed' : ''
-                        }`}
+                        className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${!isEditMode ? 'cursor-not-allowed' : ''}`}
                         disabled={!isEditMode}
                       />
                     </div>
@@ -296,9 +302,7 @@ const DoctorSetting = () => {
                       id="accountNumber"
                       value={accountNumber}
                       onChange={(e) => setAccountNumber(e.target.value)}
-                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                        bankDetails && !isEditMode ? 'cursor-not-allowed' : ''
-                      }`}
+                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${!isEditMode ? 'cursor-not-allowed' : ''}`}
                       disabled={!isEditMode}
                     />
                   </div>
@@ -314,9 +318,7 @@ const DoctorSetting = () => {
                       id="ifscCode"
                       value={ifscCode}
                       onChange={(e) => setIFSCCode(e.target.value)}
-                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                        bankDetails && !isEditMode ? 'cursor-not-allowed' : ''
-                      }`}
+                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${!isEditMode ? 'cursor-not-allowed' : ''}`}
                       disabled={!isEditMode}
                     />
                   </div>
@@ -326,25 +328,18 @@ const DoctorSetting = () => {
                   <div className="flex items-center justify-between">
                     <button
                       type="submit"
-                      className="bg-[#4f46e5] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                      className={`bg-[#4f46e5] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${!isEditMode ? 'cursor-not-allowed' : ''}`}
+                      disabled={!isEditMode}
                     >
                       {isEditMode ? "Update Bank Details" : "Add Bank Details"}
                     </button>
-                    {isEditMode ? (
+                    {isEditMode && (
                       <button
                         type="button"
                         className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         onClick={handleCancelEdit}
                       >
                         Cancel
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="bg-[#4f46e5] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        onClick={handleEditClick}
-                      >
-                        Edit Details
                       </button>
                     )}
                   </div>
@@ -353,7 +348,7 @@ const DoctorSetting = () => {
             </div>
           </div>
           {bankDetails && (
-            <div className="p-4 bg-white shadow-lg rounded-lg mt-4">
+            <div className="p-4 bg-white shadow-lg rounded-lg mt-4 relative">
               <h2 className="text-xl font-bold mb-4">Your Bank Details</h2>
               <p>
                 <strong>Bank Name:</strong> {bankDetails.bankName}
@@ -367,6 +362,13 @@ const DoctorSetting = () => {
               <p>
                 <strong>IFSC Code:</strong> {bankDetails.ifscCode}
               </p>
+              <button
+                type="button"
+                className="bg-[#4f46e5] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline absolute top-4 right-4"
+                onClick={handleEditClick}
+              >
+                Edit Details
+              </button>
             </div>
           )}
         </div>
@@ -376,4 +378,3 @@ const DoctorSetting = () => {
 };
 
 export default DoctorSetting;
-

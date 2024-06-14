@@ -2,14 +2,26 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import SalesNavbar from "./SalesNavbar";
 import SalesSide from "./SalesSide";
-import {getFirestore, collection, query, where, getDocs, doc, getDoc, deleteDoc, updateDoc, onSnapshot,} from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+  deleteDoc,
+  updateDoc,
+  onSnapshot,
+} from "firebase/firestore";
 import Calendar from "react-calendar";
 import Swal from "sweetalert2";
 import { FaEdit, FaCheck } from "react-icons/fa";
 import { SiGooglemeet } from "react-icons/si";
 import { IoSearchSharp } from "react-icons/io5";
+import "../style/Company.css";
 
-const SalesHeadSchedule = () => {
+const SalesHead = () => {
   const [scheduleMeetings, setScheduleMeetings] = useState([]);
   const [companyMeetings, setCompanyMeetings] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -22,6 +34,7 @@ const SalesHeadSchedule = () => {
   const [selectedMeetingId, setSelectedMeetingId] = useState(null);
   const [searchLocation, setSearchLocation] = useState("");
   const { id } = useParams();
+
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -248,7 +261,7 @@ const SalesHeadSchedule = () => {
         >
           <div className="container px-4 mx-auto my-10">
             <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
-              Schedule Meetings
+              <span className="bg-[#8697C4] text-white p-2"> Schedule Meetings </span>
             </h2>
 
             <div className="flex justify-end items-center flex-col sm:flex-row mb-5">
@@ -272,7 +285,7 @@ const SalesHeadSchedule = () => {
                   />
                   <button
                     type="button"
-                    className="flex-shrink-0 inline-flex px-2 items-center bg-[#3D52A1] text-white hover:bg-[#7191E6] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                    className="flex-shrink-0 inline-flex px-2 items-center bg-[#ADBBDA] text-white hover:bg-[#8697C4] focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                   >
                     <IoSearchSharp />
                   </button>
@@ -280,55 +293,55 @@ const SalesHeadSchedule = () => {
               </div>
             </div>
 
-            <div className="overflow-auto mt-3">
-              <table className="min-w-full divide-y border divide-gray-200">
+            <div className="overflow-auto mt-3 table-container">
+              <table id="tables" className="min-w-full divide-y border divide-gray-200">
                 <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
                   <tr>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm tracking-wider"
+                      className="px-3 py-3 text-sm tracking-wider bg-[#ADBBDA] text-white"
                     >
                       S.N.
                     </th>
                     <th
                       scope="col"
-                      className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
                     >
                       Doctor Name
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
                     >
                       Assigned
                     </th>
                     <th
                       scope="col"
-                      className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
                     >
                       Date
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
                     >
                       Time
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
                     >
                       Location
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 bg-gray-50 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
                     >
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="bg-gray-50 px-3 py-3 text-sm uppercase tracking-wider"
+                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
                     >
                       Action
                     </th>
@@ -353,7 +366,7 @@ const SalesHeadSchedule = () => {
                       <td className="px-3 py-3 bg-gray-50">
                         <button
                           onClick={() => toggleCalendar(meeting.id)}
-                          className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                          className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
                         >
                           <FaEdit />
                           {/* Modify */}
@@ -361,7 +374,7 @@ const SalesHeadSchedule = () => {
                         <Link
                           to={meeting.meetingLink}
                           type="button"
-                          className="text-white bg-[#7091E6] rounded-lg px-3 py-[6px] text-center me-2 mb-2"
+                          className="text-white bg-[#8697C4] rounded-lg px-3 py-[6px] text-center me-2 mb-2"
                         >
                           <SiGooglemeet className="inline-block mb-[5px]" />
                         </Link>
@@ -369,7 +382,7 @@ const SalesHeadSchedule = () => {
                           <button
                             type="button"
                             onClick={() => handleAccept(meeting.id)}
-                            className="text-white bg-[#7091E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                            className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
                           >
                             <FaCheck />
                           </button>
@@ -466,4 +479,4 @@ const SalesHeadSchedule = () => {
   );
 };
 
-export default SalesHeadSchedule;
+export default SalesHead;

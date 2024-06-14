@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
 import CompanySide from "./CompanySide";
 import CompanyNavbar from "./CompanyNavbar";
+import "../style/Company.css";
 
 const CompanyMissedMeetings = () => {
     const [missedMeetings, setMissedMeetings] = useState([]);
@@ -82,25 +83,25 @@ const CompanyMissedMeetings = () => {
                 >
                     <div className="container px-4 mx-auto my-10">
                         <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
-                            Missed Meetings
+                            <span className="bg-[#8697C4] text-white p-2"> Missed Meetings </span>
                         </h2>
-                        <div className="overflow-auto mt-3">
-                            <table className="min-w-full divide-y divide-gray-200 border">
+                        <div className="overflow-auto mt-3 table-container">
+                            <table id="tables" className="min-w-full divide-y divide-gray-200 border">
                                 <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
                                     <tr>
-                                        <th scope="col" className="px-6 py-3 text-sm tracking-wider">
+                                        <th scope="col" className="px-6 py-3 text-sm tracking-wider bg-[#ADBBDA] text-white">
                                             S.N.
                                         </th>
-                                        <th scope="col" className="px-6 py-3 text-sm bg-gray-50 uppercase tracking-wider">
+                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white">
                                             Doctor Name
                                         </th>
-                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white">
                                             Company Name
                                         </th>
-                                        <th scope="col" className="px-6 py-3 text-sm bg-gray-50 uppercase tracking-wider">
+                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white">
                                             Date
                                         </th>
-                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider">
+                                        <th scope="col" className="px-6 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white">
                                             Time
                                         </th>
                                     </tr>
