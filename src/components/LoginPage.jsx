@@ -31,7 +31,11 @@ const LoginPage = () => {
 
   const redirectToDashboard = (userData) => {
     if (userData.role === "Doctor") {
-      navigate(`/doctorDashboard/${userData.id}`);
+      if(!userData.profileComplete) {
+        navigate(`/doctorprofilecomplete/${userData.id}`);
+      }else{
+        navigate(`/doctorDashboard/${userData.id}`);
+      }
     } else if (userData.role === "Company") {
        if (userData.role_company === "Sales Head") {
         navigate(`/salesDashboard/${userData.id}`);
@@ -91,11 +95,18 @@ const LoginPage = () => {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-
       if (user) {
-        setCurrentUser({ role: "Doctor", id: user.uid });
-        setShowPopup(true);
-        setTimeout(() => redirectToDashboard({ role: "Doctor", id: user.uid }), 2000);
+        const email = user.email;
+        const emailQuery = query(collection(db, "doctors"), where("email", "==", email));
+        const snapshot = await getDocs(emailQuery);
+        if (!snapshot.empty) {
+          const userData = snapshot.docs[0].data();
+          setCurrentUser({ ...userData, id: snapshot.docs[0].id });
+          setShowPopup(true);
+          setTimeout(() => redirectToDashboard({ ...userData, id: snapshot.docs[0].id }), 2000);
+        } else {
+          throw new Error("No doctor found with this email.");
+        }
       }
     } catch (error) {
       console.error("Error signing in with Google:", error.message);

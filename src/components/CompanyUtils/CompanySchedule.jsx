@@ -2,7 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import CompanySide from "./CompanySide";
 import CompanyNavbar from "./CompanyNavbar";
-import { getFirestore, collection, query, where, getDocs, doc, getDoc, deleteDoc, updateDoc, onSnapshot } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+  deleteDoc,
+  updateDoc,
+  onSnapshot,
+} from "firebase/firestore";
 import Calendar from "react-calendar";
 import Swal from "sweetalert2";
 import { FaEdit, FaCheck } from "react-icons/fa";
@@ -85,14 +96,24 @@ const CompanySchedule = () => {
           const promises = querySnapshot.docs.map(async (doc) => {
             const meetingData = doc.data();
             const doctorData = await fetchDoctorData(meetingData.doctorID);
-            const { assignedName, assignedRole } = await fetchAssignedData(meetingData.assigned);
+            const { assignedName, assignedRole } = await fetchAssignedData(
+              meetingData.assigned
+            );
             const doctorName = doctorData ? doctorData.name : "Unknown Doctor";
-            const location = doctorData ? doctorData.location : "Unknown location";
+            const location = doctorData
+              ? doctorData.location
+              : "Unknown location";
 
             const currentDate = new Date().toISOString().split("T")[0];
-            const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const meetingDateTime = new Date(`${meetingData.date} ${meetingData.time}`);
-            const isUpcoming = meetingDateTime > new Date(currentDate + ' ' + currentTime);
+            const currentTime = new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            const meetingDateTime = new Date(
+              `${meetingData.date} ${meetingData.time}`
+            );
+            const isUpcoming =
+              meetingDateTime > new Date(currentDate + " " + currentTime);
 
             if (isUpcoming) {
               return {
@@ -108,12 +129,18 @@ const CompanySchedule = () => {
             }
           });
 
-          const resolvedData = (await Promise.all(promises)).filter(meeting => meeting !== null);
-          const filteredByDate = resolvedData.filter(meeting => !searchDate || meeting.date === searchDate);
+          const resolvedData = (await Promise.all(promises)).filter(
+            (meeting) => meeting !== null
+          );
+          const filteredByDate = resolvedData.filter(
+            (meeting) => !searchDate || meeting.date === searchDate
+          );
           let filteredData = filteredByDate;
           if (searchLocation.trim() !== "") {
-            filteredData = filteredData.filter(meeting =>
-              meeting?.location?.toLowerCase().includes(searchLocation.toLowerCase())
+            filteredData = filteredData.filter((meeting) =>
+              meeting?.location
+                ?.toLowerCase()
+                .includes(searchLocation.toLowerCase())
             );
           }
           setScheduleMeetings(filteredData);
@@ -124,7 +151,6 @@ const CompanySchedule = () => {
         console.error("Error fetching schedule meetings:", error);
       }
     };
-
 
     fetchScheduleMeetings();
   }, [id, searchDate, searchLocation]);
@@ -237,7 +263,9 @@ const CompanySchedule = () => {
 
       setScheduleMeetings((prevMeetings) =>
         prevMeetings.map((meeting) =>
-          meeting.id === meetingId ? { ...meeting, status: "accepted" } : meeting
+          meeting.id === meetingId
+            ? { ...meeting, status: "accepted" }
+            : meeting
         )
       );
     } catch (error) {
@@ -256,12 +284,16 @@ const CompanySchedule = () => {
       <div className="flex flex-1 mt-[4.2rem]">
         <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
         <div
-          className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-60" : "ml-20"
-            }`}
+          className={`overflow-y-auto flex-1 transition-all duration-300 ${
+            sidebarOpen ? "ml-60" : "ml-20"
+          }`}
         >
           <div className="container px-4 mx-auto mt-10">
             <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
-              <span className="bg-[#8697C4] text-white p-2"> Schedule Meetings </span>
+              <span className="bg-[#8697C4] text-white p-2">
+                {" "}
+                Schedule Meetings{" "}
+              </span>
             </h2>
 
             <div className="flex justify-end items-center flex-col sm:flex-row mb-5">
@@ -291,132 +323,141 @@ const CompanySchedule = () => {
                   </button>
                 </div>
               </div>
-
-
             </div>
 
-            <div className="overflow-auto mt-3 table-container">
-              <table id="tables" className="min-w-full divide-y border divide-gray-200">
-                <thead className="text-xs text-gray-700 font-bold text-left uppercase">
+            <div className="relative overflow-auto shadow-md sm:rounded-lg mt-3 table-container">
+              <table className="divide-y border divide-gray-300 w-full text-left rtl:text-right">
+                <thead className="text-sm text-gray-700 uppercase ">
                   <tr>
                     <th
                       scope="col"
-                      className="px-2 py-3 text-sm tracking-wider bg-[#ADBBDA] text-white"
+                      className="px-2 py-3 tracking-wider bg-gray-50"
                     >
                       S.N.
                     </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
-                    >
+                    <th scope="col" className="px-6 py-3 tracking-wider">
                       Doctor Name
                     </th>
                     <th
                       scope="col"
-                      className="px-2 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
+                      className="px-6 py-3 tracking-wider bg-gray-50"
                     >
                       Assigned
                     </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
-                    >
+                    <th scope="col" className="px-6 py-3 tracking-wider">
                       Role
                     </th>
                     <th
                       scope="col"
-                      className="px-2 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
+                      className="px-6 py-3 tracking-wider bg-gray-50"
                     >
                       Date
                     </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
-                    >
+                    <th scope="col" className="px-6 py-3 tracking-wider">
                       Time
                     </th>
                     <th
                       scope="col"
-                      className="px-2 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
+                      className="px-6 py-3 tracking-wider bg-gray-50"
                     >
                       Location
                     </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
-                    >
+                    <th scope="col" className="px-6 py-3 tracking-wider">
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="px-2 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
+                      className="px-6 py-3 tracking-wider bg-gray-50"
                     >
                       Action
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {sortedMeetings.map((meeting, index) => (
-                    <tr key={index} className="border-b border-gray-200">
-                      <td scope="row" className="text-center bg-gray-50 px-1 py-2">
-                        {index + 1}.
-                      </td>
-                      <td className="px-1 py-2 font-semibold text-gray-900">
-                        {meeting.doctorName}
-                      </td>
-                      <td className=" bg-gray-50 px-1 py-2">{meeting.assignedName}</td>
-                      <td className="px-1 py-2 capitalize">{meeting.assignedRole}</td>
-                      <td className="px-1 py-2 bg-gray-50">{meeting.date}</td>
-                      <td className="px-1 py-2">{meeting.time}</td>
-                      <td className="px-1 py-2 capitalize bg-gray-50">{meeting.location}</td>
-                      <td className="px-1 py-2 capitalize">{meeting.status}</td>
-                      <td className="px-1 py-2 bg-gray-50">
-                        <button
-                          onClick={() => toggleCalendar(meeting.id)}
-                          className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
-                        >
-                          <FaEdit />
-                          {/* Modify */}
-                        </button>
-                        <Link
-                          to={meeting.meetingLink}
-                          type="button"
-                          className="text-white bg-[#8697C4] rounded-lg px-3 py-[6px] text-center me-2 mb-2"
-                        >
-                          <SiGooglemeet className="inline-block mb-[5px]" />
-                        </Link>
-                        {meeting.status !== "accepted" && meeting.status !== "Rescheduled" ? (
-                          <button
-                            onClick={() => handleDeleteMeeting(meeting.id)}
-                            type="button"
-                            className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
-                          >
-                            <MdAutoDelete />
-                            {/* Delete */}
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            className="text-white bg-gray-400 rounded-lg px-3 py-2 text-center me-2 mb-2 cursor-not-allowed"
-                            disabled
-                          >
-                            <MdAutoDelete />
-                            {/* Delete */}
-                          </button>
-                        )}
-
-                        {meeting.status === "Rescheduled" ? (
-                          <button
-                            type="button"
-                            onClick={() => handleAccept(meeting.id)}
-                            className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
-                          >
-                            <FaCheck />
-                          </button>
-                        ) : null}
+                <tbody>
+                  {sortedMeetings.length === 0 ? (
+                    <tr className="bg-white border-b dark:border-gray-200">
+                      <td colSpan="9" className="text-center py-4">
+                        <p className="text-lg">No Schedule meetings.</p>
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    sortedMeetings.map((meeting, index) => (
+                      <tr
+                        key={index}
+                        className="bg-white border-b dark:border-gray-200"
+                      >
+                        <td
+                          scope="row"
+                          className="px-2 py-3 bg-gray-50 text-center font-medium"
+                        >
+                          {index + 1}.
+                        </td>
+                        <td className="px-4 py-3 font-medium">
+                          {meeting.doctorName}
+                        </td>
+                        <td className="px-4 py-3 bg-gray-50">
+                          {meeting.assignedName}
+                        </td>
+                        <td className="px-4 py-3 capitalize">
+                          {meeting.assignedRole}
+                        </td>
+                        <td className="px-4 py-3 bg-gray-50">{meeting.date}</td>
+                        <td className="px-4 py-3">{meeting.time}</td>
+                        <td className="px-4 py-3 bg-gray-50">
+                          {meeting.location}
+                        </td>
+                        <td className="px-4 py-3 capitalize">
+                          {meeting.status}
+                        </td>
+                        <td className="px-4 py-3 bg-gray-50">
+                          <button
+                            onClick={() => toggleCalendar(meeting.id)}
+                            className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                          >
+                            <FaEdit />
+                            {/* Modify */}
+                          </button>
+                          <Link
+                            to={meeting.meetingLink}
+                            type="button"
+                            className="text-white bg-[#8697C4] rounded-lg px-3 py-[6px] text-center me-2 mb-2"
+                          >
+                            <SiGooglemeet className="inline-block mb-[5px]" />
+                          </Link>
+                          {meeting.status !== "accepted" &&
+                          meeting.status !== "Rescheduled" ? (
+                            <button
+                              onClick={() => handleDeleteMeeting(meeting.id)}
+                              type="button"
+                              className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                            >
+                              <MdAutoDelete />
+                              {/* Delete */}
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              className="text-white bg-gray-400 rounded-lg px-3 py-2 text-center me-2 mb-2 cursor-not-allowed"
+                              disabled
+                            >
+                              <MdAutoDelete />
+                              {/* Delete */}
+                            </button>
+                          )}
+
+                          {meeting.status === "Rescheduled" ? (
+                            <button
+                              type="button"
+                              onClick={() => handleAccept(meeting.id)}
+                              className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                            >
+                              <FaCheck />
+                            </button>
+                          ) : null}
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -428,10 +469,11 @@ const CompanySchedule = () => {
                 (_, i) => (
                   <button
                     key={i}
-                    className={`px-3 py-2 mx-1 rounded-md ${currentPage === i + 1
-                      ? "bg-[#7191E6] text-white"
-                      : "bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300"
-                      }`}
+                    className={`px-3 py-2 mx-1 rounded-md ${
+                      currentPage === i + 1
+                        ? "bg-[#7191E6] text-white"
+                        : "bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300"
+                    }`}
                     onClick={() => handlePageClick(i + 1)}
                   >
                     {i + 1}

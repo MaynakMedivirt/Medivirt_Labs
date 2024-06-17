@@ -248,52 +248,63 @@ const ComdashProfile = () => {
                       </div>
                     )}
                     {activeTab === "product" && (
-                      <div className="overflow-auto mt-3">
-                        <table className="min-w-full divide-y border divide-gray-200">
-                          <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
+                      <div className="relative overflow-auto shadow-md sm:rounded-lg mt-3 table-container">
+                        <table className="divide-y border divide-gray-300 w-full text-left rtl:text-right">
+                          <thead className="text-sm text-gray-700 uppercase ">
                             <tr>
                               <th
                                 scope="col"
-                                className="px-6 py-3 text-sm tracking-wider"
+                                className="px-2 py-3 tracking-wider bg-gray-50"
                               >
                                 S.N.
                               </th>
                               <th
                                 scope="col"
-                                className="bg-gray-50 px-6 py-3 text-sm uppercase tracking-wider"
+                                className="px-6 py-3 tracking-wider"
                               >
                                 Product Name
                               </th>
                               <th
                                 scope="col"
-                                className="px-6 py-3 text-sm uppercase tracking-wider"
+                                className="px-6 py-3 tracking-wider bg-gray-50"
                               >
                                 Action
                               </th>
                             </tr>
                           </thead>
-                          <tbody className="bg-white divide-y divide-gray-200">
-                            {products.map((product, index) => (
-                              <tr
-                                key={product.id}
-                                className="border-b border-gray-200"
-                              >
-                                <td scope="row" className="px-4 py-2">
-                                  {index + 1}
-                                </td>
-                                <td className="px-4 py-2 font-medium text-gray-900 bg-gray-50">
-                                  {product.productName}
-                                </td>
-                                <td className="px-4 py-2">
-                                  <button
-                                    type="button"
-                                    className="text-white bg-[#7191E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
-                                  >
-                                    About Product
-                                  </button>
+                          <tbody>
+                            {products.length === 0 ? (
+                              <tr className="bg-white border-b dark:border-gray-200">
+                                <td colSpan="3" className="text-center py-4">
+                                  <p className="text-lg">No Products.</p>
                                 </td>
                               </tr>
-                            ))}
+                            ) : (
+                              products.map((product, index) => (
+                                <tr
+                                  key={index}
+                                  className="bg-white border-b dark:border-gray-200"
+                                >
+                                  <td
+                                    scope="row"
+                                    className="px-2 py-3 bg-gray-50 text-center font-medium"
+                                  >
+                                    {index + 1}.
+                                  </td>
+                                  <td className="px-4 py-3 font-medium">
+                                    {product.productName}
+                                  </td>
+                                  <td className="px-4 py-3 bg-gray-50">
+                                    <button
+                                      type="button"
+                                      className="text-white bg-[#7191E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                                    >
+                                      About Product
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))
+                            )}
                           </tbody>
                         </table>
                       </div>

@@ -91,7 +91,7 @@
 
 
 /* Responsive table adjustments for screen sizes between 768px and 1180px */
-@media screen and (min-width: 768px) and (max-width: 1180px) {
+/* @media screen and (min-width: 768px) and (max-width: 1180px) {
   #tables thead th {
     padding: 0.75rem 0.5rem;
     font-size: medium;
@@ -103,10 +103,10 @@
   #tables tbody td button {
     margin-inline-end: 3px;
   }
-}
+} */
 
 /* Responsive table adjustments for screen sizes less than 768px */
-@media screen and (max-width: 768px) {
+/* @media screen and (max-width: 768px) {
   #tables thead th {
     padding: 0.75rem 0.5rem;
     font-size: small;
@@ -114,9 +114,5 @@
   #tables tbody td {
     padding: 0.5rem;
     font-size: small;
-  }
-  /* Uncomment the following if additional button margin is required */
-  /* #tables tbody td button {
-    margin: 0 3px;
   } */
-}
+/* } */

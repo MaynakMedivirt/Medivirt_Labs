@@ -195,7 +195,7 @@ const AddDoctor = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder=" "
-                    required
+                    // required
                   />
                   <label
                     htmlFor="email"

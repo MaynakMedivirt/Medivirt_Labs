@@ -84,18 +84,17 @@ const Products = () => {
           }`}
         >
           <div className="container px-4 mx-auto my-10">
-            
-            <div id="product"className="flex justify-between items-center">
+            <div id="product" className="flex justify-between items-center">
               <h2 className="text-[1.5rem] font-bold text-center uppercase">
                 <span className="bg-[#8697C4] text-white p-2">Products</span>
               </h2>
               <div id="productlink">
-              <Link
-                to={`/company/add-product/${id}`}
-                className="bg-[#8697C4] hover:bg-[#ADBBDA] text-white font-bold py-2 px-4 rounded"
-              >
-                Add Product
-              </Link>
+                <Link
+                  to={`/company/add-product/${id}`}
+                  className="bg-[#8697C4] hover:bg-[#ADBBDA] text-white font-bold py-2 px-4 rounded"
+                >
+                  Add Product
+                </Link>
               </div>
             </div>
 
@@ -108,7 +107,7 @@ const Products = () => {
                     onChange={handleSearch}
                     placeholder="Search by product name"
                     className="px-4 py-2 border border-gray-300 w-full lg:w-auto"
-                    />
+                  />
                 </div>
                 <button
                   onClick={() => console.log("Search logic here")}
@@ -119,49 +118,60 @@ const Products = () => {
               </div>
             </div>
 
-            <div className="overflow-auto mt-3 border tzble-container">
-              <table id="tables" className="min-w-full divide-y divide-gray-200">
-                <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
+            <div className="relative overflow-auto shadow-md sm:rounded-lg mt-3 table-container">
+              <table className="divide-y border divide-gray-300 w-full text-left rtl:text-right">
+                <thead className="text-sm text-gray-700 uppercase ">
                   <tr>
                     <th
                       scope="col"
-                      className="px-4 py-3 text-sm tracking-wider bg-[#ADBBDA] text-white"
+                      className="px-2 py-3 tracking-wider bg-gray-50"
                     >
                       S.N.
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
-                    >
+                    <th scope="col" className="px-6 py-3 tracking-wider">
                       Product Name
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
+                      className="px-6 py-3 tracking-wider bg-gray-50"
                     >
                       Action
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {currentProducts.map((product, index) => (
-                    <tr key={product.id} className="border-b border-gray-200">
-                      <td scope="row" className="px-4 py-2">
-                        {indexOfFirstProduct + index + 1}
-                      </td>
-                      <td className="px-4 py-2 font-medium text-gray-900 bg-gray-50">
-                        {product.productName}
-                      </td>
-                      <td className="px-4 py-2">
-                        <button
-                          type="button"
-                          className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
-                        >
-                          About Product
-                        </button>
+                <tbody>
+                  {currentProducts.length === 0 ? (
+                    <tr className="bg-white border-b dark:border-gray-200">
+                      <td colSpan="3" className="text-center py-4">
+                        <p className="text-lg">No Products.</p>
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    currentProducts.map((product, index) => (
+                      <tr
+                        key={product.id}
+                        className="bg-white border-b dark:border-gray-200"
+                      >
+                        <td
+                          scope="row"
+                          className="px-2 py-3 bg-gray-50 text-center font-medium"
+                        >
+                          {indexOfFirstProduct + index + 1}.
+                        </td>
+                        <td className="px-4 py-3 font-medium">
+                          {product.productName}
+                        </td>
+                        <td className="px-4 py-3 bg-gray-50">
+                          <button
+                            type="button"
+                            className="text-white bg-[#7191E6] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                          >
+                            About Product
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

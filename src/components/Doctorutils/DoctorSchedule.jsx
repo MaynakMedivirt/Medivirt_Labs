@@ -2,7 +2,17 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link, Routes, Route } from "react-router-dom";
 import DoctorNavbar from "./DoctorNavbar";
 import DoctorSide from "./DoctorSide";
-import {getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc, onSnapshot,} from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc,
+  onSnapshot,
+} from "firebase/firestore";
 import Calendar from "react-calendar";
 import Swal from "sweetalert2";
 import "../style/Doctor.css";
@@ -277,7 +287,10 @@ const DoctorSchedule = () => {
         >
           <div className="container px-4 mx-auto mt-10">
             <h2 className="text-[1.5rem] my-5 font-bold text-center uppercase">
-              <span className="bg-[#8697C4] text-white p-2"> Schedule Meetings </span>
+              <span className="bg-[#8697C4] text-white p-2">
+                {" "}
+                Schedule Meetings{" "}
+              </span>
             </h2>
 
             <div className="flex justify-end items-center bg-white rounded max-md:flex-wrap max-md:max-w-full">
@@ -299,107 +312,114 @@ const DoctorSchedule = () => {
               </div>
             </div>
 
-            <div className="overflow-auto mt-3 table-container">
-              <table id="tables" className="min-w-full divide-y divide-gray-200 border">
-                <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
+            <div className="relative overflow-auto shadow-md sm:rounded-lg mt-3 table-container">
+              <table className="divide-y border divide-gray-300 w-full text-left rtl:text-right">
+                <thead className="text-sm text-gray-700 uppercase ">
                   <tr>
                     <th
                       scope="col"
-                      className="px-3 py-3 w-10 text-sm tracking-wider bg-[#ADBBDA] text-white"
+                      className="px-2 py-3 tracking-wider bg-gray-50"
                     >
                       S.N.
                     </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 w-25 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
-                    >
+                    <th scope="col" className="px-6 py-3 tracking-wider">
                       Company Name
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
+                      className="px-6 py-3 tracking-wider bg-gray-50"
                     >
                       Representative Name
                     </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
-                    >
+                    <th scope="col" className="px-6 py-3 tracking-wider">
                       Date
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
+                      className="px-6 py-3 tracking-wider bg-gray-50"
                     >
                       Time
                     </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
-                    >
+                    <th scope="col" className="px-6 py-3 tracking-wider">
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
+                      className="px-6 py-3 tracking-wider bg-gray-50"
                     >
                       Actions
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {scheduleMeetings.map((meeting, index) => (
-                    <tr key={meeting.id} className="border-b border-gray-200">
-                      <td scope="row" className="px-3 py-4 w-10">
-                        {index + 1}
-                      </td>
-                      <td className="px-3 py-4 font-medium text-gray-900 bg-gray-50">
-                        {meeting.companyName}
-                      </td>
-                      <td className="px-3 py-4">{meeting.assignedName}</td>
-                      <td className="px-3 py-4 bg-gray-50">{meeting.date}</td>
-                      <td className="px-3 py-4">{meeting.time}</td>
-                      <td className="px-3 py-4 capitalize bg-gray-50">
-                        {meeting.status}
-                      </td>
-                      <td className="px-3 py-4">
-                        <button
-                          onClick={() => toggleCalendar(meeting.id)}
-                          className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
-                        >
-                          <FaEdit />
-                          {/* Modify */}
-                        </button>
-
-                        {meeting.status !== "accepted" &&
-                        meeting.status !== "Rescheduled" ? (
-                          <button
-                            onClick={() => handleAccept(meeting.id)}
-                            type="button"
-                            className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
-                          >
-                            <FaCheck />
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            className="text-white bg-gray-400 rounded-lg px-3 py-2 text-center me-2 mb-2 cursor-not-allowed"
-                            disabled
-                          >
-                            <FaCheck />
-                          </button>
-                        )}
-
-                        <Link
-                          to={meeting.meetingLink}
-                          type="button"
-                          className="text-white bg-[#8697C4] rounded-lg px-3 py-[6px] text-center me-2 mb-2"
-                        >
-                          <SiGooglemeet className="inline-block mb-[5px]" />
-                        </Link>
+                  {scheduleMeetings.length === 0 ? (
+                    <tr className="bg-white border-b dark:border-gray-200">
+                      <td colSpan="7" className="text-center py-4">
+                        <p className="text-lg">No Schedule meetings.</p>
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    scheduleMeetings.map((meeting, index) => (
+                      <tr
+                        key={index}
+                        className="bg-white border-b dark:border-gray-200"
+                      >
+                        <td
+                          scope="row"
+                          className="px-2 py-3 bg-gray-50 text-center font-medium"
+                        >
+                          {index + 1}.
+                        </td>
+                        <td className="px-4 py-3 font-medium">
+                          {meeting.companyName}
+                        </td>
+                        <td className="px-4 py-3 bg-gray-50">
+                          {meeting.assignedName}
+                        </td>
+                        <td className="px-4 py-3">{meeting.date}</td>
+                        <td className="px-4 py-3 bg-gray-50">{meeting.time}</td>
+                        <td className="px-4 py-3 capitalize">
+                          {meeting.status}
+                        </td>
+                        <td className="px-4 py-3 bg-gray-50">
+                          <button
+                            onClick={() => toggleCalendar(meeting.id)}
+                            className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                          >
+                            <FaEdit />
+                            {/* Modify */}
+                          </button>
+
+                          {meeting.status !== "accepted" &&
+                          meeting.status !== "Rescheduled" ? (
+                            <button
+                              onClick={() => handleAccept(meeting.id)}
+                              type="button"
+                              className="text-white bg-[#8697C4] rounded-lg px-3 py-2 text-center me-2 mb-2"
+                            >
+                              <FaCheck />
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              className="text-white bg-gray-400 rounded-lg px-3 py-2 text-center me-2 mb-2 cursor-not-allowed"
+                              disabled
+                            >
+                              <FaCheck />
+                            </button>
+                          )}
+
+                          <Link
+                            to={meeting.meetingLink}
+                            type="button"
+                            className="text-white bg-[#8697C4] rounded-lg px-3 py-[6px] text-center me-2 mb-2"
+                          >
+                            <SiGooglemeet className="inline-block mb-[5px]" />
+                          </Link>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

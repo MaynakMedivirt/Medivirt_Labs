@@ -3,7 +3,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Sliderimg from "../assets/img/Slider-img.jpg";
 import "./style/Home.css";
-
+import { Link } from "react-router-dom";
 
 const Pricing = () => {
   const handleSubmit = () => {
@@ -119,9 +119,12 @@ const Pricing = () => {
                 <div className="flex-auto">setup fee : rs. 3999/- </div>
               </div>
               <div id="cardbuy1" className="flex flex-col  mt-[3.8rem] ml-3 text-lg font-semibold text-center text-white capitalize bg-indigo-800">
-                <button className="text-center px-12 py-3.5 bg-indigo-400 hover:bg-indigo-500 transition-all duration-300 ease-in-out">
+                <Link to="https://payments.cashfree.com/forms/medivirt" target="_blank" type="button" className="text-center px-12 py-3.5 bg-indigo-400 hover:bg-indigo-500 transition-all duration-300 ease-in-out">
                   Buy Now
-                </button>
+                </Link>
+                {/* <button className="text-center px-12 py-3.5 bg-indigo-400 hover:bg-indigo-500 transition-all duration-300 ease-in-out">
+                  Buy Now
+                </button> */}
               </div>
             </div>
             <div className="flex flex-col border mt-4 px-10 py-12 text-base bg-white rounded-xl shadow-sm max-w-[329px] ">

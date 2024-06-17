@@ -184,71 +184,68 @@ const CompanyCredits = () => {
                   Completed Meetings ({completedMeetings.length})
                 </h1>
               </div>
-              <div className="overflow-auto mt-3 table-container">
-                <table
-                  id="tables"
-                  className="min-w-full divide-y divide-gray-200"
-                >
-                  <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
+
+              <div className="relative overflow-auto shadow-md sm:rounded-lg mt-3 table-container">
+                <table className="divide-y border divide-gray-300 w-full text-left rtl:text-right">
+                  <thead className="text-sm text-gray-700 uppercase ">
                     <tr>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-sm tracking-wider bg-[#ADBBDA] text-white"
+                        className="px-2 py-3 tracking-wider bg-gray-50"
                       >
                         S.N.
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
-                      >
+                      <th scope="col" className="px-6 py-3 tracking-wider">
                         Doctor Name
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
+                        className="px-6 py-3 tracking-wider bg-gray-50"
                       >
                         Representative Name
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
-                      >
+                      <th scope="col" className="px-6 py-3 tracking-wider">
                         Date
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
+                        className="px-6 py-3 tracking-wider bg-gray-50"
                       >
                         Time
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody>
                     {currentMeetings.length === 0 ? (
-                      <tr>
+                      <tr className="bg-white border-b dark:border-gray-200">
                         <td colSpan="5" className="text-center py-4">
-                          <p className="text-lg">No completed meetings found.</p>
+                          <p className="text-lg">
+                            No completed meetings found.
+                          </p>
                         </td>
                       </tr>
                     ) : (
                       currentMeetings.map((meeting, index) => (
                         <tr
-                          key={meeting.id}
-                          className="border-b border-gray-200"
+                          key={index}
+                          className="bg-white border-b dark:border-gray-200"
                         >
-                          <td scope="row" className="px-6 py-4">
-                            {index + 1}
+                          <td
+                            scope="row"
+                            className="px-2 py-3 bg-gray-50 text-center font-medium"
+                          >
+                            {index + 1}.
                           </td>
-                          <td className="px-6 py-4 font-medium text-gray-900 bg-gray-50">
+                          <td className="px-4 py-3 font-medium">
                             {meeting.doctorName}
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-4 py-3 bg-gray-50">
                             {meeting.representativeName}
                           </td>
-                          <td className="px-6 py-4 bg-gray-50">
-                            {meeting.date}
+                          <td className="px-4 py-3">{meeting.date}</td>
+                          <td className="px-4 py-3 bg-gray-50">
+                            {meeting.time}
                           </td>
-                          <td className="px-6 py-4">{meeting.time}</td>
                         </tr>
                       ))
                     )}

@@ -2,10 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import CompanySide from "./CompanySide";
 import CompanyNavbar from "./CompanyNavbar";
-import {getFirestore, collection, query, where, getDocs,} from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { FaEdit } from "react-icons/fa";
 import { MdAutoDelete } from "react-icons/md";
-import '../style/Company.css';
+import "../style/Company.css";
 
 const Users = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -75,11 +81,11 @@ const Users = () => {
       <div className="flex flex-1 mt-[4.2rem]">
         <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
         <div
-          className={`overflow-y-auto flex-1 transition-all duration-300 ${sidebarOpen ? "ml-60" : "ml-20"
-            }`}
+          className={`overflow-y-auto flex-1 transition-all duration-300 ${
+            sidebarOpen ? "ml-60" : "ml-20"
+          }`}
         >
           <div className="container px-4 mx-auto my-10">
-
             <div id="users" className="flex justify-between items-center">
               <h2 className="text-[1.5rem] font-bold text-center uppercase">
                 <span className="bg-[#8697C4] text-white p-2">Users</span>
@@ -113,58 +119,54 @@ const Users = () => {
                 </button>
               </div>
             </div>
-            <div className="overflow-auto mt-3 border table-container">
-              <table id="tables" className="min-w-full divide-y divide-gray-200">
-                <thead className="text-xs text-gray-700 font-bold border-t border-gray-200 text-left uppercase">
+            <div className="relative overflow-auto shadow-md sm:rounded-lg mt-3 table-container">
+              <table className="divide-y border divide-gray-300 w-full text-left rtl:text-right">
+                <thead className="text-sm text-gray-700 uppercase ">
                   <tr>
                     <th
                       scope="col"
-                      className="px-4 py-3 text-sm tracking-wider bg-[#ADBBDA] text-white"
+                      className="px-2 py-3 tracking-wider bg-gray-50"
                     >
                       S.N.
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
-                    >
+                    <th scope="col" className="px-6 py-3 tracking-wider">
                       Name
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
+                      className="px-6 py-3 tracking-wider bg-gray-50"
                     >
                       Role
                     </th>
-                    <th
-                      scope="col"
-                      className="px-4 py-3 text-sm uppercase tracking-wider bg-[#8697C4] text-white"
-                    >
+                    <th scope="col" className="px-6 py-3 tracking-wider">
                       Location
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 text-sm uppercase tracking-wider bg-[#ADBBDA] text-white"
+                      className="px-6 py-3 tracking-wider bg-gray-50"
                     >
                       Action
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody>
                   {currentUsers.map((user, index) => (
-                    <tr key={user.id} className="border-b border-gray-200">
-                      <td scope="row" className="px-4 py-2">
-                        {indexOfFirstUser + index + 1}
+                    <tr
+                      key={user.id}
+                      className="bg-white border-b dark:border-gray-200"
+                    >
+                      <td
+                        scope="row"
+                        className="px-2 py-3 bg-gray-50 text-center font-medium"
+                      >
+                        {indexOfFirstUser + index + 1}.
                       </td>
-                      <td className="px-4 py-2 font-medium text-gray-900 bg-gray-50">
+                      <td className="px-4 py-3 font-medium">
                         {user.firstName} {user.lastName}
                       </td>
-                      <td className="px-4 py-2 font-medium text-gray-900 ">
-                        {user.role}
-                      </td>
-                      <td className="px-4 py-2 font-medium text-gray-900 bg-gray-50">
-                        {user.location}
-                      </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3 bg-gray-50">{user.role}</td>
+                      <td className="px-4 py-3">{user.location}</td>
+                      <td className="px-4 py-3 bg-gray-50">
                         <button
                           onClick={() =>
                             handleEditProfile(user.id, user.companyId)
@@ -190,10 +192,11 @@ const Users = () => {
               {pageNumbers.map((number) => (
                 <button
                   key={number}
-                  className={`px-3 py-2 mx-1 rounded-md font-bold ${currentPage === number
-                    ? "bg-transparent text-gray-800 border border-[#7191E6] hover:bg-[#7191E6] hover:text-white"
-                    : "bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300"
-                    }`}
+                  className={`px-3 py-2 mx-1 rounded-md font-bold ${
+                    currentPage === number
+                      ? "bg-transparent text-gray-800 border border-[#7191E6] hover:bg-[#7191E6] hover:text-white"
+                      : "bg-transparent text-gray-800 border border-gray-300 hover:bg-gray-300"
+                  }`}
                   onClick={() => paginate(number)}
                 >
                   {number}

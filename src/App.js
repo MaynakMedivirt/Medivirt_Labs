@@ -15,6 +15,7 @@ import Pricing from './components/Pricing';
 import Footer from './components/Footer';
 import LearnMore from './components/LearnMore';
 
+import DoctorProfileComplete from './components/Doctorutils/DoctorProfileComplete';
 import DoctorDashboard from './components/Doctorutils/DoctorDashboard';
 import DocdashProfile from './components/Doctorutils/DocdashProfile';
 import EditDoctorAbout from './components/Doctorutils/EditDoctorAbout';
@@ -122,6 +123,7 @@ const App = () => {
           <Route path='/price' element={<Pricing/>}/>
           <Route path='/footer' element={<Footer/>}/>
 
+          <Route path='/doctorprofilecomplete/:id' element={<DoctorProfileComplete/>}/>
           <Route path='/doctorDashboard/:id' element={<DoctorDashboard/>}/>
           <Route path='/doctor/profile/:id' element={<DocdashProfile/>}/>          
           <Route path='/doctor/profile/edit-about/:id' element={<EditDoctorAbout/>}/>          
