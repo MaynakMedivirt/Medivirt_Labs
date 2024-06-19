@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getFirestore, doc, getDoc, onSnapshot } from "firebase/firestore";
+import { parseISO, format, parse, compareAsc } from "date-fns";
 
 const Doctorbox = ({ conversation, setCurrentConversation }) => {
   const [senderNames, setSenderNames] = useState({});
@@ -44,12 +45,14 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
               id: doc.id,
               message: messageData.message,
               sentBy: messageData.sentBy,
-              date: new Date(
-                messageData.timestamp.toDate()
-              ).toLocaleDateString(),
-              time: new Date(
-                messageData.timestamp.toDate()
-              ).toLocaleTimeString(),
+              date: format(
+                parseISO(messageData.timestamp.toDate().toISOString()),
+                "dd-MM-yyyy"
+              ),
+              time: format(
+                parseISO(messageData.timestamp.toDate().toISOString()),
+                "hh:mm a"
+              ),
             },
           ],
         };
@@ -113,27 +116,32 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
   }, [conversation]);
 
   const compareTimeStamps = (msg1, msg2) => {
-    const date1 = new Date(msg1.date);
-    const date2 = new Date(msg2.date);
+    const date1 = msg1.date ? parse(msg1.date, "dd-MM-yyyy", new Date()) : null;
+    const date2 = msg2.date ? parse(msg2.date, "dd-MM-yyyy", new Date()) : null;
 
-    if (date1.getTime() !== date2.getTime()) {
-      return date1.getTime() - date2.getTime();
+    const dateComparison = compareAsc(date1, date2);
+
+    if (dateComparison !== 0) {
+      return dateComparison;
     } else {
-      const time1 = new Date("2000-01-01 " + msg1.time);
-      const time2 = new Date("2000-01-01 " + msg2.time);
-      return time1.getTime() - time2.getTime();
+      const time1 = msg1.time ? parse(msg1.time, "hh:mm a", new Date()) : null;
+      const time2 = msg2.time ? parse(msg2.time, "hh:mm a", new Date()) : null;
+      return compareAsc(time1, time2);
     }
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-GB");
   };
 
   let currentDate = null;
 
   return (
-    <div className="doctorbox-container" style={{ display: "flex", flexDirection: "column-reverse", height: "100%", overflowY: "auto" }}>
+    <div
+      className="doctorbox-container"
+      style={{
+        display: "flex",
+        flexDirection: "column-reverse",
+        height: "100%",
+        overflowY: "auto",
+      }}
+    >
       <div className="">
         {conversation &&
           conversation.messages &&
@@ -141,7 +149,8 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
             .filter((msg) => msg.time)
             .sort(compareTimeStamps)
             .map((msg, idx) => {
-              const showDate = msg.date !== currentDate;
+              const showDate =
+                idx === 0 || msg.date !== conversation.messages[idx - 1].date;
               currentDate = msg.date;
               let name;
               if (msg.sentBy === "company" || msg.sentBy === "user") {
@@ -153,7 +162,7 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
                 <div key={idx}>
                   {showDate && (
                     <div className="mb-2 text-center text-gray-600">
-                      {formatDate(msg.date)}
+                      {msg.date}
                     </div>
                   )}
                   <div

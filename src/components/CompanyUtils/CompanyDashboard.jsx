@@ -1,130 +1,414 @@
-import React, { useState, useEffect } from 'react';
-import CompanyNavbar from './CompanyNavbar';
-import CompanySide from './CompanySide';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import CompanyNavbar from "./CompanyNavbar";
+import CompanySide from "./CompanySide";
 import { AiFillMessage } from "react-icons/ai";
 import { RiCalendarScheduleLine } from "react-icons/ri";
-import { FaChartLine } from "react-icons/fa6";
+import { FaChartLine } from "react-icons/fa";
 import { PiChartPieSliceFill } from "react-icons/pi";
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
-import { useParams } from 'react-router-dom';
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  onSnapshot,
+  doc,
+  getDoc,
+} from "firebase/firestore";
+import { useParams } from "react-router-dom";
+import { format } from "date-fns";
+import Graph from "../../assets/img/graph.PNG";
 
 const CompanyDashboard = () => {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [messageCount, setMessageCount] = useState(0);
-    const [meetingCount, setMeetingCount] = useState(0);
-    const [projectedEarnings, setProjectedEarnings] = useState(0);
-    const { id } = useParams();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [messages, setMessages] = useState([]);
+  const [scheduleMeetings, setScheduleMeetings] = useState([]);
+  const { id } = useParams();
 
-    const toggleSidebar = () => {
-        setSidebarOpen(!sidebarOpen);
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const db = getFirestore();
+        const messageRef = collection(db, "messages");
+        const q = query(messageRef, where("companyID", "==", id));
+        const querySnapshot = await getDocs(q);
+
+        const fetchDoctorData = async (doctorId) => {
+          const doctorDocRef = doc(db, "doctors", doctorId);
+          const doctorDocSnapshot = await getDoc(doctorDocRef);
+          return doctorDocSnapshot.exists() ? doctorDocSnapshot.data() : null;
+        };
+
+        const fetchAssignedData = async (messageId) => {
+          try {
+            const companyDocRef = doc(db, "companies", messageId);
+            const companyDocSnapshot = await getDoc(companyDocRef);
+
+            if (companyDocSnapshot.exists()) {
+              return companyDocSnapshot.data().name;
+            }
+
+            const userDocRef = doc(db, "users", messageId);
+            const userDocSnapshot = await getDoc(userDocRef);
+
+            return userDocSnapshot.exists()
+              ? `${userDocSnapshot.data().firstName} ${
+                  userDocSnapshot.data().lastName
+                }`
+              : null;
+          } catch (error) {
+            console.error("Error fetching assigned data:", error);
+            return null;
+          }
+        };
+
+        const groupedMessages = {};
+        const promises = querySnapshot.docs.map(async (doc) => {
+          const messageData = doc.data();
+          const assignedName = await fetchAssignedData(messageData.messageId);
+          const doctorData = await fetchDoctorData(messageData.doctorID);
+          const doctorName = doctorData ? doctorData.name : "Unknown Doctor";
+
+          const key = `${messageData.doctorID}_${messageData.companyID}`;
+          if (!groupedMessages[key]) {
+            groupedMessages[key] = {
+              doctorName,
+              assignedName,
+              doctorID: messageData.doctorID,
+              companyID: messageData.companyID,
+              messages: [],
+              recentMessage: {
+                text: "",
+                isCompany: false,
+                date: "",
+                time: "",
+                timestamp: null,
+              },
+            };
+          }
+
+          const timestamp = messageData.timestamp?.toDate();
+          const date = timestamp ? format(timestamp, "dd-MM-yyyy") : "N/A";
+          const time = timestamp ? format(timestamp, "hh:mm a") : "N/A";
+
+          groupedMessages[key].messages.push({
+            messageId: messageData.messageId,
+            sentId: messageData.sentId,
+            id: doc.id,
+            message: messageData.messages,
+            sentBy: messageData.sentBy,
+            date,
+            time,
+          });
+
+          if (
+            !groupedMessages[key].recentMessage.timestamp ||
+            timestamp > groupedMessages[key].recentMessage.timestamp
+          ) {
+            groupedMessages[key].recentMessage = {
+              text: messageData.messages,
+              isCompany: messageData.sentBy === "company",
+              date,
+              time,
+              timestamp,
+            };
+          }
+        });
+
+        await Promise.all(promises);
+
+        const messagesArray = Object.values(groupedMessages);
+        const sortedMessages = messagesArray
+          .sort((a, b) => {
+            const timestampA = a.recentMessage.timestamp;
+            const timestampB = b.recentMessage.timestamp;
+            return timestampB - timestampA;
+          })
+          .slice(0, 4);
+
+        setMessages(sortedMessages);
+      } catch (error) {
+        console.error("Error fetching schedule messages:", error);
+      }
     };
 
-    useEffect(() => {
-        const fetchMessageCount = async () => {
-            try {
-                const db = getFirestore();
-                const messageRef = collection(db, "messages");
-                const q = query(messageRef, where("companyID", "==", id)); 
-                const querySnapshot = await getDocs(q);
+    const fetchScheduleMeetings = async () => {
+      try {
+        const db = getFirestore();
+        const scheduleMeetingsRef = collection(db, "scheduleMeeting");
+        const q = query(scheduleMeetingsRef, where("companyID", "==", id));
 
-                const uniqueCompanies = new Set();
-                querySnapshot.forEach((doc) => {
-                    const messageData = doc.data();
-                    uniqueCompanies.add(messageData.doctorID);
-                });
-
-                setMessageCount(uniqueCompanies.size);
-            } catch (error) {
-                console.error("Error fetching unique company count:", error);
+        const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+          const fetchDoctorData = async (doctorId) => {
+            const doctorDocRef = doc(db, "doctors", doctorId);
+            const doctorDocSnapshot = await getDoc(doctorDocRef);
+            if (doctorDocSnapshot.exists()) {
+              return doctorDocSnapshot.data();
+            } else {
+              console.error(`Doctor with ID ${doctorId} not found`);
+              return null;
             }
-        };
+          };
 
-        const fetchMeetingCount = async () => {
-            try {
-                const db = getFirestore();
-                const meetingRef = collection(db, "scheduleMeeting");
-                const q = query(meetingRef, where("companyID", "==", id));
-                const querySnapshot = await getDocs(q);
-                setMeetingCount(querySnapshot.size);
-            } catch (error) {
-                console.error("Error fetching meeting count:", error);
+          const fetchCompanyData = async (companyId) => {
+            const CompanyDocRef = doc(db, "companies", companyId);
+            const CompanyDocSnapshot = await getDoc(CompanyDocRef);
+            if (CompanyDocSnapshot.exists()) {
+              return CompanyDocSnapshot.data();
+            } else {
+              console.error(`Company with ID ${companyId} not found`);
+              return null;
             }
-        };
+          };
 
-        fetchMessageCount();
-        fetchMeetingCount();
-    }, []);
+          const fetchAssignedData = async (assigned) => {
+            let assignedName;
+            let assignedRole;
 
-    // useEffect(() => {
-    //     setProjectedEarnings(meetingCount * 150); 
-    // }, [meetingCount]);
+            try {
+              const companyDocRef = doc(db, "companies", assigned);
+              const companyDocSnapshot = await getDoc(companyDocRef);
 
-    return (
-        <div className="flex flex-col h-screen">
-            <CompanyNavbar />
-            <div className="flex flex-1 mt-[4.2rem]">
-                <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
-                <div className={`overflow-y-auto flex-1 transition-margin duration-300 ${sidebarOpen ? 'ml-60' : 'ml-20'}`}>
-                    <div className="container px-4 mx-auto my-10">
-                        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                            <div className="bg-white border shadow-sm rounded p-5">
-                                <div className="flex space-x-4 items-center">
-                                    <div>
-                                        <div className="bg-gray-50 rounded-full w-12 h-12 text-rose-300 flex justify-center items-center">
-                                            <AiFillMessage className="text-[#8697C4] h-6 w-6" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div className="text-gray-400">Messages</div>
-                                        <div className="text-2xl font-bold text-black">{messageCount}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="bg-white border shadow-sm rounded p-5">
-                                <div className="flex space-x-4 items-center">
-                                    <div>
-                                        <div className="bg-gray-50 rounded-full w-12 h-12 text-rose-300 flex justify-center items-center">
-                                            <RiCalendarScheduleLine className="text-[#8697C4] h-6 w-6" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div className="text-gray-400">Schedule-Meeting</div>
-                                        <div className="text-2xl font-bold text-black">{meetingCount}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="bg-white border shadow-sm rounded p-5">
-                                <div className="flex space-x-4 items-center">
-                                    <div>
-                                        <div className="bg-gray-50 rounded-full w-12 h-12 text-rose-300 flex justify-center items-center">
-                                            <FaChartLine className="text-[#8697C4] h-6 w-6" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div className="text-gray-400">Credits</div>           
-                                        <div className="text-2xl font-bold text-black">{meetingCount}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="bg-white border shadow-sm rounded p-5">
-                                <div className="flex space-x-4 items-center">
-                                    <div>
-                                        <div className="bg-gray-50 rounded-full w-12 h-12 text-rose-300 flex justify-center items-center">
-                                            <PiChartPieSliceFill className="text-[#8697C4] h-6 w-6" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div className="text-gray-400">Analytics</div>
-                                        <div className="text-2xl font-bold text-black">----</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+              if (companyDocSnapshot.exists()) {
+                assignedName = companyDocSnapshot.data().name;
+                assignedRole = companyDocSnapshot.data().role;
+              } else {
+                const userDocRef = doc(db, "users", assigned);
+                const userDocSnapshot = await getDoc(userDocRef);
+
+                if (userDocSnapshot.exists()) {
+                  const userData = userDocSnapshot.data();
+                  assignedName = `${userData.firstName} ${userData.lastName}`;
+                  assignedRole = userData.role;
+                } else {
+                  console.error(`No document found with ID ${assigned}`);
+                }
+              }
+            } catch (error) {
+              console.error("Error fetching assigned data:", error);
+            }
+
+            return { assignedName, assignedRole };
+          };
+
+          const currentDate = new Date().toISOString().split("T")[0];
+          const currentTime = new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+
+          const upcomingMeetings = [];
+          querySnapshot.forEach((doc) => {
+            const meetingData = doc.data();
+            const meetingDateTime = new Date(
+              `${meetingData.date} ${meetingData.time}`
+            );
+
+            // Check if meeting is upcoming
+            if (meetingDateTime > new Date(currentDate + " " + currentTime)) {
+              upcomingMeetings.push({
+                id: doc.id,
+                ...meetingData,
+              });
+            }
+          });
+
+          // Sort upcoming meetings by date/time ascending
+          upcomingMeetings.sort((a, b) => {
+            const dateTimeA = new Date(`${a.date} ${a.time}`);
+            const dateTimeB = new Date(`${b.date} ${b.time}`);
+            return dateTimeA - dateTimeB;
+          });
+
+          // Take the first 4 upcoming meetings
+          const recentMeetings = upcomingMeetings.slice(0, 4);
+
+          // Fetch doctor and assigned data for each meeting
+          const promises = recentMeetings.map(async (meeting) => {
+            const doctorData = await fetchDoctorData(meeting.doctorID);
+            const companyData = await fetchCompanyData(meeting.companyID);
+            const { assignedName, assignedRole } = await fetchAssignedData(
+              meeting.assigned
+            );
+            const doctorName = doctorData ? doctorData.name : "Unknown Doctor";
+            const companyName = companyData
+              ? companyData.companyName
+              : "Unknown Company";
+
+            return {
+              id: meeting.id,
+              doctorName,
+              companyName,
+              assignedName,
+              assignedRole,
+              ...meeting,
+            };
+          });
+
+          // Resolve all promises and set the state
+          const resolvedData = await Promise.all(promises);
+          setScheduleMeetings(resolvedData);
+        });
+
+        return () => unsubscribe();
+      } catch (error) {
+        console.error("Error fetching schedule meetings:", error);
+      }
+    };
+
+    fetchMessages();
+    fetchScheduleMeetings();
+
+    return () => {};
+  }, [id]);
+
+  return (
+    <div className="flex flex-col h-screen">
+      <CompanyNavbar />
+      <div className="flex flex-1 mt-[4.2rem]">
+        <CompanySide open={sidebarOpen} toggleSidebar={toggleSidebar} />
+        <div
+          className={`overflow-y-auto flex-1 transition-margin duration-300 ${
+            sidebarOpen ? "ml-60" : "ml-20"
+          }`}
+        >
+          <div className="container px-4 mx-auto my-10 grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="bg-white p-4 rounded shadow-md">
+              <div className="bg-[#8697C4] text-white p-4">
+                <h2 className="text-lg font-bold flex items-center">
+                  <AiFillMessage className="mr-2" /> Recent Messages
+                </h2>
+              </div>
+              {messages.length === 0 ? (
+                <div
+                  className="px-4 py-2 border-b my-2 shadow-lg cursor-pointer hover:bg-gray-100"
+                  style={{ background: "white" }}
+                >
+                  No messages found !
                 </div>
+              ) : (
+                messages.map((message, index) => (
+                  <Link
+                    key={index}
+                    to={`/company/messages/${message.companyID}`}
+                  >
+                    <div
+                      className="px-4 py-2 border-b my-2 shadow-lg cursor-pointer hover:bg-gray-100"
+                      style={{ background: "white" }}
+                    >
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="font-bold text-gray-700">
+                            {message.doctorName}
+                          </div>
+                          <div className="text-sm font-bold text-gray-600 mt-1">
+                            {message.recentMessage.text}
+                          </div>
+                        </div>
+                        <div className="text-xs text-gray-400 text-right">
+                          <div>{message.recentMessage.date}</div>
+                          <div>{message.recentMessage.time}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))
+              )}
             </div>
+
+            <div className="bg-white p-4 rounded shadow-md">
+              <div className="bg-[#8697C4] text-white p-4">
+                <h2 className="text-lg font-bold flex items-center">
+                  <RiCalendarScheduleLine className="mr-2" /> Schedule
+                </h2>
+              </div>
+              <div className="overflow-auto shadow-md sm:rounded-lg mt-3 table-container">
+                <table className="divide-y border divide-gray-300 w-full text-left rtl:text-right">
+                  <thead className="text-sm text-gray-700 uppercase ">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="px-2 py-4 tracking-wider bg-gray-50"
+                      >
+                        S.N.
+                      </th>
+                      <th scope="col" className="px-3 py-4 tracking-wider">
+                        Doctor Name
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-4 tracking-wider bg-gray-50"
+                      >
+                        Company Name
+                      </th>
+                      <th scope="col" className="px-3 py-4 tracking-wider">
+                        Assigned
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {scheduleMeetings.length === 0 ? (
+                      <tr className="bg-white border-b dark:border-gray-200">
+                        <td colSpan="3" className="text-center py-4">
+                          <p className="text-lg">No Schedule meetings.</p>
+                        </td>
+                      </tr>
+                    ) : (
+                      scheduleMeetings.map((meeting, index) => (
+                        <tr
+                          key={index}
+                          className="bg-white border-b dark:border-gray-200"
+                        >
+                          <td
+                            scope="row"
+                            className="px-2 py-4 bg-gray-50 text-center"
+                          >
+                            {index + 1}.
+                          </td>
+                          <td className="px-2 py-2 font-medium">
+                            {meeting.doctorName}
+                          </td>
+                          <td className="px-2 py-2 bg-gray-50">
+                            {meeting.companyName}
+                          </td>
+                          <td className="px-2 py-2">{meeting.assignedName}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded shadow-md">
+              <div className="bg-[#8697C4] text-white p-4">
+                <h2 className="text-lg font-bold flex items-center">
+                  <FaChartLine className="mr-2" /> Earnings Graph
+                </h2>
+              </div>
+              <div className="h-64">
+                <img src={Graph} alt="" srcset="" />
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded shadow-md">
+              <div className="bg-[#8697C4] text-white p-4">
+                <h2 className="text-lg font-bold flex items-center">
+                  <PiChartPieSliceFill className="mr-2" /> Meeting Graph
+                </h2>
+              </div>
+              <div className="h-64">
+                <img src={Graph} alt="" srcset="" />
+              </div>
+            </div>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default CompanyDashboard;

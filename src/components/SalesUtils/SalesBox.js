@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getFirestore, doc, getDoc, onSnapshot } from "firebase/firestore";
+import { parseISO, format, parse, compareAsc } from "date-fns";
 
 const SalesBox = ({
   conversation,
@@ -11,7 +12,11 @@ const SalesBox = ({
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    if (!conversation || !conversation.messages || conversation.messages.length === 0) {
+    if (
+      !conversation ||
+      !conversation.messages ||
+      conversation.messages.length === 0
+    ) {
       return;
     }
 
@@ -45,8 +50,14 @@ const SalesBox = ({
               id: doc.id,
               message: messageData.message,
               sentBy: messageData.sentBy,
-              date: new Date(messageData.timestamp.toDate()).toLocaleDateString(),
-              time: new Date(messageData.timestamp.toDate()).toLocaleTimeString(),
+              date: format(
+                parseISO(messageData.timestamp.toDate().toISOString()),
+                "dd-MM-yyyy"
+              ),
+              time: format(
+                parseISO(messageData.timestamp.toDate().toISOString()),
+                "hh:mm a"
+              ),
             },
           ],
         };
@@ -58,7 +69,11 @@ const SalesBox = ({
   }, [conversation, currentUserId, setCurrentConversation]);
 
   useEffect(() => {
-    if ( !conversation || !conversation.messages || conversation.messages.length === 0) {
+    if (
+      !conversation ||
+      !conversation.messages ||
+      conversation.messages.length === 0
+    ) {
       return;
     }
 
@@ -80,7 +95,10 @@ const SalesBox = ({
 
             if (senderSnapshot.exists()) {
               const senderData = senderSnapshot.data();
-              let name = senderData.firstName && senderData.lastName ? `${senderData.firstName} ${senderData.lastName}` : senderData.name || "Unknown Sender";
+              let name =
+                senderData.firstName && senderData.lastName
+                  ? `${senderData.firstName} ${senderData.lastName}`
+                  : senderData.name || "Unknown Sender";
               names[sentId] = name;
             } else {
               console.error(`Sender with ID ${sentId} not found.`);
@@ -103,21 +121,18 @@ const SalesBox = ({
   }, [conversation]);
 
   const compareTimeStamps = (msg1, msg2) => {
-    const date1 = new Date(msg1.date);
-    const date2 = new Date(msg2.date);
+    const date1 = msg1.date ? parse(msg1.date, "dd-MM-yyyy", new Date()) : null;
+    const date2 = msg2.date ? parse(msg2.date, "dd-MM-yyyy", new Date()) : null;
 
-    if (date1.getTime() !== date2.getTime()) {
-      return date1.getTime() - date2.getTime();
+    const dateComparison = compareAsc(date1, date2);
+
+    if (dateComparison !== 0) {
+      return dateComparison;
     } else {
-      const time1 = new Date("2000-01-01 " + msg1.time);
-      const time2 = new Date("2000-01-01 " + msg2.time);
-      return time1.getTime() - time2.getTime();
+      const time1 = msg1.time ? parse(msg1.time, "hh:mm a", new Date()) : null;
+      const time2 = msg2.time ? parse(msg2.time, "hh:mm a", new Date()) : null;
+      return compareAsc(time1, time2);
     }
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-GB");
   };
 
   const handlePredefinedMessageClick = (message) => {
@@ -127,46 +142,62 @@ const SalesBox = ({
   let currentDate = null;
 
   return (
-    <div className="companybox-container" style={{ display: "flex", flexDirection: "column-reverse", height: "100%", overflowY: "auto" }}>
+    <div
+      className="companybox-container"
+      style={{
+        display: "flex",
+        flexDirection: "column-reverse",
+        height: "100%",
+        overflowY: "auto",
+      }}
+    >
       <div className="">
-        {conversation && conversation.messages && conversation.messages.filter((msg) => msg.time).sort(compareTimeStamps).map((msg, idx) => {
-          const showDate = msg.date !== currentDate;
-          currentDate = msg.date;
-          let name;
-          if (msg.sentId === currentUserId) {
-            name = "";
-          } else if (msg.sentBy === "company") {
-            name = senderNames[msg.sentId];
-          } else if (msg.sentBy === "admin") {
-            name = "Admin";
-          }
-          return (
-            <div key={idx}>
-              {showDate && (
-                <div className="mb-2 text-center text-gray-600">
-                  {formatDate(msg.date)}
+        {conversation &&
+          conversation.messages &&
+          conversation.messages
+            .filter((msg) => msg.time)
+            .sort(compareTimeStamps)
+            .map((msg, idx) => {
+              const showDate =
+                idx === 0 || msg.date !== conversation.messages[idx - 1].date;
+              currentDate = msg.date;
+              let name;
+              if (msg.sentId === currentUserId) {
+                name = "";
+              } else if (msg.sentBy === "company") {
+                name = senderNames[msg.sentId];
+              } else if (msg.sentBy === "admin") {
+                name = "Admin";
+              }
+              return (
+                <div key={idx}>
+                  {showDate && (
+                    <div className="mb-2 text-center text-gray-600">
+                      {msg.date}
+                    </div>
+                  )}
+                  <div
+                    className={`mb-2 ${
+                      msg.sentBy === "company" ? "text-right" : "text-left"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block p-2 rounded-lg ${
+                        msg.sentBy === "company"
+                          ? "bg-[#8697C4] text-white"
+                          : "bg-gray-200"
+                      }`}
+                    >
+                      <span className="block text-[0.75rem] font-bold">
+                        {name}
+                      </span>
+                      {msg.message}
+                    </span>
+                    <p className="text-xs text-gray-500 mt-1">{msg.time}</p>
+                  </div>
                 </div>
-              )}
-              <div
-                className={`mb-2 ${
-                  msg.sentBy === "company" ? "text-right" : "text-left"
-                }`}
-              >
-              <span
-                className={`inline-block p-2 rounded-lg ${
-                  msg.sentBy === "company" ? "bg-[#8697C4] text-white" : "bg-gray-200"
-                }`}
-              >
-                  <span className="block text-[0.75rem] font-bold">
-                    {name}
-                  </span>
-                  {msg.message}
-                </span>
-                <p className="text-xs text-gray-500 mt-1">{msg.time}</p>
-              </div>
-            </div>
-          );
-        })}
+              );
+            })}
       </div>
     </div>
   );

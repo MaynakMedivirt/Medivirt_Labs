@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getFirestore, doc, getDoc, onSnapshot } from "firebase/firestore";
-import { parseISO, format,parse, compareAsc } from "date-fns";
-
+import { parseISO, format, parse, compareAsc } from "date-fns";
 
 const Chatbox = ({
   conversation,
@@ -108,13 +107,11 @@ const Chatbox = ({
     const date1 = msg1.date ? parse(msg1.date, "dd-MM-yyyy", new Date()) : null;
     const date2 = msg2.date ? parse(msg2.date, "dd-MM-yyyy", new Date()) : null;
 
-    // Compare dates first
     const dateComparison = compareAsc(date1, date2);
 
     if (dateComparison !== 0) {
       return dateComparison;
     } else {
-      // If dates are equal or both are null, compare times
       const time1 = msg1.time ? parse(msg1.time, "hh:mm a", new Date()) : null;
       const time2 = msg2.time ? parse(msg2.time, "hh:mm a", new Date()) : null;
       return compareAsc(time1, time2);

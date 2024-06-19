@@ -19,6 +19,7 @@ import "../style/Company.css";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { FaCommentSlash } from "react-icons/fa";
 import { IoSearchSharp } from "react-icons/io5";
+import { parseISO, format } from "date-fns";
 
 const SalesHeadMessage = () => {
   const [messages, setMessages] = useState([]);
@@ -74,11 +75,8 @@ const SalesHeadMessage = () => {
       setReplyMessage("");
 
       const timestamp = replyData.timestamp;
-      const date = timestamp.toLocaleDateString();
-      const time = timestamp.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+      const date = format(parseISO(timestamp), "dd-MM-yyyy");
+      const time = format(parseISO(timestamp), "hh:mm a");
 
       const newMessage = {
         messageId: replyData.messageId,
@@ -216,8 +214,8 @@ const SalesHeadMessage = () => {
             }
 
             const timestamp = messageData.timestamp?.toDate();
-            const date = timestamp ? timestamp.toLocaleDateString() : "N/A";
-            const time = timestamp ? timestamp.toLocaleTimeString() : "N/A";
+            const date = timestamp ? format(timestamp, "dd-MM-yyyy") : "N/A";
+            const time = timestamp ? format(timestamp, "hh:mm a") : "N/A";
 
             groupedMessages[key].messages.push({
               messageId: messageData.messageId,

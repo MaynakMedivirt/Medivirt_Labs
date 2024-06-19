@@ -185,7 +185,7 @@ const CompanyCredits = () => {
                 </h1>
               </div>
 
-              <div className="relative overflow-auto shadow-md sm:rounded-lg mt-3 table-container">
+              <div className="overflow-auto shadow-md sm:rounded-lg mt-3 table-container">
                 <table className="divide-y border divide-gray-300 w-full text-left rtl:text-right">
                   <thead className="text-sm text-gray-700 uppercase ">
                     <tr>
