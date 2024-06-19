@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
@@ -19,9 +19,6 @@ const ProfileComplete = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const auth = getAuth();
-  const [useWebcam, setUseWebcam] = useState(false);
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -59,50 +56,6 @@ const ProfileComplete = () => {
     // setImageRemoved(false);
   };
 
-  // Function to handle taking a selfie
-  const handleTakeSelfie = async () => {
-    setUseWebcam(true);
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
-        videoRef.current.srcObject = stream;
-      } catch (error) {
-        console.error("Error accessing webcam:", error);
-      }
-    }
-  };
-
-  // Function to capture the selfie
-  const captureSelfie = () => {
-    if (canvasRef.current) {
-      const context = canvasRef.current.getContext("2d");
-      if (context && videoRef.current) {
-        context.drawImage(videoRef.current, 0, 0, 300, 225);
-        const data = canvasRef.current.toDataURL("image/png");
-        setImageUrl(data);
-        setUseWebcam(false);
-        const stream = videoRef.current.srcObject;
-        const tracks = stream.getTracks();
-        tracks.forEach((track) => track.stop());
-      }
-    }
-  };
-
-  // Function to remove the selected image or selfie
-  const removeImage = () => {
-    setImageUrl(null);
-    setImageFile(null);
-  };
-
-  const cancelSelfie = () => {
-    setUseWebcam(false);
-    const stream = videoRef.current.srcObject;
-    const tracks = stream.getTracks();
-    tracks.forEach((track) => track.stop());
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -114,20 +67,12 @@ const ProfileComplete = () => {
       };
 
       if (imageFile) {
-        // Upload the image file to Firebase Storage
         const imageRef = ref(storage, `images/${imageFile.name}`);
         await uploadBytes(imageRef, imageFile);
         const downloadURL = await getDownloadURL(imageRef);
         newData.image = downloadURL;
-      } else if (imageUrl) {
-        // Upload the captured image (selfie) to Firebase Storage
-        const blob = await fetch(imageUrl).then((res) => res.blob());
-        const imageRef = ref(storage, `images/selfie_${Date.now()}.png`);
-        await uploadBytes(imageRef, blob);
-        const downloadURL = await getDownloadURL(imageRef);
-        newData.image = downloadURL;
-      } else {
-        newData.image = ""; // If no image or selfie is selected, remove the image URL
+      } else if (!imageUrl) {
+        newData.image = "";
       }
 
       await updateDoc(companyRef, newData);
@@ -150,31 +95,6 @@ const ProfileComplete = () => {
       console.error("Error updating document:", error);
     }
   };
-
-  useEffect(() => {
-    const fetchCompanyProfile = async () => {
-      try {
-        const db = getFirestore();
-        const companyRef = doc(db, "companies", id);
-        const docSnap = await getDoc(companyRef);
-        if (docSnap.exists()) {
-          setCompany({ id: docSnap.id, ...docSnap.data() });
-          if (docSnap.data().image) {
-            const url = await getDownloadURL(
-              ref(storage, docSnap.data().image)
-            );
-            setImageUrl(url);
-          }
-        } else {
-          console.log("No such document!");
-        }
-      } catch (error) {
-        console.error("Error fetching company:", error);
-      }
-    };
-
-    fetchCompanyProfile();
-  }, [id, storage]);
 
   if (!company) {
     return <div>Loading...</div>;
@@ -268,97 +188,29 @@ const ProfileComplete = () => {
               />
             </div>
           </div>
-          {/* <div className="mb-3">
-                        <label htmlFor="image" className="block mb-2 px-2 text-lg font-bold text-gray-900 dark:text-white">Image :</label>
-                        <input
-                            type="file"
-                            name="image"
-                            id="image"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            onChange={handleImageUpload}
-                            accept="image/*"
-                        />
-                    </div>
-                    {imageUrl && (
-                        <div className="mb-6">
-                            <img
-                                src={imageUrl}
-                                alt="Preview"
-                                style={{ maxWidth: "100%", maxHeight: "200px" }}
-                            />
-                        </div>
-                    )} */}
-
           <div className="mb-3">
             <label
               htmlFor="image"
-              className="block mb-2 px-2 text-lg font-bold text-gray-900 d\e"
+              className="block mb-2 px-2 text-lg font-bold text-gray-900 dark:text-white"
             >
               Image :
             </label>
-            <div className="flex flex-col sm:flex-row mb-3">
-              <input
-                type="file"
-                name="image"
-                id="image"
-                className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-                onChange={handleImageUpload}
-                accept="image/*"
-              />
-              <span
-                className="text-xl text-gray-700 font-bold "
-                style={{ margin: "auto 1rem" }}
-              >
-                OR
-              </span>
-              <button
-                type="button"
-                onClick={handleTakeSelfie}
-                className="bg-[#7191E6] text-white font-bold py-2 px-4 rounded-lg"
-              >
-                Capture Image
-              </button>
-            </div>
+            <input
+              type="file"
+              name="image"
+              id="image"
+              className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              onChange={handleImageUpload}
+              accept="image/*"
+            />
           </div>
-          {useWebcam && (
-            <div className="mb-3">
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                width="300"
-                height="225"
-              />
-              <button
-                type="button"
-                onClick={captureSelfie}
-                className="bg-[#7191E6] text-white font-bold py-2 px-4 rounded-lg mt-2"
-              >
-                Capture
-              </button>
-              <button
-                type="button"
-                onClick={cancelSelfie}
-                className="bg-red-500 text-white font-bold py-2 px-4 rounded-lg mt-2 ml-4"
-              >
-                Cancel
-              </button>
-            </div>
-          )}
-          {imageUrl && !useWebcam && (
+          {imageUrl && (
             <div className="mb-6">
               <img
                 src={imageUrl}
                 alt="Preview"
                 style={{ maxWidth: "100%", maxHeight: "200px" }}
               />
-              <button
-                type="button"
-                onClick={removeImage}
-                className="bg-red-500 text-white font-bold py-2 px-4 rounded-lg mt-2"
-              >
-                Remove Image
-              </button>
             </div>
           )}
           <div className="mb-3">
