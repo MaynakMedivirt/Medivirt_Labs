@@ -295,7 +295,7 @@ const CompanyDashboard = () => {
                 messages.map((message, index) => (
                   <Link
                     key={index}
-                    to={`/company/messages/${message.companyID}`}
+                    to={`/company/message/${message.companyID}`}
                   >
                     <div
                       className="px-4 py-2 border-b my-2 shadow-lg cursor-pointer hover:bg-gray-100"
@@ -390,7 +390,7 @@ const CompanyDashboard = () => {
                   <FaChartLine className="mr-2" /> Earnings Graph
                 </h2>
               </div>
-              <div className="h-64">
+              <div>
                 <img src={Graph} alt="" srcset="" />
               </div>
             </div>
@@ -400,7 +400,7 @@ const CompanyDashboard = () => {
                   <PiChartPieSliceFill className="mr-2" /> Meeting Graph
                 </h2>
               </div>
-              <div className="h-64">
+              <div>
                 <img src={Graph} alt="" srcset="" />
               </div>
             </div>

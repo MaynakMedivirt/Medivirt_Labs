@@ -19,7 +19,7 @@ import "../style/Doctor.css";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { FaCommentSlash } from "react-icons/fa";
 import { IoSearchSharp } from "react-icons/io5";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 
 const DoctorMessage = () => {
   const [messages, setMessages] = useState([]);
@@ -70,8 +70,8 @@ const DoctorMessage = () => {
       setReplyMessage("");
 
       const timestamp = replyData.timestamp;
-      const date = format(parseISO(timestamp), "dd-MM-yyyy");
-      const time = format(parseISO(timestamp), "hh:mm a");
+      const date = format(timestamp, "dd/MM/yyyy");
+      const time = format(timestamp, "hh:mm:ss a");
 
       const newMessage = {
         messageId: replyData.messageId,
@@ -200,8 +200,10 @@ const DoctorMessage = () => {
           }
 
           const timestamp = messageData.timestamp?.toDate();
-          const date = timestamp ? format(timestamp, "dd-MM-yyyy") : "N/A";
-          const time = timestamp ? format(timestamp, "hh:mm a") : "N/A";
+          const date = timestamp ? format(timestamp, "dd/MM/yyyy") : "N/A";
+          const time = timestamp
+            ? format(timestamp, "hh:mm:ss a")
+            : "N/A";
 
           groupedMessages[key].messages.push({
             messageId: messageData.messageId,

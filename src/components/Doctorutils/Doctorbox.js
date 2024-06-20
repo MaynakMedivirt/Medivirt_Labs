@@ -1,17 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getFirestore, doc, getDoc, onSnapshot } from "firebase/firestore";
-import { parseISO, format, parse, compareAsc } from "date-fns";
+import { format, parse } from "date-fns";
 
 const Doctorbox = ({ conversation, setCurrentConversation }) => {
   const [senderNames, setSenderNames] = useState({});
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    if (
-      !conversation ||
-      !conversation.messages ||
-      conversation.messages.length === 0
-    ) {
+    if (!conversation || !conversation.messages || conversation.messages.length === 0) {
       return;
     }
 
@@ -35,28 +31,27 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
           return;
         }
 
-        const updatedConversation = {
-          ...conversation,
-          messages: [
-            ...conversation.messages,
-            {
-              messageId: messageData.messageId,
-              sentId: messageData.sentId,
-              id: doc.id,
-              message: messageData.message,
-              sentBy: messageData.sentBy,
-              date: format(
-                parseISO(messageData.timestamp.toDate().toISOString()),
-                "dd-MM-yyyy"
-              ),
-              time: format(
-                parseISO(messageData.timestamp.toDate().toISOString()),
-                "hh:mm a"
-              ),
-            },
-          ],
+        const newMessage = {
+          messageId: messageData.messageId,
+          sentId: messageData.sentId,
+          id: doc.id,
+          message: messageData.message,
+          sentBy: messageData.sentBy,
+          timestamp: messageData.timestamp,
+          date: format(new Date(messageData.timestamp.toDate()), "dd/MM/yyyy"),
+          time: format(new Date(messageData.timestamp.toDate()), "hh:mm:ss a"),
         };
-        setCurrentConversation(updatedConversation);
+
+        // Update messages with new message and sort
+        const updatedMessages = [...conversation.messages, newMessage].sort(
+          compareTimeStamps
+        );
+
+        // Update conversation state with updated messages
+        setCurrentConversation({ ...conversation, messages: updatedMessages });
+      },
+      (error) => {
+        console.error("Error fetching message:", error);
       }
     );
 
@@ -70,63 +65,62 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
 
     async function fetchSenderNames() {
       const db = getFirestore();
-      const names = {};
-      const promises = conversation.messages.map(async (msg) => {
-        const { sentId } = msg;
-        if (sentId && !names[sentId]) {
-          try {
-            console.log(`Fetching name for sentId: ${sentId}`);
-            let senderRef = doc(db, "companies", sentId);
-            let senderSnapshot = await getDoc(senderRef);
+      const names = { ...senderNames };
 
-            if (!senderSnapshot.exists()) {
-              senderRef = doc(db, "users", sentId);
-              senderSnapshot = await getDoc(senderRef);
-            }
+      // Use Promise.all to await all sender name fetches
+      await Promise.all(
+        conversation.messages.map(async (msg) => {
+          const { sentId } = msg;
+          if (sentId && !names[sentId]) {
+            try {
+              let senderRef = doc(db, "companies", sentId);
+              let senderSnapshot = await getDoc(senderRef);
 
-            if (senderSnapshot.exists()) {
-              const senderData = senderSnapshot.data();
-              let name =
-                senderData.firstName && senderData.lastName
-                  ? `${senderData.firstName} ${senderData.lastName}`
-                  : senderData.name || "Unknown Sender";
-              names[sentId] = name;
-              console.log(`Fetched name: ${name} for sentId: ${sentId}`);
-            } else {
-              console.error(`Sender with ID ${sentId} not found.`);
+              if (!senderSnapshot.exists()) {
+                senderRef = doc(db, "users", sentId);
+                senderSnapshot = await getDoc(senderRef);
+              }
+
+              if (senderSnapshot.exists()) {
+                const senderData = senderSnapshot.data();
+                let name =
+                  senderData.firstName && senderData.lastName
+                    ? `${senderData.firstName} ${senderData.lastName}`
+                    : senderData.name || "Unknown Sender";
+                names[sentId] = name;
+              } else {
+                console.error(`Sender with ID ${sentId} not found.`);
+                names[sentId] = "Unknown Sender";
+              }
+            } catch (error) {
+              console.error("Error fetching sender name:", error);
               names[sentId] = "Unknown Sender";
             }
-          } catch (error) {
-            console.error("Error fetching sender name:", error);
-            names[sentId] = "Unknown Sender";
           }
-        }
-      });
+        })
+      );
 
-      await Promise.all(promises);
+      // Set senderNames state with updated names
       setSenderNames(names);
-      console.log("Sender names fetched:", JSON.stringify(names, null, 2));
     }
 
     fetchSenderNames();
-  }, [conversation]);
+  }, [conversation, senderNames]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [conversation]);
 
   const compareTimeStamps = (msg1, msg2) => {
-    const date1 = msg1.date ? parse(msg1.date, "dd-MM-yyyy", new Date()) : null;
-    const date2 = msg2.date ? parse(msg2.date, "dd-MM-yyyy", new Date()) : null;
+    const date1 = parse(msg1.date, "dd/MM/yyyy", new Date());
+    const date2 = parse(msg2.date, "dd/MM/yyyy", new Date());
 
-    const dateComparison = compareAsc(date1, date2);
-
-    if (dateComparison !== 0) {
-      return dateComparison;
+    if (date1.getTime() !== date2.getTime()) {
+      return date1.getTime() - date2.getTime();
     } else {
-      const time1 = msg1.time ? parse(msg1.time, "hh:mm a", new Date()) : null;
-      const time2 = msg2.time ? parse(msg2.time, "hh:mm a", new Date()) : null;
-      return compareAsc(time1, time2);
+      const time1 = parse(msg1.time, "hh:mm:ss a", new Date());
+      const time2 = parse(msg2.time, "hh:mm:ss a", new Date());
+      return time1.getTime() - time2.getTime();
     }
   };
 
@@ -149,12 +143,11 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
             .filter((msg) => msg.time)
             .sort(compareTimeStamps)
             .map((msg, idx) => {
-              const showDate =
-                idx === 0 || msg.date !== conversation.messages[idx - 1].date;
+              const showDate = msg.date !== currentDate;
               currentDate = msg.date;
               let name;
               if (msg.sentBy === "company" || msg.sentBy === "user") {
-                name = senderNames[msg.sentId] || "unknown";
+                name = senderNames[msg.sentId] || "Unknown Sender";
               } else if (msg.sentBy === "admin") {
                 name = "Admin";
               }
@@ -188,6 +181,7 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
               );
             })}
       </div>
+      <div ref={messagesEndRef} />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getFirestore, doc, getDoc, onSnapshot } from "firebase/firestore";
-import { parseISO, format, parse, compareAsc } from "date-fns";
+import { format, parse } from 'date-fns';
 
 const Chatbox = ({
   conversation,
@@ -29,29 +29,28 @@ const Chatbox = ({
       (doc) => {
         const messageData = doc.data();
         if (!messageData) {
-          // console.error(
-          //   "No message data found for messageId:",
-          //   firstMessage.messageId
-          // );
+          console.error("Message data not found");
           return;
         }
 
-        const updatedConversation = {
-          ...conversation,
-          messages: [
-            ...conversation.messages,
-            {
-              messageId: messageData.messageId,
-              sentId: messageData.sentId,
-              id: doc.id,
-              message: messageData.message,
-              sentBy: messageData.sentBy,
-              date: format(parseISO(messageData.timestamp.toDate().toISOString()), 'dd-MM-yyyy'),
-              time: format(parseISO(messageData.timestamp.toDate().toISOString()), 'hh:mm a'),
-            },
-          ],
+        const newMessage = {
+          messageId: messageData.messageId,
+          sentId: messageData.sentId,
+          id: doc.id,
+          message: messageData.message,
+          sentBy: messageData.sentBy,
+          timestamp: messageData.timestamp,
+          date: format(new Date(messageData.timestamp.toDate()), 'dd/MM/yyyy'),
+          time: format(new Date(messageData.timestamp.toDate()), 'hh:mm:ss a'),
         };
+
+        const updatedMessages = [...conversation.messages, newMessage].sort(compareTimeStamps);
+        const updatedConversation = { ...conversation, messages: updatedMessages };
+
         setCurrentConversation(updatedConversation);
+      },
+      (error) => {
+        console.error("Error fetching message:", error);
       }
     );
 
@@ -59,13 +58,13 @@ const Chatbox = ({
   }, [conversation, currentUserId, setCurrentConversation]);
 
   useEffect(() => {
-    if ( !conversation || !conversation.messages || conversation.messages.length === 0) {
+    if (!conversation || !conversation.messages || conversation.messages.length === 0) {
       return;
     }
 
     async function fetchSenderNames() {
       const db = getFirestore();
-      const names = {};
+      const names = { ...senderNames }; // Preserve existing names
 
       for (const msg of conversation.messages) {
         const { sentId } = msg;
@@ -93,28 +92,27 @@ const Chatbox = ({
           }
         }
       }
+
       setSenderNames(names);
     }
 
     fetchSenderNames();
-  }, [conversation, currentUserId]);
+  }, [conversation, currentUserId, senderNames]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [conversation]);
 
   const compareTimeStamps = (msg1, msg2) => {
-    const date1 = msg1.date ? parse(msg1.date, "dd-MM-yyyy", new Date()) : null;
-    const date2 = msg2.date ? parse(msg2.date, "dd-MM-yyyy", new Date()) : null;
+    const date1 = parse(msg1.date, 'dd/MM/yyyy', new Date());
+    const date2 = parse(msg2.date, 'dd/MM/yyyy', new Date());
 
-    const dateComparison = compareAsc(date1, date2);
-
-    if (dateComparison !== 0) {
-      return dateComparison;
+    if (date1.getTime() !== date2.getTime()) {
+      return date1.getTime() - date2.getTime();
     } else {
-      const time1 = msg1.time ? parse(msg1.time, "hh:mm a", new Date()) : null;
-      const time2 = msg2.time ? parse(msg2.time, "hh:mm a", new Date()) : null;
-      return compareAsc(time1, time2);
+      const time1 = parse(msg1.time, 'hh:mm:ss a', new Date());
+      const time2 = parse(msg2.time, 'hh:mm:ss a', new Date());
+      return time1.getTime() - time2.getTime();
     }
   };
 
@@ -126,10 +124,10 @@ const Chatbox = ({
 
   return (
     <div className="companybox-container" style={{ display: "flex", flexDirection: "column-reverse", height: "100%", overflowY: "auto" }}>
-      <div className="">
+      <div>
         {conversation && conversation.messages && conversation.messages.filter((msg) => msg.time).sort(compareTimeStamps).map((msg, idx) => {
-            const showDate = idx === 0 || msg.date !== conversation.messages[idx - 1].date;
-            currentDate = msg.date;
+          const showDate = msg.date !== currentDate;
+          currentDate = msg.date;
           let name;
           if (msg.sentId === currentUserId) {
             name = "";
@@ -146,15 +144,11 @@ const Chatbox = ({
                 </div>
               )}
               <div
-                className={`mb-2 ${
-                  msg.sentBy === "company" ? "text-right" : "text-left"
-                }`}
+                className={`mb-2 ${msg.sentBy === "company" ? "text-right" : "text-left"}`}
               >
-              <span
-                className={`inline-block p-2 rounded-lg ${
-                  msg.sentBy === "company" ? "bg-[#8697C4] text-white" : "bg-gray-200"
-                }`}
-              >
+                <span
+                  className={`inline-block p-2 rounded-lg ${msg.sentBy === "company" ? "bg-[#8697C4] text-white" : "bg-gray-200"}`}
+                >
                   <span className="block text-[0.75rem] font-bold">
                     {name}
                   </span>
@@ -165,6 +159,7 @@ const Chatbox = ({
             </div>
           );
         })}
+        <div ref={messagesEndRef} />
       </div>
     </div>
   );
