@@ -68,7 +68,7 @@ import CompanyMissedMeetings from './components/CompanyUtils/CompanyMissedMeetin
 import MyDoctors from './components/CompanyUtils/MyDoctors';
 import DoctorViewProfile from './components/CompanyUtils/DoctorViewProfile';
 import CompanySetting  from './components/CompanyUtils/CompanySetting ';
-
+import CompanyAnalytics from './components/CompanyUtils/CompanyAnalytics';
 
 import SalesDashboard from './components/SalesUtils/SalesDashboard';
 import SalesHeadUsers from './components/SalesUtils/SalesHeadUsers';
@@ -179,6 +179,7 @@ const App = () => {
           <Route path='/company/doctors/:id' element={<MyDoctors/>}/>
           <Route path='/company/viewProfile/:id' element={<DoctorViewProfile/>}/>
           <Route path='/company/setting/:id' element={<CompanySetting/>}/>
+          <Route path='/company/analytics/:id' element={<CompanyAnalytics/>}/>
 
           <Route path='/doctor/earning/:id' element={<DoctorEarning/>}/>
           <Route path='/doctor/missedMeeting/:id' element={<DoctorMissedMeetings/>}/>

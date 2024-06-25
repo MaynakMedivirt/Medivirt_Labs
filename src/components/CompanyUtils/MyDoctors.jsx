@@ -20,7 +20,6 @@ const MyDoctors = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-
         const fetchDoctors = async () => {
             try {
                 const db = getFirestore();
@@ -38,39 +37,75 @@ const MyDoctors = () => {
                 setLoading(false);
             }
         };
-
         fetchDoctors();
     }, []);
 
     useEffect(() => {
         const applyFilters = () => {
             let filtered = doctors.filter((doctor) => {
-
                 const nameMatch = doctor.name.toLowerCase().includes(nameFilter.toLowerCase());
-
                 const specialistMatch = specialistFilter === "All" || doctor.specialist === specialistFilter;
-
                 const locationMatch = locationFilter === "All" || doctor.location === locationFilter;
 
                 return nameMatch && specialistMatch && locationMatch;
             });
 
             setFilteredDoctors(filtered);
+            setCurrentPage(1);
         };
 
         applyFilters();
     }, [nameFilter, specialistFilter, locationFilter, doctors]);
-
+    
+    const handleViewProfile = (doctorId, id) => {
+        navigate(`/company/viewProfile/${id}`, { state: { doctorId } });
+    }
     const indexOfLastDoctor = currentPage * doctorsPerPage;
     const indexOfFirstDoctor = indexOfLastDoctor - doctorsPerPage;
     const currentDoctors = filteredDoctors.slice(indexOfFirstDoctor, indexOfLastDoctor);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-    const handleViewProfile = (doctorId, id) => {
-        navigate(`/company/viewProfile/${id}`, { state: { doctorId } });
+    const totalPages = Math.ceil(filteredDoctors.length / doctorsPerPage);
 
-    }
+    const renderPagination = () => {
+        if (totalPages <= 1) return null;
+
+        const pageNumbers = [];
+        for (let i = Math.max(1, currentPage - 1); i <= Math.min(totalPages, currentPage + 1); i++) {
+            pageNumbers.push(i);
+        }
+
+        return (
+            <div className="flex mt-4">
+                {currentPage > 1 && (
+                    <button
+                        onClick={() => paginate(currentPage - 1)}
+                        className="px-4 py-2 bg-white border text-neutral-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 mx-1"
+                    >
+                        &lt;
+                    </button>
+                )}
+                {pageNumbers.map((number) => (
+                    <button
+                        key={number}
+                        onClick={() => paginate(number)}
+                        className={`px-4 py-2 ${currentPage === number ? "bg-indigo-400 text-white" : "bg-white border text-neutral-800"} rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 mx-1`}
+                    >
+                        {number}
+                    </button>
+                ))}
+                {currentPage < totalPages && (
+                    <button
+                        onClick={() => paginate(currentPage + 1)}
+                        className="px-4 py-2 bg-white border text-neutral-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 mx-1"
+                    >
+                        &gt;
+                    </button>
+                )}
+            </div>
+        );
+    };
 
     return (
         <div className="flex flex-col h-screen">
@@ -160,7 +195,7 @@ const MyDoctors = () => {
                                     </div>
                                 ))}
                             </div>
-                            <div className="flex mt-4">
+                            {/* <div className="flex mt-4">
                                 {[...Array(Math.ceil(filteredDoctors.length / doctorsPerPage)).keys()].map((number) => (
                                     <button
                                         key={number}
@@ -170,7 +205,8 @@ const MyDoctors = () => {
                                         {number + 1}
                                     </button>
                                 ))}
-                            </div>
+                            </div> */}
+                            {renderPagination()}
                             <div className="text-gray-600 dark:text-gray-400 text-sm mb-4 text-end">
                                 {`Showing ${currentDoctors.length} out of ${filteredDoctors.length} matches`}
                             </div>

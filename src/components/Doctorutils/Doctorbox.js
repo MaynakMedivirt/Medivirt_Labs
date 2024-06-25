@@ -7,7 +7,11 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    if (!conversation || !conversation.messages || conversation.messages.length === 0) {
+    if (
+      !conversation ||
+      !conversation.messages ||
+      conversation.messages.length === 0
+    ) {
       return;
     }
 
@@ -31,27 +35,28 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
           return;
         }
 
-        const newMessage = {
-          messageId: messageData.messageId,
-          sentId: messageData.sentId,
-          id: doc.id,
-          message: messageData.message,
-          sentBy: messageData.sentBy,
-          timestamp: messageData.timestamp,
-          date: format(new Date(messageData.timestamp.toDate()), "dd/MM/yyyy"),
-          time: format(new Date(messageData.timestamp.toDate()), "hh:mm:ss a"),
+        const updatedConversation = {
+          ...conversation,
+          messages: [
+            ...conversation.messages,
+            {
+              messageId: messageData.messageId,
+              sentId: messageData.sentId,
+              id: doc.id,
+              message: messageData.message,
+              sentBy: messageData.sentBy,
+              date: format(
+                new Date(messageData.timestamp.toDate()),
+                "dd/MM/yyyy"
+              ),
+              time: format(
+                new Date(messageData.timestamp.toDate()),
+                "hh:mm:ss a"
+              ),
+            },
+          ],
         };
-
-        // Update messages with new message and sort
-        const updatedMessages = [...conversation.messages, newMessage].sort(
-          compareTimeStamps
-        );
-
-        // Update conversation state with updated messages
-        setCurrentConversation({ ...conversation, messages: updatedMessages });
-      },
-      (error) => {
-        console.error("Error fetching message:", error);
+        setCurrentConversation(updatedConversation);
       }
     );
 
@@ -65,47 +70,46 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
 
     async function fetchSenderNames() {
       const db = getFirestore();
-      const names = { ...senderNames };
+      const names = {};
+      const promises = conversation.messages.map(async (msg) => {
+        const { sentId } = msg;
+        if (sentId && !names[sentId]) {
+          try {
+            console.log(`Fetching name for sentId: ${sentId}`);
+            let senderRef = doc(db, "companies", sentId);
+            let senderSnapshot = await getDoc(senderRef);
 
-      // Use Promise.all to await all sender name fetches
-      await Promise.all(
-        conversation.messages.map(async (msg) => {
-          const { sentId } = msg;
-          if (sentId && !names[sentId]) {
-            try {
-              let senderRef = doc(db, "companies", sentId);
-              let senderSnapshot = await getDoc(senderRef);
+            if (!senderSnapshot.exists()) {
+              senderRef = doc(db, "users", sentId);
+              senderSnapshot = await getDoc(senderRef);
+            }
 
-              if (!senderSnapshot.exists()) {
-                senderRef = doc(db, "users", sentId);
-                senderSnapshot = await getDoc(senderRef);
-              }
-
-              if (senderSnapshot.exists()) {
-                const senderData = senderSnapshot.data();
-                let name =
-                  senderData.firstName && senderData.lastName
-                    ? `${senderData.firstName} ${senderData.lastName}`
-                    : senderData.name || "Unknown Sender";
-                names[sentId] = name;
-              } else {
-                console.error(`Sender with ID ${sentId} not found.`);
-                names[sentId] = "Unknown Sender";
-              }
-            } catch (error) {
-              console.error("Error fetching sender name:", error);
+            if (senderSnapshot.exists()) {
+              const senderData = senderSnapshot.data();
+              let name =
+                senderData.firstName && senderData.lastName
+                  ? `${senderData.firstName} ${senderData.lastName}`
+                  : senderData.name || "Unknown Sender";
+              names[sentId] = name;
+              console.log(`Fetched name: ${name} for sentId: ${sentId}`);
+            } else {
+              console.error(`Sender with ID ${sentId} not found.`);
               names[sentId] = "Unknown Sender";
             }
+          } catch (error) {
+            console.error("Error fetching sender name:", error);
+            names[sentId] = "Unknown Sender";
           }
-        })
-      );
+        }
+      });
 
-      // Set senderNames state with updated names
+      await Promise.all(promises);
       setSenderNames(names);
+      console.log("Sender names fetched:", JSON.stringify(names, null, 2));
     }
 
     fetchSenderNames();
-  }, [conversation, senderNames]);
+  }, [conversation]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -147,7 +151,7 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
               currentDate = msg.date;
               let name;
               if (msg.sentBy === "company" || msg.sentBy === "user") {
-                name = senderNames[msg.sentId] || "Unknown Sender";
+                name = senderNames[msg.sentId] || "unknown";
               } else if (msg.sentBy === "admin") {
                 name = "Admin";
               }
@@ -155,6 +159,7 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
                 <div key={idx}>
                   {showDate && (
                     <div className="mb-2 text-center text-gray-600">
+                      {/* {formatDate(msg.date)} */}
                       {msg.date}
                     </div>
                   )}
@@ -180,8 +185,8 @@ const Doctorbox = ({ conversation, setCurrentConversation }) => {
                 </div>
               );
             })}
+        <div ref={messagesEndRef} />
       </div>
-      <div ref={messagesEndRef} />
     </div>
   );
 };

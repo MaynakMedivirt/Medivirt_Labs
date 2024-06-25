@@ -21,6 +21,7 @@ import { FaCommentSlash } from "react-icons/fa";
 import { IoSearchSharp } from "react-icons/io5";
 import { format } from "date-fns";
 
+
 const DoctorMessage = () => {
   const [messages, setMessages] = useState([]);
   const [replyMessage, setReplyMessage] = useState("");
@@ -68,6 +69,13 @@ const DoctorMessage = () => {
       await setDoc(customDocRef, replyData);
 
       setReplyMessage("");
+
+      // const timestamp = replyData.timestamp;
+      // const date = timestamp.toLocaleDateString();
+      // const time = timestamp.toLocaleTimeString([], {
+      //   hour: "2-digit",
+      //   minute: "2-digit",
+      // });
 
       const timestamp = replyData.timestamp;
       const date = format(timestamp, "dd/MM/yyyy");
@@ -198,6 +206,10 @@ const DoctorMessage = () => {
               },
             };
           }
+
+          // const timestamp = messageData.timestamp?.toDate();
+          // const date = timestamp ? timestamp.toLocaleDateString() : "N/A";
+          // const time = timestamp ? timestamp.toLocaleTimeString() : "N/A";
 
           const timestamp = messageData.timestamp?.toDate();
           const date = timestamp ? format(timestamp, "dd/MM/yyyy") : "N/A";

@@ -305,7 +305,7 @@ const CompanySchedule = () => {
                   className="p-2"
                 />
               </div>
-              <div className="flex flex-col relative mx-2 justify-center self-stretch my-auto border rounded-md mt-2">
+              <div className="flex flex-col mx-2 justify-center self-stretch my-auto border rounded-md mt-2">
                 <div className="flex">
                   <input
                     type="text"
